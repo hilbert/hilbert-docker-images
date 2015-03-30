@@ -41,7 +41,7 @@ do
     202) docker run --rm --name appB -i "$U/$I:appb" ;;
     203) 
          echo "Please make sure to run this script from your local X11 server (terminal) since xeys's X-client will use '$XSOCK, $XAUTH'..."
-         docker run -v -e DISPLAY -e USER  $XSOCK:$XSOCK -v $XAUTH:$XAUTH -e XAUTHORITY=$XAUTH --rm --name xeyes "$U/$I:xeyes" ;;
+         docker run -e DISPLAY -e USER -v $XSOCK:$XSOCK -v $XAUTH:$XAUTH -e XAUTHORITY=$XAUTH --rm --name xeyes "$U/$I:xeyes" ;;
 
     *) echo "Thank You! Quiting... "; echo ; echo "Leftover containers: "; docker ps -a;  exit 0 ;; 
   esac  
