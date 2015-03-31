@@ -2,8 +2,9 @@
 
 U=malex984
 I=dockapp
-# docker pull debian:wheezy 
-# docker tag debian:wheezy "$U/mini"
+##### old: debian:wheezy 
+#docker pull phusion/baseimage:0.9.16
+#docker tag phusion/baseimage:0.9.16 "$U/$I:base"
 
 docker images -a
 
