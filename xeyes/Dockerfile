@@ -11,6 +11,7 @@ RUN apt-get install -qqy xauth x11-apps
 RUN apt-get clean && rm -rf /var/lib/apt/lists/* /tmp/* /var/tmp/*
 
 ENV DISPLAY :0
-CMD xeyes
+# CMD /usr/bin/xeyes
+
 
 
