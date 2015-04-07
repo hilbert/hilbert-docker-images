@@ -33,6 +33,7 @@ mydeamon () {
         --lxc-conf='lxc.cgroup.devices.allow=c 81:* rwm' \
         --lxc-conf='lxc.cgroup.devices.allow=c 116:* rwm' \
         "$@"
+  exit $?
 }
 #        -e DOCKER_HOST=unix:///var/run/docker.sock -e NO_PROXY=/var/run/docker.sock \
 #        -e CUPS_USER_ADMIN=vagrant -e CUPS_USER_PASSWORD=vagrant -p 6631:631/tcp \
