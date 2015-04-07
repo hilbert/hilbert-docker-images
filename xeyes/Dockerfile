@@ -1,17 +1,18 @@
-FROM malex984/dockapp:base
+FROM malex984/dockapp:alsa
 
 MAINTAINER Oleksandr Motsak <malex984@googlemail.com>
 
-# Use baseimage-docker's init system.
-ENTRYPOINT ["/sbin/my_init"]
+RUN DEBIAN_FRONTEND=noninteractive apt-get -q -y install xauth 
+RUN DEBIAN_FRONTEND=noninteractive apt-get -q -y install x11-apps
+RUN DEBIAN_FRONTEND=noninteractive apt-get -q -y install rxvt-unicode
 
-RUN apt-get update
-RUN apt-get install -qqy xauth x11-apps
-# Clean up APT when done.
-RUN apt-get clean && rm -rf /var/lib/apt/lists/* /tmp/* /var/tmp/*
-
+ENV XLIB_SKIP_ARGB_VISUALS 1
+ENV QT_X11_NO_MITSHM 1
 ENV DISPLAY :0
+
 # CMD /usr/bin/xeyes
 
+# Clean up APT when done.
+# RUN apt-get clean && rm -rf /var/lib/apt/lists/* /tmp/* /var/tmp/*
 
 

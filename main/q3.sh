@@ -1,0 +1,66 @@
+#! /bin/bash
+
+U=malex984
+I=dockapp
+
+USER_UID=$(id -u)
+APP="q3"
+
+ARGS="$@"
+  export XSOCK=/tmp/.X11-unix
+  export XAUTH=/tmp/.docker.xauth
+
+  if [ ! -f $XAUTH ]; then
+     touch $XAUTH
+     xauth nlist :0 | sed -e "s/^..../ffff/" | xauth -f $XAUTH nmerge -
+  fi
+  export X="DISPLAY -e USER -v $XSOCK:$XSOCK -v $XAUTH:$XAUTH -e XAUTHORITY=$XAUTH"
+
+  echo "Please make sure to run this script from your local X11 server (terminal) since xeys's X-client will use '$XSOCK, $XAUTH'..."
+  echo
+  echo "We now enable anyone to connect to this X11..."
+  xhost +
+
+  xprop -root
+
+  echo
+  echo "Starting $APP ('$ARGS')"
+
+# localhost # this does not work :(
+  # -v /dev/shm:/dev/shm \
+  export SND="$X \
+ -v /etc/machine-id:/etc/machine-id \
+ -v /var/lib/dbus:/var/lib/dbus \
+ -v /run/dbus/system_bus_socket:/run/dbus/system_bus_socket \
+ -v /var/run/docker.sock:/var/run/docker.sock \
+ -e DOCKER_HOST=unix:///var/run/docker.sock -e NO_PROXY=/var/run/docker.sock \
+ -v /var/run/dbus/system_bus_socket:/var/run/dbus/system_bus_socket \
+ -v /sys/fs/cgroup:/sys/fs/cgroup \
+ -v /run/user/${USER_UID}/pulse:/run/user/${USER_UID}/pulse \
+ -v /home/vagrant:/home/docker \
+ -v /dev/dri:/dev/dri \
+ --device=/dev/video0:/dev/video0 \
+ -v /dev/snd:/dev/snd \
+ -e PULSE_SERVER=/run/user/${USER_UID}/pulse/native "
+
+# -v /run/user/${USER_UID}/pulse:/run/pulse \
+
+# options for running terminal apps via docker run:
+RUNTERM="-it --rm -a stdin -a stdout -a stderr"
+OPTS="--skip-startup-files --no-kill-all-on-exit --quiet --skip-runit"
+
+# docker run $RUNTERM --net=none --name appa "$U/$I:appa" $OPTS -- "/sbin/setuser" "ur" "/home/ur/bin/A.sh" "$@"
+
+   sudo docker run --name $APP \
+     $RUNTERM \
+     --privileged \
+     -e $SND \
+     --lxc-conf='lxc.cgroup.devices.allow=c 226:* rwm' \
+     --lxc-conf='lxc.cgroup.devices.allow=c 81:* rwm' \
+     --lxc-conf='lxc.cgroup.devices.allow=c 116:* rwm' \
+     "$U/$I:$APP" \
+        "/bin/bash" "$ARGS"
+# $OPTS --
+### "/sbin/setuser" "ur" 
+
+
