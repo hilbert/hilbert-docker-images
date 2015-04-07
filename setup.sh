@@ -12,7 +12,10 @@ docker ps -a -s
 
 # x11vb
 # dd appa menu main alsa xeyes gui play iceweasel skype q3 x11 cups ;
-for d in base ;
+
+# base :  alsa appa dd menu skype x11
+
+for d in alsa appa dd menu skype x11 ;
 do
   echo
   echo "Building $d -> $U/$I:$d...."

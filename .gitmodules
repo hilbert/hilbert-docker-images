@@ -1,0 +1,9 @@
+[submodule "xeyes/xfullscreen"]
+	path = xeyes/xfullscreen
+	url = https://github.com/IMAGINARY/xfullscreen.git
+[submodule "gui/qclosebutton"]
+	path = gui/qclosebutton
+	url = https://github.com/IMAGINARY/qclosebutton.git
+[submodule "gui/appchoo"]
+	path = gui/appchoo
+	url = https://github.com/porst17/appchoo.git
