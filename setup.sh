@@ -7,15 +7,14 @@ I=dockapp
 #docker pull phusion/baseimage
 #docker tag phusion/baseimage:0.9.16 "$U/$I:base"
 
+
 docker images -a
 docker ps -a -s
 
-# x11vb
-# dd appa menu main alsa xeyes gui play iceweasel skype q3 x11 cups ;
+# ALL: base dd main appa menu alsa xeyes gui play iceweasel skype q3 x11 cups x11vb;
 
-# base :  alsa appa dd menu skype x11
-
-for d in alsa appa dd menu skype x11 ;
+# for dependencies please check out depsgen.sh!
+for d in base dd main menu appa alsa xeyes gui ;
 do
   echo
   echo "Building $d -> $U/$I:$d...."

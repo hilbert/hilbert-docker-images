@@ -1,0 +1,16 @@
+digraph deps{ graph [label="an arrow means that its source is based on the arrow's target", labelloc=b]; node [color=white]; rankdir = RL;
+":alsa" -> ":base" ;
+":appa" -> ":base" ;
+":base" -> "phusion/baseimage" ;
+":dd" -> ":base" ;
+":gui" -> ":xeyes" ;
+":iceweasel" -> ":gui" ;
+":main" -> ":dd" ;
+":menu" -> ":base" ;
+":play" -> ":gui" ;
+":q3" -> ":xeyes" ;
+":skype" -> ":base" ;
+":x11" -> ":base" ;
+":x11vb" -> ":x11" ;
+":xeyes" -> ":alsa" ;
+}
