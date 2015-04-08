@@ -1,12 +1,16 @@
 # dockapp
 Application with a dynamic choice of docker containers to run .
 
-Run `setup.sh` in order to build all needed docker images.
+The goal was to share parts of images as much as possible while keeping the whole application as dynamic as possible. 
 
-`runme.sh` is supposed to be the only entry point, which pulls the :main image and runs the glue (`main.sh`) inside it, while giving it the whole control over the host system. 
+Most of our images are currently available as different tag in malex984/dockapp repository (https://registry.hub.docker.com/u/malex984/dockapp/).
+Since some of them are quite big please do consider building them instead of pulling!
+Run (and change) `setup.sh` in order to build all needed docker images. 
 
-`:main/main.sh` is the main glue (the only piece which is supposed to be aware of docker) it expects `:menu/menu.sh` to exit with some return code, 
-depending on which it takes some action or quits the infinite loop.
+The shell script `runme.sh` is supposed to be the dockapp's entry pointr. 
+It pulls the :main image and runs the glue (`main.sh`) inside it while passing it the whole control (!) over the host system. 
+
+`:main/main.sh` is the main glue (the only piece which is supposed to be aware of docker) it expects `:menu/menu.sh` to exit with some return code, depending on which it takes some action or quits the infinite loop.
 
 * `:base` serves as the common root for all my images. Thus it is the only image that needs to update & upgrade packages.
 * `:dd` contains the docker cli and thus serves as a basis for `:main` which in turn pulls and launches further images.
@@ -26,6 +30,8 @@ Some applications may need further deamons to run in background. Here is a list 
 * `:cups` is supposed to run CUPS server (:6631) - needs to be tested.
 
 
+NOTE: under Mac OS X the user may need to use `xsocat.sh` from under an X11-Terminal (as it needs to know `$DISPLAY`). 
 NOTE: i previously used `boot2docker` under Mac OS X, with X11 setup
 following: `https://github.com/docker/docker/issues/8710` (make sure to
 fix your firewall, and X11 settings), but after the recent changes it may be incompatible with boot2docker anymore... Sorry!
+
