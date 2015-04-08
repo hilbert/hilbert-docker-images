@@ -15,15 +15,15 @@ echo "Current User: `id`"
 
 echo
 
-export XSOCK=/tmp/.X11-unix/
-export X="DISPLAY=:0 -v $XSOCK:$XSOCK"
+X="NODISPLAY=1"
 
-case "x$OSTYPE" in
+case "$OSTYPE" in
  linux*) # For Linux host with X11:
 
-   if  [ "x$DISPLAY" != "x:0" ]; then
+   if [[ -d /tmp/.X11-unix/ ]] && [[  "$DISPLAY" =~ ^:[0-9]+ ]]; then
      echo "Forwarding X11 via xauth..."
-     export XAUTH=/tmp/.docker.xauth
+     XSOCK=/tmp/.X11-unix/
+     XAUTH=/tmp/.docker.xauth
 
      if [ ! -f $XAUTH ]; then
         touch $XAUTH
@@ -31,15 +31,11 @@ case "x$OSTYPE" in
      fi
      echo "We now enable anyone to connect to this X11..."
      xhost +
-     export X="$X -e USER -v $XAUTH:$XAUTH -e XAUTHORITY=$XAUTH"
-   elif [ "x$DISPLAY" == "x:0" -a -d "$XSOCK" ]; then
-     echo "Just Forwarding X11 socket locally... "
-     export X="DISPLAY=:0 -v $XSOCK:$XSOCK"
+     X="DISPLAY -v $XSOCK:$XSOCK -v $XAUTH:$XAUTH -e XAUTHORITY=$XAUTH"
    else
 # Detect a Virtual Box VM!?
-#     export X="DISPLAY=:0 -v $XSOCK:$XSOCK -v $XAUTH:$XAUTH -e XAUTHORITY=$XAUTH"
      echo "Please start one of X11 servers before using any GUI apps... "
-     export X="NODISPLAY=1"
+     X="NODISPLAY=1"
 ## TODO: start X11 server here??
    fi
  ;;
@@ -49,7 +45,7 @@ case "x$OSTYPE" in
   echo
 
   export DISPLAY="192.168.59.3:0"
-  export X="DISPLAY=192.168.59.3:0"
+  export X="DISPLAY"
   ## $(boot2docker ip) ## ???
   echo "Please make sure to start xsocat.sh from your local X11 server since xeys's X-client will use '-e $X'..."
   echo "X11 should 'Allow connections from network clients & Your firewall should not block incomming connections to X11'"
@@ -57,6 +53,11 @@ case "x$OSTYPE" in
   open -a XQuartz # --args xterm $PWD/xsocat.sh #?
  ;;
 esac
+
+echo "Will use the following X11 settings: "
+echo "'$X'"
+export X
+
 
 echo "Current docker images: "
 sudo docker images -a
@@ -90,8 +91,10 @@ do
 
 #      else
         echo "Starting X11... "
+        #### TODO: get DISPLAY setting out of the service!!!!
+        #### here we assume that this was the first X11 server on this host!
         $SELFDIR/sv.sh x11 Xorg
-        export X="DISPLAY=:0 -v $XSOCK:$XSOCK"
+       export X="DISPLAY=:0 -v $XSOCK:$XSOCK"
         export DISPLAY=:0
 #      fi
     ;;
@@ -101,7 +104,9 @@ do
         echo "There seems to be X11 running already..."
       fi 
 #      else
-        echo "Starting x11 / with vb guest additions... "
+       echo "Starting x11 / with vb guest additions... "
+        #### TODO: get DISPLAY setting out of the service!!!!
+        #### here we assume that this was the first X11 server on this host!
         $SELFDIR/sv.sh x11vb Xorg
         export X="DISPLAY=:0 -v $XSOCK:$XSOCK"
         export DISPLAY=:0
@@ -194,10 +199,7 @@ done
 
 
 
-
-
-
-
+################ TODO: don't mount all of /dev/! Try to make use of the necessary devices only!
 
 # -v /dev/shm:/dev/shm \
 # -v /etc/machine-id:/etc/machine-id \

@@ -18,15 +18,14 @@ echo "e.g. via 'sudo addgroup `whoami` docker'... "
 echo
 
 
-export XSOCK=/tmp/.X11-unix/
-export X="DISPLAY=:0 -v $XSOCK:$XSOCK"
-
-case "x$OSTYPE" in
+X="NODISPLAY=1"
+case "$OSTYPE" in
  linux*) # For Linux host with X11:
 
-   if  [ "x$DISPLAY" != "x:0" ]; then
-     echo "Forwarding X11 via xauth..."
-     export XAUTH=/tmp/.docker.xauth
+    if [[ -d /tmp/.X11-unix/ ]] && [[  "$DISPLAY" =~ ^:[0-9]+ ]]; then 
+     echo "Forwarding X11 locally via xauth..."
+     XAUTH=/tmp/.docker.xauth
+     XSOCK=/tmp/.X11-unix/
 
      if [ ! -f $XAUTH ]; then
         touch $XAUTH
@@ -34,15 +33,11 @@ case "x$OSTYPE" in
      fi
      echo "We now enable anyone to connect to this X11..."
      xhost +
-     export X="$X -e USER -v $XAUTH:$XAUTH -e XAUTHORITY=$XAUTH"
-   elif [ "x$DISPLAY" == "x:0" -o -d "$XSOCK" ]; then
-     echo "Just Forwarding X11 socket locally... "
-     export X="DISPLAY=:0 -v $XSOCK:$XSOCK"
+     X="DISPLAY -v $XSOCK:$XSOCK -v $XAUTH:$XAUTH -e XAUTHORITY=$XAUTH"
    else
 # Detect a Virtual Box VM!?
-#     export X="DISPLAY=:0 -v $XSOCK:$XSOCK -v $XAUTH:$XAUTH -e XAUTHORITY=$XAUTH"
      echo "Please start one of X11 servers before using any GUI apps... "
-     export X="NODISPLAY=1"
+     X="NODISPLAY=1"
 ## TODO: start X11 server here??
    fi
  ;;
@@ -51,7 +46,7 @@ case "x$OSTYPE" in
   echo "TO BE TESTED!!!! Will probaby not work via Boot2Docker for now... Sorry! :("
   echo
 
-  export X="DISPLAY=192.168.59.3:0"
+  X="DISPLAY=192.168.59.3:0"
   ## $(boot2docker ip) ## ???
   echo "Please make sure to start xsocat.sh from your local X11 server since xeys's X-client will use '-e $X'..."
   echo "X11 should 'Allow connections from network clients & Your firewall should not block incomming connections to X11'"
@@ -60,6 +55,10 @@ case "x$OSTYPE" in
  ;;
 esac
 
+echo "Will use the following X11 settings: "
+echo "'$X'"
+
+export X
 
 #    # Check if there is a container image with that name
 #    if ! docker inspect --format '{{ .Author }}' "$1" >&/dev/null
@@ -92,7 +91,6 @@ myrunner () {
 }
 # -v /tmp/.X11-unix:/tmp/.X11-unix \
 # -v /var/run/docker.sock:/var/run/docker.sock \
-## --restart=always \
 # --add-host=dockerhost:$HIP --net host \ ## --net bridge \
 # --name main $U/$I:main \
 #   --no-kill-all-on-exit --skip-runit -- \
@@ -116,8 +114,9 @@ myrunner \
    --no-kill-all-on-exit --skip-runit -- \
       /usr/local/bin/main.sh "$@"
 #    /sbin/setuser $(whoami) \
+RET=$?
 
-echo ".... Finished glue.... (exit code: $?)"
+echo ".... Finished glue.... (exit code: $RET)"
 
 # killing the gue if it still runs...
 echo
@@ -128,4 +127,5 @@ echo "Leftover containers: "
 sudo docker ps -a
 echo
 
-exit 0
+exit $RET
+
