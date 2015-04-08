@@ -8,6 +8,10 @@ HIP=`ip route show 0.0.0.0/0 | grep -Eo 'via \S+' | awk '{ print \$2 }'`
 echo
 echo "Current Host ($HIP): `uname -a`"
 echo "Current User: `id`"
+echo "Please make sure that the current user is in docker group... "
+echo "e.g. via 'sudo addgroup `whoami` docker'... " 
+
+
 #USER_UID=$(id -u)
 #set
 #env
@@ -71,12 +75,13 @@ esac
 #    fi
 
 myrunner () {
+#        -u $(whoami) -w "$HOME" \
+#	$(env | cut -d= -f1 | awk '{print "-e", $1}') \
   sudo docker run -ti --net bridge --privileged \
         --add-host=dockerhost:$HIP \
-        -u $(whoami) -w "$HOME" \
-	$(env | cut -d= -f1 | awk '{print "-e", $1}') \
         -e DOCKER_HOST=unix:///var/run/docker.sock -e NO_PROXY=/var/run/docker.sock \
 	-v /etc/passwd:/etc/passwd:ro \
+	-v /etc/shadow:/etc/shadow:ro \
 	-v /etc/group:/etc/group:ro \
 	-v /etc/localtime:/etc/localtime:ro \
 	-v /dev/:/dev/ \
@@ -98,7 +103,7 @@ myrunner () {
 # -e DOCKER_TLS_VERIFY=1 -e DOCKER_CERT_PATH=/home/ur/??? \
 
 echo "Previously started containers: "
-docker ps -a
+sudo docker ps -a
 
 # We expect this to run on Linux with docker confiured correctly
 echo "Running the main glue script... "
@@ -112,11 +117,11 @@ echo ".... Finished glue.... (exit code: $?)"
 
 # killing the gue if it still runs...
 echo
-docker rm -f main # menu
+sudo docker rm -f main # menu
 
 echo
 echo "Leftover containers: "
-docker ps -a
+sudo docker ps -a
 echo
 
 exit 0

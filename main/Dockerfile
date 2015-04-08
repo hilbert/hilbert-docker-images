@@ -2,12 +2,12 @@ FROM malex984/dockapp:dd
 
 MAINTAINER Oleksandr Motsak <malex984@googlemail.com>
 
-COPY main.sh menu.sh run.sh sv.sh A.sh /usr/local/bin/
-
 RUN DEBIAN_FRONTEND=noninteractive apt-get -q -y install xauth
 
 ENV DOCKER_HOST unix:///var/run/docker.sock 
 ENV NO_PROXY /var/run/docker.sock
+
+COPY main.sh menu.sh run.sh sv.sh A.sh /usr/local/bin/
 
 # VOLUME ...
 # CMD /usr/local/bin/main.sh

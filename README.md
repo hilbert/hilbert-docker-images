@@ -1,23 +1,31 @@
 # dockapp
-Application with a dynamic choice of docker containers to run 
+Application with a dynamic choice of docker containers to run .
 
 Run `setup.sh` in order to build all needed docker images.
 
-`main.sh` is the main glue (the only piece which is supposed to be aware of docker) it expects `menu` to exit with some code, 
-depending on which it either runs appa or appb, or quits the infinite loop.
+`runme.sh` is supposed to be the only entry point, which pulls the :main image and runs the glue (`main.sh`) inside it, while giving it the whole control over the host system. 
 
-`appa`, `appb` images run simple shell scripts saying AAA... or BBB... together with some host data.
+`:main/main.sh` is the main glue (the only piece which is supposed to be aware of docker) it expects `:menu/menu.sh` to exit with some return code, 
+depending on which it takes some action or quits the infinite loop.
 
-`menu` image is a crude shell menu asking the user to choose from AAA, BBB, and QUIT and returns the choice via STDOUT and exit code (201, 202, 203 resp.).
+* `:base` serves as the common root for all my images. Thus it is the only image that needs to update & upgrade packages.
+* `:dd` contains the docker cli and thus serves as a basis for `:main` which in turn pulls and launches further images.
+* `:menu` image is a crude shell menu asking the user to choose an option and returns the choice via the retunr code (201, 202, 203 etc... ).
+* `:appa` image run simple shell scripts saying AAA... or BBB... together with some host data.
+* `:alsa` tests your audio HW using ALSA
+* `:xeyes` is an image with some X11 client applications (e.g. `xeyes`).
+* `:gui` contains further GUI applications based on GTK and QT. 
+* `:q3` is a standalone (huge!) image with OpenArena (free version of Quake 3 Arena) which seems to work but FPS was quite low to my linking :(
+* `:skype` propriatory 32-bit application runs using apulse (emulation of pulseaudio via ALSA), it may also be able to capture video if you are lucky with your camera, its drivers and settings...
+* `:iceweasel` Firefox but flash may fail. 
+* `:play` contains several media players like `cmus`, `vlc`, `mplayer`, `xine`.
 
-`xeyes` is an image with GUI (X11 client) application (`xeyes`).
+Some applications may need further deamons to run in background. Here is a list of server images:
+* `:x11` is an Xorg deamon
+* `:x11vb` X11 server image with VirtualBox Guest Additions installed.
+* `:cups` is supposed to run CUPS server (:6631) - needs to be tested.
 
-NOTE: since i use `boot2docker` under Mac OS X the current X11 setup
-follows: `https://github.com/docker/docker/issues/8710` (make sure to
-fix your firewall).
 
-Other possibilities include `ssh -X`, `vnc` and sharing X11-sockets
-between Linux host (running X11 server) and docker container (see
-`http://stackoverflow.com/a/25280523` and
-`http://stackoverflow.com/questions/24095968/docker-for-gui-based-environments`).
-
+NOTE: i previously used `boot2docker` under Mac OS X, with X11 setup
+following: `https://github.com/docker/docker/issues/8710` (make sure to
+fix your firewall, and X11 settings), but after the recent changes it may be incompatible with boot2docker anymore... Sorry!
