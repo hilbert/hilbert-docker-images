@@ -19,15 +19,22 @@ It pulls the :main image and runs the glue (`main.sh`) inside it while passing i
 * `:alsa` tests your audio HW using ALSA
 * `:xeyes` is an image with some X11 client applications (e.g. `xeyes`).
 * `:gui` contains further GUI applications based on GTK and QT. 
-* `:q3` is a standalone (huge!) image with OpenArena (free version of Quake 3 Arena) which seems to work but FPS was quite low to my linking :(
-* `:skype` propriatory 32-bit application runs using apulse (emulation of pulseaudio via ALSA), it may also be able to capture video if you are lucky with your camera, its drivers and settings...
+* `:q3` is a standalone (huge!) image with OpenArena (free version of Quake 3 Arena) which works but FPS was a bit low for me :( ALSA sound was good!
+* `:skype` propriatory 32-bit application runs using apulse (emulation of pulseaudio via ALSA), it may also be able to capture video if you are lucky with your camera, its drivers and settings... It starts fine with working sound input/output but may refuse working after a while... :(
 * `:iceweasel` Firefox but flash may fail. 
 * `:play` contains several media players like `cmus`, `vlc`, `mplayer`, `xine`.
 
 Some applications may need further deamons to run in background. Here is a list of server images:
 * `:x11` is an Xorg deamon
 * `:x11vb` X11 server image with VirtualBox Guest Additions installed.
-* `:cups` is supposed to run CUPS server (:6631) - needs to be tested.
+* `:cups` is supposed to run CUPS server (:6631) - seems to start but has to be thoughly tested.
+
+Further steps:
+* test everything (printing via cups!?) 
+* build 3rd party tools (currently insorporated via git submodules)
+* switch to X11 menu by default
+* make use of composite X11 & 3rd party tools for X11 menu
+
 
 
 NOTE: under Mac OS X the user may need to use `xsocat.sh` from under an X11-Terminal (as it needs to know `$DISPLAY`). 
