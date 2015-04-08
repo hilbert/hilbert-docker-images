@@ -114,8 +114,8 @@ echo
 myrunner \
  --name main $U/$I:main \
    --no-kill-all-on-exit --skip-runit -- \
-    /sbin/setuser $(whoami) \
       /usr/local/bin/main.sh "$@"
+#    /sbin/setuser $(whoami) \
 
 echo ".... Finished glue.... (exit code: $?)"
 

@@ -45,8 +45,8 @@ sudo docker run \
      --lxc-conf='lxc.cgroup.devices.allow=c 81:* rwm' \
      --lxc-conf='lxc.cgroup.devices.allow=c 116:* rwm' \
         --name $APP "$U/$I:$APP" $OPTS -- \
-            /sbin/setuser $(whoami) \
 		$ARGS
+#            /sbin/setuser $(whoami) \
 
 exit $?
 
