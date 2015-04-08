@@ -16,13 +16,13 @@ echo "Current User: `id`"
 echo
 
 X="NODISPLAY=1"
+XSOCK=/tmp/.X11-unix/
 
 case "$OSTYPE" in
  linux*) # For Linux host with X11:
 
    if [[ -d /tmp/.X11-unix/ ]] && [[  "$DISPLAY" =~ ^:[0-9]+ ]]; then
      echo "Forwarding X11 via xauth..."
-     XSOCK=/tmp/.X11-unix/
      XAUTH=/tmp/.docker.xauth
 
      if [ ! -f $XAUTH ]; then
@@ -87,30 +87,35 @@ do
     207)
       if [ ! -z "$DISPLAY" ]; then
         echo "There seems to be X11 running already..."
-      fi 
-
-#      else
-        echo "Starting X11... "
-        #### TODO: get DISPLAY setting out of the service!!!!
-        #### here we assume that this was the first X11 server on this host!
-        $SELFDIR/sv.sh x11 Xorg
-       export X="DISPLAY=:0 -v $XSOCK:$XSOCK"
-        export DISPLAY=:0
-#      fi
+      else
+        echo "Starting X11: Xorg... "
+        F="$XSOCK/.new.orig.id"
+        $SELFDIR/sv.sh x11 Xorg.sh Xorg "$F"
+        sleep 2
+        ID=`cat "$F"`
+        sudo rm "$F"
+        unset F
+        export DISPLAY=":$ID"
+        unset ID
+        export X="DISPLAY=$DISPLAY -v $XSOCK:$XSOCK"
+     fi
     ;;
 
     208)
       if [ ! -z "$DISPLAY" ]; then
         echo "There seems to be X11 running already..."
-      fi 
-#      else
-       echo "Starting x11 / with vb guest additions... "
-        #### TODO: get DISPLAY setting out of the service!!!!
-        #### here we assume that this was the first X11 server on this host!
-        $SELFDIR/sv.sh x11vb Xorg
-        export X="DISPLAY=:0 -v $XSOCK:$XSOCK"
-        export DISPLAY=:0
-#      fi
+      else
+        echo "Starting X11: Xorg with (?) vb guest additions... "
+        F="$XSOCK/.new.vb.id"
+        $SELFDIR/sv.sh x11vb Xorg.sh Xorg "$F"
+        sleep 2
+        ID=`cat "$F"`
+        sudo rm "$F"
+        unset F
+        export DISPLAY=":$ID"
+        unset ID
+        export X="DISPLAY=$DISPLAY -v $XSOCK:$XSOCK"
+      fi
     ;;
 
     212)
