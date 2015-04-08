@@ -7,9 +7,10 @@ RUN DEBIAN_FRONTEND=noninteractive apt-get -q -y install x11-apps
 RUN DEBIAN_FRONTEND=noninteractive apt-get -q -y install rxvt-unicode
 RUN DEBIAN_FRONTEND=noninteractive apt-get -q -y install xdotool
 
-ENV XLIB_SKIP_ARGB_VISUALS 1
-ENV QT_X11_NO_MITSHM 1
-ENV DISPLAY :0
+# ENV XLIB_SKIP_ARGB_VISUALS 1
+
+# set the following if any QT GUI look like an empty rectangular window
+# ENV QT_X11_NO_MITSHM 1
 
 # CMD /usr/bin/xeyes
 

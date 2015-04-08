@@ -5,7 +5,11 @@ The goal was to share parts of images as much as possible while keeping the whol
 
 Most of our images are currently available as different tag in malex984/dockapp repository (https://registry.hub.docker.com/u/malex984/dockapp/).
 Since some of them are quite big please do consider building them instead of pulling!
-Run (and change) `setup.sh` in order to build all needed docker images. 
+Run (and change) `setup.sh` in order to build docker images.
+
+The dependencies between images are as follows: 
+![Dependencies between docker images](deps.png)
+
 
 The shell script `runme.sh` is supposed to be the dockapp's entry pointr. 
 It pulls the :main image and runs the glue (`main.sh`) inside it while passing it the whole control (!) over the host system. 
@@ -30,6 +34,9 @@ Some applications may need further deamons to run in background. Here is a list 
 * `:cups` is supposed to run CUPS server (:6631) - seems to start but has to be thoughly tested.
 
 Further steps:
+* *make sure it can use the currently running X11 of the host machine* (!)
+* correct DISPLAY handling in `runme` and `main/*.sh` (NOTE: Dockfiles should NOT set any such variables!)
+* make use of `Xephyr` / file descriptors
 * test everything (printing via cups!?) 
 * build 3rd party tools (currently insorporated via git submodules)
 * switch to X11 menu by default
@@ -42,3 +49,4 @@ NOTE: i previously used `boot2docker` under Mac OS X, with X11 setup
 following: `https://github.com/docker/docker/issues/8710` (make sure to
 fix your firewall, and X11 settings), but after the recent changes it may be incompatible with boot2docker anymore... Sorry!
 
+TODO: make a nice logo for the app (e.g. whales following each other while being driven by BASH :) )

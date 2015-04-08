@@ -2,15 +2,13 @@ FROM malex984/dockapp:base
 
 MAINTAINER Oleksandr Motsak <malex984@googlemail.com>
 
-ENV XLIB_SKIP_ARGB_VISUALS 1
-ENV QT_X11_NO_MITSHM 1
-ENV DISPLAY :0
-
 # Setup multiarch because Skype is 32bit only
 # Make sure the repository information is up to date
 
 RUN dpkg --add-architecture i386 
-RUN apt-get update 
+RUN DEBIAN_FRONTEND=noninteractive apt-get -y update
+#RUN DEBIAN_FRONTEND=noninteractive apt-get -y upgrade
+
 
 RUN DEBIAN_FRONTEND=noninteractive apt-get install -q -y alsa:i386 alsa-tools:i386
 
@@ -25,7 +23,7 @@ RUN DEBIAN_FRONTEND=noninteractive apt-get install -q -y v4l-utils:i386
 ADD http://download.skype.com/linux/skype-debian_4.3.0.37-1_i386.deb /usr/src/skype.deb
 
 RUN dpkg -i /usr/src/skype.deb || true && apt-get install -fy
-# RUN rm /usr/src/skype.deb
+RUN rm -f /usr/src/skype.deb
 
 # Our own starter via apulse: 
 COPY skype.sh /usr/local/bin/
