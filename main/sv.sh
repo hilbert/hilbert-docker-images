@@ -9,7 +9,7 @@ APP="$1"
 shift
 ARGS="$@"
 
-[ -z "$X" ] && X="DISPLAY1=:0"
+[ -z "$X" ] && X="NODISPLAY=1"
 
 X="$X \
         -v /etc/passwd:/etc/passwd:ro \

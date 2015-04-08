@@ -32,14 +32,14 @@ case "x$OSTYPE" in
      echo "We now enable anyone to connect to this X11..."
      xhost +
      export X="$X -e USER -v $XAUTH:$XAUTH -e XAUTHORITY=$XAUTH"
-   elif [ "x$DISPLAY" == "x:0" -o -d "$XSOCK" ]; then
+   elif [ "x$DISPLAY" == "x:0" -a -d "$XSOCK" ]; then
      echo "Just Forwarding X11 socket locally... "
      export X="DISPLAY=:0 -v $XSOCK:$XSOCK"
    else
 # Detect a Virtual Box VM!?
 #     export X="DISPLAY=:0 -v $XSOCK:$XSOCK -v $XAUTH:$XAUTH -e XAUTHORITY=$XAUTH"
      echo "Please start one of X11 servers before using any GUI apps... "
-     export X=""
+     export X="NODISPLAY=1"
 ## TODO: start X11 server here??
    fi
  ;;
@@ -48,6 +48,7 @@ case "x$OSTYPE" in
   echo "TO BE TESTED!!!! Will probaby not work via Boot2Docker for now... Sorry! :("
   echo
 
+  export DISPLAY="192.168.59.3:0"
   export X="DISPLAY=192.168.59.3:0"
   ## $(boot2docker ip) ## ???
   echo "Please make sure to start xsocat.sh from your local X11 server since xeys's X-client will use '-e $X'..."
@@ -83,23 +84,28 @@ do
   case "$APP" in
 
     207)
-      if [ ! -z "$X" ]; then
+      if [ ! -z "$DISPLAY" ]; then
         echo "There seems to be X11 running already..."
-      else
+      fi 
+
+#      else
         echo "Starting X11... "
         $SELFDIR/sv.sh x11 Xorg
         export X="DISPLAY=:0 -v $XSOCK:$XSOCK"
-      fi
+        export DISPLAY=:0
+#      fi
     ;;
 
     208)
-      if [ ! -z "$X" ]; then
+      if [ ! -z "$DISPLAY" ]; then
         echo "There seems to be X11 running already..."
-      else
+      fi 
+#      else
         echo "Starting x11 / with vb guest additions... "
         $SELFDIR/sv.sh x11vb Xorg
         export X="DISPLAY=:0 -v $XSOCK:$XSOCK"
-      fi
+        export DISPLAY=:0
+#      fi
     ;;
 
     212)
@@ -107,7 +113,7 @@ do
     ;;
 
     213)
-      if [ ! -z "$X" ]; then
+      if [ ! -z "$DISPLAY" ]; then
         echo "Starting GUI shell... Please run cmus/vlc/mplaye/xine yourself... " && $SELFDIR/run.sh play "rxvt-unicode -e bash"
       else
         echo "Please start X11 beforehand!"
@@ -115,7 +121,7 @@ do
     ;;
 
     211)
-      if [ ! -z "$X" ]; then
+      if [ ! -z "$DISPLAY" ]; then
         echo "Starting skype... " && $SELFDIR/run.sh skype skype.sh
       else
         echo "Please start X11 beforehand!"
@@ -123,7 +129,7 @@ do
     ;;
 
     210)
-      if [ ! -z "$X" ]; then
+      if [ ! -z "$DISPLAY" ]; then
         echo "Starting Q3... " && $SELFDIR/run.sh q3 /usr/games/openarena
       else
         echo "Please start X11 beforehand!"
@@ -131,7 +137,7 @@ do
     ;;
 
     209)
-      if [ ! -z "$X" ]; then
+      if [ ! -z "$DISPLAY" ]; then
         echo "Starting iceweasel/firefox?... " && $SELFDIR/run.sh iceweasel firefox
       else
         echo "Please start X11 beforehand!"
@@ -139,7 +145,7 @@ do
     ;;
 
     206)
-      if [ ! -z "$X" ]; then
+      if [ ! -z "$DISPLAY" ]; then
         echo "starting X11-SHELL for testing... " && $SELFDIR/run.sh xeyes "rxvt-unicode -e bash"
       else
         echo "Please start X11 beforehand!"
@@ -147,7 +153,7 @@ do
     ;;
 
    204)
-      if [ ! -z "$X" ]; then
+      if [ ! -z "$DISPLAY" ]; then
         echo "Starting gui shell (gedit, g3dviewer? + X11-apps)... " && $SELFDIR/run.sh gui "rxvt-unicode -e bash"
       else
         echo "Please start X11 beforehand!"

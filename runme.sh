@@ -42,7 +42,7 @@ case "x$OSTYPE" in
 # Detect a Virtual Box VM!?
 #     export X="DISPLAY=:0 -v $XSOCK:$XSOCK -v $XAUTH:$XAUTH -e XAUTHORITY=$XAUTH"
      echo "Please start one of X11 servers before using any GUI apps... "
-#     export X=""
+     export X="NODISPLAY=1"
 ## TODO: start X11 server here??
    fi
  ;;
@@ -79,6 +79,7 @@ myrunner () {
 #	$(env | cut -d= -f1 | awk '{print "-e", $1}') \
   sudo docker run -ti --net bridge --privileged \
         --add-host=dockerhost:$HIP \
+        -e $X \
         -e DOCKER_HOST=unix:///var/run/docker.sock -e NO_PROXY=/var/run/docker.sock \
 	-v /etc/passwd:/etc/passwd:ro \
 	-v /etc/shadow:/etc/shadow:ro \

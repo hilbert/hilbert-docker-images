@@ -11,7 +11,7 @@ ARGS="$@"
   echo
   echo "Starting $APP ('$ARGS')"
 
-[ -z "$X" ] && X="DISPLAY=:0"
+[ -z "$X" ] && X="NODISPLAY=1"
 
 X="$X \
  -v /tmp/:/tmp/ \
@@ -21,6 +21,7 @@ X="$X \
  -v /var/run/dbus/system_bus_socket:/var/run/dbus/system_bus_socket \
  -v /sys/fs/cgroup:/sys/fs/cgroup \
  -v /dev/dri:/dev/dri \
+ -v /dev/shm:/dev/shm \
  --device=/dev/video0:/dev/video0 \
  -v /dev/snd:/dev/snd \
 "
