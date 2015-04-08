@@ -13,18 +13,27 @@ ARGS="$@"
 
 [ -z "$X" ] && X="NODISPLAY=1"
 
+# -v /tmp/:/tmp/ \
+#        -v /etc/machine-id:/etc/machine-id:ro \
+#  -v /dev/dri:/dev/dri \
+#  -v /dev/shm:/dev/shm \
+#  --device=/dev/video0:/dev/video0 \
+#  -v /dev/snd:/dev/snd \
+
 X="$X \
- -v /tmp/:/tmp/ \
- -v /etc/machine-id:/etc/machine-id \
+ -v /etc/passwd:/etc/passwd:ro \
+ -v /etc/shadow:/etc/shadow:ro \
+ -v /etc/group:/etc/group:ro \
+ -v /etc/localtime:/etc/localtime:ro \
+ -v /etc/sudoers:/etc/sudoers:ro -v /etc/sudoers.d/:/etc/sudoers.d/:ro \
+ -v /home/:/home/ \
  -v /var/lib/dbus:/var/lib/dbus \
  -v /run/dbus/system_bus_socket:/run/dbus/system_bus_socket \
  -v /var/run/dbus/system_bus_socket:/var/run/dbus/system_bus_socket \
  -v /sys/fs/cgroup:/sys/fs/cgroup \
- -v /dev/dri:/dev/dri \
- -v /dev/shm:/dev/shm \
- --device=/dev/video0:/dev/video0 \
- -v /dev/snd:/dev/snd \
+ -v /dev/:/dev/ \
 "
+
 # options for running terminal apps via docker run:
 RUNTERM="-it --rm -a stdin -a stdout -a stderr --net bridge --privileged"
 OPTS="--skip-startup-files --no-kill-all-on-exit --quiet --skip-runit"
@@ -35,7 +44,9 @@ sudo docker run \
      --lxc-conf='lxc.cgroup.devices.allow=c 226:* rwm' \
      --lxc-conf='lxc.cgroup.devices.allow=c 81:* rwm' \
      --lxc-conf='lxc.cgroup.devices.allow=c 116:* rwm' \
-     --name $APP "$U/$I:$APP" $OPTS -- $ARGS
+        --name $APP "$U/$I:$APP" $OPTS -- \
+            /sbin/setuser $(whoami) \
+		$ARGS
 
 exit $?
 

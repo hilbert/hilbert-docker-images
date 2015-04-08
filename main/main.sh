@@ -59,10 +59,10 @@ case "x$OSTYPE" in
 esac
 
 echo "Current docker images: "
-docker images -a
+sudo docker images -a
 
 echo "Current docker containers: "
-docker ps -a
+sudo docker ps -a
 echo
 
 
@@ -182,7 +182,7 @@ do
       echo
       echo "Quiting... please make sure to kill any services yourself... "
       echo "Leftover containers: "
-      docker ps -a
+      sudo docker ps -a
       exit 0
     ;;
   esac

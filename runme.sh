@@ -75,21 +75,19 @@ esac
 #    fi
 
 myrunner () {
-#        -u $(whoami) -w "$HOME" \
-#	$(env | cut -d= -f1 | awk '{print "-e", $1}') \
-  sudo docker run -ti --net bridge --privileged \
+ sudo docker run -ti --net bridge --privileged \
         --add-host=dockerhost:$HIP \
-        -e $X \
-        -e DOCKER_HOST=unix:///var/run/docker.sock -e NO_PROXY=/var/run/docker.sock \
 	-v /etc/passwd:/etc/passwd:ro \
 	-v /etc/shadow:/etc/shadow:ro \
 	-v /etc/group:/etc/group:ro \
 	-v /etc/localtime:/etc/localtime:ro \
+        -v /etc/sudoers:/etc/sudoers:ro -v /etc/sudoers.d/:/etc/sudoers.d/:ro \
+	-v /home/:/home/ \
+        -e $X -e DOCKER_HOST=unix:///var/run/docker.sock -e NO_PROXY=/var/run/docker.sock \
 	-v /dev/:/dev/ \
         -v /tmp/:/tmp/ \
 	-v /var/:/var/ \
 	-v /run/:/run/ \
-	-v /home/:/home/ \
 	"$@"
 }
 # -v /tmp/.X11-unix:/tmp/.X11-unix \
@@ -109,9 +107,14 @@ sudo docker ps -a
 # We expect this to run on Linux with docker confiured correctly
 echo "Running the main glue script... "
 echo
+
+#-u $(whoami) -w "$HOME" \
+#$(env | grep -v -E '^DISPLAY=' | cut -d= -f1 | awk '{print "-e", $1}') \
+ 
 myrunner \
  --name main $U/$I:main \
    --no-kill-all-on-exit --skip-runit -- \
+    /sbin/setuser $(whoami) \
       /usr/local/bin/main.sh "$@"
 
 echo ".... Finished glue.... (exit code: $?)"
