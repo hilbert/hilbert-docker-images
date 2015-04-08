@@ -75,7 +75,7 @@ esac
 #    fi
 
 myrunner () {
- sudo docker run -ti --net bridge --privileged \
+ sudo docker run --rm -ti --net bridge --privileged \
         --add-host=dockerhost:$HIP \
 	-v /etc/passwd:/etc/passwd:ro \
 	-v /etc/shadow:/etc/shadow:ro \
