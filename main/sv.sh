@@ -72,5 +72,5 @@ RUNTERM="-d" # " --rm -it "
 
 OPTS="--skip-startup-files --no-kill-all-on-exit --quiet --skip-runit"
 
-mydeamon $RUNTERM --name $APP "$U/$I:$APP" $OPTS -- "$ARGS" # "/sbin/setuser" "ur" "..."?
+mydeamon $RUNTERM --name $APP "$U/$I:$APP" $OPTS -- $ARGS # "/sbin/setuser" "ur" "..."?
 

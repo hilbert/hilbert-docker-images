@@ -3,7 +3,7 @@
 XORG=$1
 TMP=$2
 
-exec 6> "$TMP"
-$XORG -displayfd 6 &
+exec 6<> "$TMP"
+$XORG -displayfd 6 1>/dev/null 2>&1
 exec 6>&-
 
