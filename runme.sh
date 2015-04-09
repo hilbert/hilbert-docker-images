@@ -18,14 +18,14 @@ echo "e.g. via 'sudo addgroup `whoami` docker'... "
 echo
 
 
-X="NODISPLAY=1"
+XSOCK=/tmp/.X11-unix/
+X="NODISPLAY=1 -v $XSOCK:$XSOCK"
 case "$OSTYPE" in
  linux*) # For Linux host with X11:
 
     if [[ -d /tmp/.X11-unix/ ]] && [[  "$DISPLAY" =~ ^:[0-9]+ ]]; then 
      echo "Forwarding X11 locally via xauth..."
      XAUTH=/tmp/.docker.xauth
-     XSOCK=/tmp/.X11-unix/
 
      if [ ! -f $XAUTH ]; then
         touch $XAUTH
@@ -37,7 +37,7 @@ case "$OSTYPE" in
    else
 # Detect a Virtual Box VM!?
      echo "Please start one of X11 servers before using any GUI apps... "
-     X="NODISPLAY=1"
+     X="NODISPLAY=1 -v $XSOCK:$XSOCK"
 ## TODO: start X11 server here??
    fi
  ;;

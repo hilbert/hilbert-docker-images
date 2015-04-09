@@ -15,8 +15,8 @@ echo "Current User: `id`"
 
 echo
 
-X="NODISPLAY=1"
 XSOCK=/tmp/.X11-unix/
+X="NODISPLAY=1 -v $XSOCK:$XSOCK"
 
 case "$OSTYPE" in
  linux*) # For Linux host with X11:
@@ -35,7 +35,7 @@ case "$OSTYPE" in
    else
 # Detect a Virtual Box VM!?
      echo "Please start one of X11 servers before using any GUI apps... "
-     X="NODISPLAY=1"
+     X="NODISPLAY=1 -v $XSOCK:$XSOCK"
 ## TODO: start X11 server here??
    fi
  ;;
@@ -60,7 +60,7 @@ export X
 
 
 echo "Current docker images: "
-sudo docker images -a
+sudo docker images
 
 echo "Current docker containers: "
 sudo docker ps -a
@@ -80,7 +80,7 @@ while :
 do
  $SELFDIR/menu.sh \
      "Your choice please?" \
-     "A_Test_Application_A B_Same_Test_App Alsa_Test GUI_Shell Bash_in_MainGlueApp X11_Shell X11Server X11Server_VB Iceweasel Q3 Skype Cups_Server Media_Players QUIT"
+     "A_Test_Application_A B_Same_Test_App Alsa_Test GUI_Shell Bash_in_MainGlueApp X11_Shell X11Server Nothing Iceweasel Q3 Skype Cups_Server Media_Players QUIT"
   APP="$?"
   case "$APP" in
 
@@ -89,15 +89,18 @@ do
         echo "There seems to be X11 running already..."
       else
         echo "Starting X11: Xorg... "
-        F="$XSOCK/.new.orig.id"
+        F="$XSOCK/.new.x11.id"
         $SELFDIR/sv.sh x11 Xorg.sh Xorg "$F"
-        sleep 2
-        ID=`cat "$F"`
-        sudo rm "$F"
+        sleep 3
+        ID=`sudo docker exec x11 cat "$F"`
+#        sudo docker cp x11 "$F" "$F_copy"
+#        ID=`cat "$F_copy"`
+#        sudo rm "$F_copy"
         unset F
         export DISPLAY=":$ID"
         unset ID
         export X="DISPLAY=$DISPLAY -v $XSOCK:$XSOCK"
+        ### XAUTH?
      fi
     ;;
 
@@ -105,16 +108,17 @@ do
       if [ ! -z "$DISPLAY" ]; then
         echo "There seems to be X11 running already..."
       else
-        echo "Starting X11: Xorg with (?) vb guest additions... "
-        F="$XSOCK/.new.vb.id"
-        $SELFDIR/sv.sh x11vb Xorg.sh Xorg "$F"
-        sleep 2
-        ID=`cat "$F"`
-        sudo rm "$F"
-        unset F
-        export DISPLAY=":$ID"
-        unset ID
-        export X="DISPLAY=$DISPLAY -v $XSOCK:$XSOCK"
+#        echo "Starting X11: Xorg with (?) vb guest additions... "
+#        F="$XSOCK/.new.vb.id"
+#        $SELFDIR/sv.sh x11vb Xorg.sh Xorg "$F"
+#        sleep 2
+#        ID=`cat "$F"`
+#        sudo rm "$F"
+#        unset F
+#        export DISPLAY=":$ID"
+#        unset ID
+#        export X="DISPLAY=$DISPLAY -v $XSOCK:$XSOCK"
+         echo "Sorry nothing here at the moment... "
       fi
     ;;
 

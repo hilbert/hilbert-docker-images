@@ -11,7 +11,8 @@ ARGS="$@"
   echo
   echo "Starting $APP ('$ARGS')"
 
-[ -z "$X" ] && X="NODISPLAY=1"
+XSOCK=/tmp/.X11-unix/
+[ -z "$X" ] && X="NODISPLAY=1 -v $XSOCK:$XSOCK"
 
 # -v /tmp/:/tmp/ \
 #        -v /etc/machine-id:/etc/machine-id:ro \

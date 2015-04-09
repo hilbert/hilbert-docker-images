@@ -9,7 +9,8 @@ APP="$1"
 shift
 ARGS="$@"
 
-[ -z "$X" ] && X="NODISPLAY=1"
+XSOCK=/tmp/.X11-unix/
+[ -z "$X" ] && X="NODISPLAY=1 -v $XSOCK:$XSOCK"
 
 X="$X \
         -v /etc/passwd:/etc/passwd:ro \
