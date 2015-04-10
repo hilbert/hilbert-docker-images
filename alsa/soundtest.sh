@@ -38,3 +38,5 @@ sleep 2
 # read
 
 
+
+TODO: https://wiki.archlinux.org/index.php/PulseAudio/Examples#PulseAudio_as_a_minimal_unintrusive_dumb_pipe_to_ALSA 

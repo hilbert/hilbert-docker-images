@@ -7,3 +7,6 @@
 [submodule "gui/appchoo"]
 	path = gui/appchoo
 	url = https://github.com/porst17/appchoo.git
+[submodule "alsa/apulse"]
+	path = alsa/apulse
+	url = https://github.com/i-rinat/apulse.git
