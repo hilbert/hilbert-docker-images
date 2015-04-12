@@ -36,7 +36,7 @@ X="$X \
 "
 
 # options for running terminal apps via docker run:
-RUNTERM="-it --rm -a stdin -a stdout -a stderr --net bridge --privileged"
+RUNTERM="-it --rm -a stdin -a stdout -a stderr --net host --privileged --ipc=host --pid=host "
 OPTS="--skip-startup-files --no-kill-all-on-exit --quiet --skip-runit"
 
 sudo docker run \

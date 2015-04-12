@@ -74,7 +74,7 @@ export X
 #    fi
 
 myrunner () {
- sudo docker run --rm -ti --net bridge --privileged \
+ sudo docker run --rm -ti --net host --privileged --ipc=host --pid=host \
         --add-host=dockerhost:$HIP \
 	-v /etc/passwd:/etc/passwd:ro \
 	-v /etc/shadow:/etc/shadow:ro \

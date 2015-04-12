@@ -29,7 +29,7 @@ X="$X \
 mydeamon () {
 # -u $(whoami) -w "$HOME" \
 # $(env | cut -d= -f1 | awk '{print "-e", $1}') \
-  sudo docker run --privileged --net host -P -e $X \
+  sudo docker run --privileged --net host --ipc=host --pid=host -P -e $X \
         --lxc-conf='lxc.cgroup.devices.allow=c 226:* rwm' \
         --lxc-conf='lxc.cgroup.devices.allow=c 81:* rwm' \
         --lxc-conf='lxc.cgroup.devices.allow=c 116:* rwm' \
