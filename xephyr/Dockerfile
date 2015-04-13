@@ -1,9 +1,10 @@
-FROM alpine:3.1
+FROM malex984/dockapp:x11
 MAINTAINER Christian Stussak <stussak@mfo.de>
 
-RUN apk update
-RUN apk add mesa-dri-swrast xorg-server-xephyr xkeyboard-config xkbcomp
+# RUN apt-get -y update
+RUN apt-get -qqy install  mesa-dri-swrast xorg-server-xephyr xkeyboard-config xkbcomp
 
-ADD startXephyr.sh /
+ADD startXephyr.sh /usr/local/bin/
 
-ENTRYPOINT [ "/startXephyr.sh" ]
+
+## ENTRYPOINT [ "/startXephyr.sh" ]

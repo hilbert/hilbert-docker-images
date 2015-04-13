@@ -14,7 +14,9 @@ docker ps -a -s
 # ALL: base dd main appa menu alsa xeyes gui play iceweasel skype q3 x11 cups x11vb;
 
 # for dependencies please check out depsgen.sh!
-for d in base dd main menu appa alsa xeyes x11 gui ;
+# for d in base dd main menu appa alsa xeyes x11 gui ;
+#qclosebutton xeyes appchoo  ;
+for d in main x11 ;
 do
   echo
   echo "Building $d -> $U/$I:$d...."
@@ -35,4 +37,19 @@ docker images -a
 docker rmi $(docker images -q -f dangling=true)
 docker images -a
 docker ps -a
+
+
+
+#E: Unable to locate package sdl
+#E: Unable to locate package sdl_image
+#E: Unable to locate package libpng
+#E: Unable to locate package jpeg
+
+#E: Unable to locate package mesa-dri-swrast
+#E: Unable to locate package xorg-server-xephyr
+#E: Package 'xkeyboard-config' has no installation candidate
+#E: Unable to locate package xkbcomp
+
+# E: Unable to locate package libqt5gui5
+# E: Unable to locate package libqt5widgets5
 
