@@ -80,7 +80,7 @@ while :
 do
  $SELFDIR/menu.sh \
      "Your choice please?" \
-     "A_Test_Application_A B_Same_Test_App Alsa_Test GUI_Shell Bash_in_MainGlueApp X11_Shell X11Server Xephyr Iceweasel Q3 Skype Cups_Server Media_Players QUIT"
+     "A_Test_Application_A B_Same_Test_App Alsa_Test GUI_Shell Bash_in_MainGlueApp X11_Shell X11Server Xephyr Iceweasel Q3 Skype Cups_Server Media_Players AppChoo QUIT"
   APP="$?"
   case "$APP" in
 
@@ -121,6 +121,14 @@ do
 
     212)
       echo "Starting cups... " && $SELFDIR/sv.sh cups /usr/local/bin/start_cups.sh
+    ;;
+
+    214)
+      if [ ! -z "$DISPLAY" ]; then
+        echo "Starting GUI shell for appchoo... Please build appchoo yourself... " && $SELFDIR/run.sh appchoo "rxvt-unicode -e bash"
+      else
+        echo "Please start X11 beforehand!"
+      fi
     ;;
 
     213)

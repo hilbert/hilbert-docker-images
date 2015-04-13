@@ -3,6 +3,7 @@ set -e
 
 U=malex984
 I=dockapp
+IM="$U/$I:main"
 HIP=`ip route show 0.0.0.0/0 | grep -Eo 'via \S+' | awk '{ print \$2 }'`
 
 echo
@@ -73,8 +74,13 @@ export X
 #	return
 #    fi
 
+RET=0
 myrunner () {
- sudo docker run --rm -ti --net host --privileged --ipc=host --pid=host \
+ ID=$(docker ps -a | grep "$IM" | awk '{ print $1 }')
+
+ if [ -z $ID ]; then 
+   # run --rm 
+   ID=$(sudo docker create -ti --net host --privileged --ipc=host --pid=host \
         --add-host=dockerhost:$HIP \
 	-v /etc/passwd:/etc/passwd:ro \
 	-v /etc/shadow:/etc/shadow:ro \
@@ -87,7 +93,16 @@ myrunner () {
 	-v /dev/:/dev/ \
 	-v /var/:/var/ \
 	-v /run/:/run/ \
-	"$@"
+	"$@" )
+ fi
+
+ docker start -ai $ID
+ RET=$?
+
+ docker stop -t 5 $ID > /dev/null 2>&1 
+ docker rm -f $ID > /dev/null 2>&1 
+
+# return $RET
 }
 # -v /tmp/.X11-unix:/tmp/.X11-unix \
 # -v /var/run/docker.sock:/var/run/docker.sock \
@@ -109,18 +124,19 @@ echo
 #-u $(whoami) -w "$HOME" \
 #$(env | grep -v -E '^DISPLAY=' | cut -d= -f1 | awk '{print "-e", $1}') \
  
-myrunner \
- --name main $U/$I:main \
-   --no-kill-all-on-exit --skip-runit -- \
-      /usr/local/bin/main.sh "$@"
+# --name main 
+myrunner "$IM" --no-kill-all-on-exit --skip-runit -- /usr/local/bin/main.sh "$@"
 #    /sbin/setuser $(whoami) \
-RET=$?
 
 echo ".... Finished glue.... (exit code: $RET)"
 
 # killing the gue if it still runs...
-echo
-sudo docker rm -f main # menu
+# echo
+ID=$(docker ps -a | grep "$IM" | awk '{ print $1 }')
+
+if [ ! -z $ID ]; then
+  sudo docker rm -f $ID # menu
+fi
 
 echo
 echo "Leftover containers: "

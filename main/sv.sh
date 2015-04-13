@@ -29,12 +29,21 @@ X="$X \
 mydeamon () {
 # -u $(whoami) -w "$HOME" \
 # $(env | cut -d= -f1 | awk '{print "-e", $1}') \
-  sudo docker run --privileged --net host --ipc=host --pid=host -P -e $X \
+
+# options for running terminal apps via docker run:
+  RUNTERM="-d" # " --rm -it "
+
+  ID=$(sudo docker create $RUNTERM --privileged --net host --ipc=host --pid=host -P -e $X \
         --lxc-conf='lxc.cgroup.devices.allow=c 226:* rwm' \
         --lxc-conf='lxc.cgroup.devices.allow=c 81:* rwm' \
         --lxc-conf='lxc.cgroup.devices.allow=c 116:* rwm' \
-        "$@"
-  exit $?
+        "$@")
+  echo "Service ($APP) id: $ID"
+
+  docker start $ID
+  RET="$?"
+
+  exit $RET
 }
 #        -e DOCKER_HOST=unix:///var/run/docker.sock -e NO_PROXY=/var/run/docker.sock \
 #        -e CUPS_USER_ADMIN=vagrant -e CUPS_USER_PASSWORD=vagrant -p 6631:631/tcp \
@@ -68,10 +77,8 @@ mydeamon () {
 echo
 echo "Starting service $APP ('$ARGS')"
 
-# options for running terminal apps via docker run:
-RUNTERM="-d" # " --rm -it "
-
 OPTS="--skip-startup-files --no-kill-all-on-exit --quiet --skip-runit"
+# --name $APP 
 
-mydeamon $RUNTERM --name $APP "$U/$I:$APP" $OPTS -- $ARGS # "/sbin/setuser" "ur" "..."?
+mydeamon "$U/$I:$APP" $OPTS -- $ARGS # "/sbin/setuser" "ur" "..."?
 

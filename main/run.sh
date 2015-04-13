@@ -37,20 +37,27 @@ X="$X \
 "
 
 # options for running terminal apps via docker run:
-RUNTERM="-it --rm -a stdin -a stdout -a stderr --net host --privileged --ipc=host --pid=host "
+RUNTERM="-it -a stdin -a stdout -a stderr --net host --privileged --ipc=host --pid=host "
 OPTS="--skip-startup-files --no-kill-all-on-exit --quiet --skip-runit"
 
-sudo docker run \
+# run --rm
+ID=$(sudo docker create \
      $RUNTERM \
      -e $X \
      --lxc-conf='lxc.cgroup.devices.allow=c 226:* rwm' \
      --lxc-conf='lxc.cgroup.devices.allow=c 81:* rwm' \
      --lxc-conf='lxc.cgroup.devices.allow=c 116:* rwm' \
-        --name $APP "$U/$I:$APP" $OPTS -- \
-		$ARGS
+        "$U/$I:$APP" $OPTS -- \
+		$ARGS )
 #            /sbin/setuser $(whoami) \
 
-exit $?
+docker start -ai $ID
+RET=$?
+
+docker stop -t 5 $ID > /dev/null 2>&1
+docker rm -f $ID > /dev/null 2>&1 
+
+exit $RET
 
 # $RUNTERM --net=none --name appa "$U/$I:appa" $OPTS -- "/sbin/setuser" "ur" "/home/ur/bin/A.sh" "$@"
 # -- /bin/bash $ARGS
