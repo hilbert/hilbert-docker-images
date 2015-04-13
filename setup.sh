@@ -14,9 +14,9 @@ docker ps -a -s
 # ALL: base dd main appa menu alsa xeyes gui play iceweasel skype q3 x11 cups x11vb;
 
 # for dependencies please check out depsgen.sh!
-# for d in base dd main menu appa alsa xeyes x11 gui ;
 #qclosebutton xeyes appchoo  ;
-for d in main x11 ;
+# for d in main alsa xeyes x11 x11vb ;
+for d in base dd main menu appa alsa xeyes x11 gui ;
 do
   echo
   echo "Building $d -> $U/$I:$d...."
