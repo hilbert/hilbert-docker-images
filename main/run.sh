@@ -12,7 +12,7 @@ ARGS="$@"
   echo "Starting $APP ('$ARGS')"
 
 XSOCK=/tmp/.X11-unix/
-[ -z "$X" ] && X="NODISPLAY=1 -v $XSOCK:$XSOCK"
+[ -z "$X" ] && X="NODISPLAY=1"
 
 # -v /tmp/:/tmp/ \
 #        -v /etc/machine-id:/etc/machine-id:ro \
@@ -22,6 +22,7 @@ XSOCK=/tmp/.X11-unix/
 #  -v /dev/snd:/dev/snd \
 
 X="$X \
+ -v /tmp/:/tmp/ \
  -v /etc/passwd:/etc/passwd:ro \
  -v /etc/shadow:/etc/shadow:ro \
  -v /etc/group:/etc/group:ro \

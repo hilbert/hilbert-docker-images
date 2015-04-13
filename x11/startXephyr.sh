@@ -1,5 +1,8 @@
 #!/bin/bash
 
+F="$1"
+shift
+
 DISPLAY_NUM=0
 unset HAS_DISPLAY_NUM
 
@@ -26,7 +29,7 @@ do
 		if grep -q "^[[:space:]]*"$PID"[[:space:]]*$" `find /tmp/ | grep "^/tmp/\.X"$DISPLAY_NUM"-lock$"`
 		then
 			# write the display number to the log file
-			echo $DISPLAY_NUM > display.log
+			echo $DISPLAY_NUM > "$F"
 			wait $PID
 			exit 0
 		fi

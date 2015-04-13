@@ -16,12 +16,12 @@ echo "Current User: `id`"
 echo
 
 XSOCK=/tmp/.X11-unix/
-X="NODISPLAY=1 -v $XSOCK:$XSOCK"
+X="NODISPLAY=1"
 
 case "$OSTYPE" in
  linux*) # For Linux host with X11:
 
-   if [[ -d /tmp/.X11-unix/ ]] && [[  "$DISPLAY" =~ ^:[0-9]+ ]]; then
+   if [[ -d "$XSOCK" ]] && [[  "$DISPLAY" =~ ^:[0-9]+ ]]; then
      echo "Forwarding X11 via xauth..."
      XAUTH=/tmp/.docker.xauth
 
@@ -31,11 +31,11 @@ case "$OSTYPE" in
      fi
      echo "We now enable anyone to connect to this X11..."
      xhost +
-     X="DISPLAY -v $XSOCK:$XSOCK -v $XAUTH:$XAUTH -e XAUTHORITY=$XAUTH"
+     X="DISPLAY -e XAUTHORITY=$XAUTH"
    else
 # Detect a Virtual Box VM!?
      echo "Please start one of X11 servers before using any GUI apps... "
-     X="NODISPLAY=1 -v $XSOCK:$XSOCK"
+     X="NODISPLAY=1"
 ## TODO: start X11 server here??
    fi
  ;;
@@ -80,7 +80,7 @@ while :
 do
  $SELFDIR/menu.sh \
      "Your choice please?" \
-     "A_Test_Application_A B_Same_Test_App Alsa_Test GUI_Shell Bash_in_MainGlueApp X11_Shell X11Server Nothing Iceweasel Q3 Skype Cups_Server Media_Players QUIT"
+     "A_Test_Application_A B_Same_Test_App Alsa_Test GUI_Shell Bash_in_MainGlueApp X11_Shell X11Server Xephyr Iceweasel Q3 Skype Cups_Server Media_Players QUIT"
   APP="$?"
   case "$APP" in
 
@@ -93,32 +93,29 @@ do
         $SELFDIR/sv.sh x11 Xorg.sh Xorg "$F"
         sleep 3
         ID=`sudo docker exec x11 cat "$F"`
-#        sudo docker cp x11 "$F" "$F_copy"
-#        ID=`cat "$F_copy"`
-#        sudo rm "$F_copy"
         unset F
         export DISPLAY=":$ID"
         unset ID
-        export X="DISPLAY=$DISPLAY -v $XSOCK:$XSOCK"
+#        export X="DISPLAY=$DISPLAY"
         ### XAUTH?
      fi
     ;;
 
     208)
-      if [ ! -z "$DISPLAY" ]; then
-        echo "There seems to be X11 running already..."
+      if [ -z "$DISPLAY" ]; then
+        echo "Please start X11 beforehand!"
       else
-#        echo "Starting X11: Xorg with (?) vb guest additions... "
-#        F="$XSOCK/.new.vb.id"
-#        $SELFDIR/sv.sh x11vb Xorg.sh Xorg "$F"
-#        sleep 2
-#        ID=`cat "$F"`
-#        sudo rm "$F"
-#        unset F
-#        export DISPLAY=":$ID"
-#        unset ID
-#        export X="DISPLAY=$DISPLAY -v $XSOCK:$XSOCK"
-         echo "Sorry nothing here at the moment... "
+        echo "Starting X11: Xephyr using $DISPLAY... "
+        F="$XSOCK/.new.xephyr.id"
+        $SELFDIR/sv.sh x11 startXephyr.sh "$F"
+        sleep 3
+        ID=`sudo docker exec x11 cat "$F"`
+        unset F
+        export DISPLAY=":$ID"
+        unset ID
+#        export X="DISPLAY=$DISPLAY"
+        ### XAUTH?
+ 
       fi
     ;;
 

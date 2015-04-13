@@ -10,9 +10,10 @@ shift
 ARGS="$@"
 
 XSOCK=/tmp/.X11-unix/
-[ -z "$X" ] && X="NODISPLAY=1 -v $XSOCK:$XSOCK"
+[ -z "$X" ] && X="NODISPLAY=1"
 
 X="$X \
+        -v /tmp/:/tmp/ \
         -v /etc/passwd:/etc/passwd:ro \
         -v /etc/shadow:/etc/shadow:ro \
         -v /etc/group:/etc/group:ro \
@@ -21,7 +22,6 @@ X="$X \
         -v /var/:/var/ \
         -v /run/:/run/ \
         -v /home/:/home/ \
-        -v /tmp/:/tmp/ \
         -v /sys/fs/cgroup:/sys/fs/cgroup \
 "
 

@@ -19,11 +19,11 @@ echo
 
 
 XSOCK=/tmp/.X11-unix/
-X="NODISPLAY=1 -v $XSOCK:$XSOCK"
+X="NODISPLAY=1"
 case "$OSTYPE" in
  linux*) # For Linux host with X11:
 
-    if [[ -d /tmp/.X11-unix/ ]] && [[  "$DISPLAY" =~ ^:[0-9]+ ]]; then 
+    if [[ -d "$XSOCK" ]] && [[  "$DISPLAY" =~ ^:[0-9]+ ]]; then 
      echo "Forwarding X11 locally via xauth..."
      XAUTH=/tmp/.docker.xauth
 
@@ -33,11 +33,11 @@ case "$OSTYPE" in
      fi
      echo "We now enable anyone to connect to this X11..."
      xhost +
-     X="DISPLAY -v $XSOCK:$XSOCK -v $XAUTH:$XAUTH -e XAUTHORITY=$XAUTH"
+     X="DISPLAY -e XAUTHORITY=$XAUTH"
    else
 # Detect a Virtual Box VM!?
      echo "Please start one of X11 servers before using any GUI apps... "
-     X="NODISPLAY=1 -v $XSOCK:$XSOCK"
+     X="NODISPLAY=1"
 ## TODO: start X11 server here??
    fi
  ;;
@@ -82,9 +82,9 @@ myrunner () {
 	-v /etc/localtime:/etc/localtime:ro \
         -v /etc/sudoers:/etc/sudoers:ro -v /etc/sudoers.d/:/etc/sudoers.d/:ro \
 	-v /home/:/home/ \
+        -v /tmp/:/tmp/ \
         -e $X -e DOCKER_HOST=unix:///var/run/docker.sock -e NO_PROXY=/var/run/docker.sock \
 	-v /dev/:/dev/ \
-        -v /tmp/:/tmp/ \
 	-v /var/:/var/ \
 	-v /run/:/run/ \
 	"$@"
