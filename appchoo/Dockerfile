@@ -16,24 +16,36 @@ MAINTAINER Christian Stussak <stussak@mfo.de>
 RUN apt-get install -q -y build-essential
 #  linux-headers-generic
 
-# RUN DEBIAN_FRONTEND=noninteractive apt-get -q -y install
-# curl
-# RUN DEBIAN_FRONTEND=noninteractive apt-get -q -y install 
+RUN DEBIAN_FRONTEND=noninteractive apt-get -q -y install mesa-utils
+
 
 ADD https://github.com/IMAGINARY/xfullscreen/archive/master.tar.gz /usr/src/xfullscreen.tar.gz
 
 # curl g++ make ???
 
-# sdl sdl_image libpng jpeg
-# sdl-dev sdl_image-dev musl-dev
+# musl-dev??
+RUN DEBIAN_FRONTEND=noninteractive apt-get -q -y install libsdl-image1.2-dev
 ADD https://github.com/porst17/appchoo/archive/master.tar.gz /usr/src/appchoo.tar.gz
-# | tar -xz && cd appchoo-master && make && cp appchoo /usr/local/bin/ && rm -rf /appchoo-master
+RUN cd /usr/src/ && tar -xzvf appchoo.tar.gz && cd appchoo-master && make && cp appchoo /usr/local/bin/ && rm -rf /appchoo-master
 
 
-# libqt5gui5 libqt5widgets5
-# qt5-default
+# qt5-default #? libqt5gui5 libqt5widgets5 
 ADD https://github.com/IMAGINARY/qclosebutton/archive/master.tar.gz /usr/src/qclosebutton.tar.gz
 # | tar -xz && cd qclosebutton-master && qmake && make && cp qclosebutton /usr/local/bin/ && rm -rf qclosebutton-master
+
+
+# fbsuite seems to be rather outdated, and unusable on 64 bit ubuntu14.04 :(
+# TODO: Find corresponding tools or their analogs...
+ADD http://downloads.sourceforge.net/project/fbsuite/fbsuite/0.9.7.6/xfbsuite-0.9.7.6.tgz?r=http%3A%2F%2Fsourceforge.net%2Fprojects%2Ffbsuite%2F&ts=1429031264&use_mirror=switch /usr/src/xfbsuite-0.9.7.6.tgz
+# | tar -xz && cd xfbsuite-0.9.7.6 && install.sh
+
+
+# ADD http://www.ozone3d.net/gputest/dl/GpuTest_Linux_x64_0.7.0.zip /usr/src/GpuTest_Linux_x64_0.7.0.zip
+# Forbidden??
+
+## It seems that he following require some command line tools 
+ADD http://www.mathematik.uni-kl.de/~motsak/files/GPU_Test_Info_Linux64.tar.gz /usr/src/GPU_Test_Info_Linux64.tar.gz
+
 
 # RUN apt-get purge -qqy --auto-remove 
 # curl make gcc linux-headers libgcc 
