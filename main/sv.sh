@@ -31,17 +31,18 @@ mydeamon () {
 # $(env | cut -d= -f1 | awk '{print "-e", $1}') \
 
 # options for running terminal apps via docker run:
-  RUNTERM="-d" # " --rm -it "
+#  RUNTERM="--rm -it"
 
-  ID=$(sudo docker create $RUNTERM --privileged --net host --ipc=host --pid=host -P -e $X \
+  sudo docker run -d --privileged --net host --ipc=host --pid=host -P -e $X \
         --lxc-conf='lxc.cgroup.devices.allow=c 226:* rwm' \
         --lxc-conf='lxc.cgroup.devices.allow=c 81:* rwm' \
         --lxc-conf='lxc.cgroup.devices.allow=c 116:* rwm' \
-        "$@")
-  echo "Service ($APP) id: $ID"
+        "$@"
 
-  docker start $ID
   RET="$?"
+
+#  echo "Service ($APP) id: $ID"
+#  docker start $ID
 
   exit $RET
 }
