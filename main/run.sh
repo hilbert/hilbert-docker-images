@@ -41,7 +41,7 @@ RUNTERM="-it -a stdin -a stdout -a stderr --net host --privileged --ipc=host --p
 OPTS="--skip-startup-files --no-kill-all-on-exit --quiet --skip-runit"
 
 # run --rm
-ID=$(sudo docker create \
+ID=$(docker create \
      $RUNTERM \
      -e $X \
      --lxc-conf='lxc.cgroup.devices.allow=c 226:* rwm' \

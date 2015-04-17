@@ -27,7 +27,7 @@ do
   # docker rm -f "$d"
 
   cd "$d"
-  sudo docker build --pull=false -t "$U/$I:$d" "."
+  docker build --pull=false -t "$U/$I:$d" "."
   cd -
   echo
 #  docker push "$U/$I:$d"

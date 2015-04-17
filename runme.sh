@@ -80,19 +80,19 @@ myrunner () {
 
  if [ -z $ID ]; then 
    # run --rm 
-   ID=$(sudo docker create -ti --net host --privileged --ipc=host --pid=host \
+   ID=$(docker create -ti --net host --privileged --ipc=host --pid=host \
         --add-host=dockerhost:$HIP \
 	-v /etc/passwd:/etc/passwd:ro \
 	-v /etc/shadow:/etc/shadow:ro \
 	-v /etc/group:/etc/group:ro \
 	-v /etc/localtime:/etc/localtime:ro \
         -v /etc/sudoers:/etc/sudoers:ro -v /etc/sudoers.d/:/etc/sudoers.d/:ro \
-	-v /home/:/home/ \
-        -v /tmp/:/tmp/ \
+	-v /home/:/home/:ro \
+        -v /tmp/:/tmp/:rw \
         -e $X -e DOCKER_HOST=unix:///var/run/docker.sock -e NO_PROXY=/var/run/docker.sock \
-	-v /dev/:/dev/ \
-	-v /var/:/var/ \
-	-v /run/:/run/ \
+	-v /dev/:/dev/:rw \
+	-v /var/:/var/:rw \
+	-v /run/:/run/:rw \
 	"$@" )
  fi
 
@@ -115,7 +115,7 @@ myrunner () {
 # -e DOCKER_TLS_VERIFY=1 -e DOCKER_CERT_PATH=/home/ur/??? \
 
 echo "Previously started containers: "
-sudo docker ps -a
+docker ps -a
 
 # We expect this to run on Linux with docker confiured correctly
 echo "Running the main glue script... "
@@ -135,12 +135,12 @@ echo ".... Finished glue.... (exit code: $RET)"
 ID=$(docker ps -a | grep "$IM" | awk '{ print $1 }')
 
 if [ ! -z $ID ]; then
-  sudo docker rm -f $ID # menu
+  docker rm -f $ID # menu
 fi
 
 echo
 echo "Leftover containers: "
-sudo docker ps -a
+docker ps -a
 echo
 
 exit $RET

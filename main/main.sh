@@ -60,10 +60,10 @@ export X
 
 
 echo "Current docker images: "
-sudo docker images
+docker images
 
 echo "Current docker containers: "
-sudo docker ps -a
+docker ps -a
 echo
 
 
@@ -92,7 +92,7 @@ do
         F="$XSOCK/.new.x11.id"
         $SELFDIR/sv.sh x11 Xorg.sh Xorg "$F"
         sleep 3
-        ID=`sudo docker exec x11 cat "$F"`
+        ID=`docker exec x11 cat "$F"`
         unset F
         export DISPLAY=":$ID"
         unset ID
@@ -109,7 +109,7 @@ do
         F="$XSOCK/.new.xephyr.id"
         $SELFDIR/sv.sh x11 startXephyr.sh "$F"
         sleep 3
-        ID=`sudo docker exec x11 cat "$F"`
+        ID=`docker exec x11 cat "$F"`
         unset F
         export DISPLAY=":$ID"
         unset ID
@@ -201,7 +201,7 @@ do
       echo
       echo "Quiting... please make sure to kill any services yourself... "
       echo "Leftover containers: "
-      sudo docker ps -a
+      docker ps -a
       exit 0
     ;;
   esac
@@ -230,7 +230,7 @@ done
 # --device=/dev/video0:/dev/video0 \
 # -v /dev/snd:/dev/snd "
 # -e PULSE_SERVER=/run/user/${USER_UID}/pulse/native \
-#      sudo docker run -it --name sound \
+#      docker run -it --name sound \
 #        --privileged \
 #       -e $SND \
 #       --lxc-conf='lxc.cgroup.devices.allow=c 226:* rwm' \
