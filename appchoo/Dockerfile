@@ -4,20 +4,18 @@
 #     sudo docker run --rm -i -e DISPLAY -v /tmp/.X11-unix:/tmp/.X11-unix repo/image
 
 # FROM alpine:3.1
-FROM malex984/dockapp:gui
+FROM malex984/dockapp:x11vb
 # phusion/baseimage:0.9.16
 
 MAINTAINER Christian Stussak <stussak@mfo.de>
 
 # RUN apt-get -y update
-
 # make gcc linux-headers libgcc 
 
-RUN apt-get install -q -y build-essential
+# RUN apt-get install -q -y build-essential
 #  linux-headers-generic
 
-RUN DEBIAN_FRONTEND=noninteractive apt-get -q -y install mesa-utils
-
+# RUN DEBIAN_FRONTEND=noninteractive apt-get -q -y install mesa-utils
 
 ADD https://github.com/IMAGINARY/xfullscreen/archive/master.tar.gz /usr/src/xfullscreen.tar.gz
 
@@ -26,28 +24,34 @@ ADD https://github.com/IMAGINARY/xfullscreen/archive/master.tar.gz /usr/src/xful
 # musl-dev??
 RUN DEBIAN_FRONTEND=noninteractive apt-get -q -y install libsdl-image1.2-dev
 ADD https://github.com/porst17/appchoo/archive/master.tar.gz /usr/src/appchoo.tar.gz
-RUN cd /usr/src/ && tar -xzvf appchoo.tar.gz && cd appchoo-master && make && cp appchoo /usr/local/bin/ && rm -rf /appchoo-master
+#RUN tar -xzvf /usr/src/appchoo.tar.gz -C /tmp && cd /usr/src/appchoo-master && make && cp appchoo /usr/local/bin/ && cd / && rm -rf /usr/src/appchoo-master
 
-
-# qt5-default #? libqt5gui5 libqt5widgets5 
+RUN DEBIAN_FRONTEND=noninteractive apt-get -q -y install qt4-default qt4-qmake 
 ADD https://github.com/IMAGINARY/qclosebutton/archive/master.tar.gz /usr/src/qclosebutton.tar.gz
-# | tar -xz && cd qclosebutton-master && qmake && make && cp qclosebutton /usr/local/bin/ && rm -rf qclosebutton-master
+#RUN tar -xzvf /usr/src/qclosebutton.tar.gz -C /tmp && cd /usr/src/qclosebutton-master && qmake && make && cp qclosebutton /usr/local/bin/ && cd / && rm -rf /usr/src/qclosebutton-master
 
+
+# TODO: Find corresponding tools or their analogs...
+ADD http://www.mathematik.uni-kl.de/~motsak/files/BM/BM.tar.bz2 /usr/src/BM.tar.bz2
 
 # fbsuite seems to be rather outdated, and unusable on 64 bit ubuntu14.04 :(
-# TODO: Find corresponding tools or their analogs...
 ADD http://downloads.sourceforge.net/project/fbsuite/fbsuite/0.9.7.6/xfbsuite-0.9.7.6.tgz?r=http%3A%2F%2Fsourceforge.net%2Fprojects%2Ffbsuite%2F&ts=1429031264&use_mirror=switch /usr/src/xfbsuite-0.9.7.6.tgz
 # | tar -xz && cd xfbsuite-0.9.7.6 && install.sh
+
+ADD http://xdialog.free.fr/Xdialog-2.3.1.tar.bz2 /usr/src/Xdialog-2.3.1.tar.bz2
+
 
 
 # ADD http://www.ozone3d.net/gputest/dl/GpuTest_Linux_x64_0.7.0.zip /usr/src/GpuTest_Linux_x64_0.7.0.zip
 # Forbidden??
 
 ## It seems that he following require some command line tools 
-ADD http://www.mathematik.uni-kl.de/~motsak/files/GPU_Test_Info_Linux64.tar.gz /usr/src/GPU_Test_Info_Linux64.tar.gz
+#ADD http://www.mathematik.uni-kl.de/~motsak/files/BM/GPU_Test_Info_Linux64.tar.gz /usr/src/GPU_Test_Info_Linux64.tar.gz
 
+ADD appchoo qclosebutton /usr/local/bin
 
 # RUN apt-get purge -qqy --auto-remove 
 # curl make gcc linux-headers libgcc 
 
 ## ENTRYPOINT [ "/usr/local/bin/appchoo" ]
+
