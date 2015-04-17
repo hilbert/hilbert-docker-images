@@ -10,3 +10,6 @@
 [submodule "alsa/apulse"]
 	path = alsa/apulse
 	url = https://github.com/i-rinat/apulse.git
+[submodule "x11/xfullscreen"]
+	path = x11/xfullscreen
+	url = https://github.com/IMAGINARY/xfullscreen.git
