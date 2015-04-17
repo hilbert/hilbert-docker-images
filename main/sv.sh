@@ -13,16 +13,16 @@ XSOCK=/tmp/.X11-unix/
 [ -z "$X" ] && X="NODISPLAY=1"
 
 X="$X \
-        -v /tmp/:/tmp/ \
+        -v /tmp/:/tmp/:rw \
         -v /etc/passwd:/etc/passwd:ro \
         -v /etc/shadow:/etc/shadow:ro \
         -v /etc/group:/etc/group:ro \
         -v /etc/localtime:/etc/localtime:ro \
-        -v /dev/:/dev/ \
-        -v /var/:/var/ \
-        -v /run/:/run/ \
-        -v /home/:/home/ \
-        -v /sys/fs/cgroup:/sys/fs/cgroup \
+        -v /home/:/home/:ro \
+        -v /dev/:/dev/:rw \
+        -v /var/:/var/:rw \
+        -v /run/:/run/:rw \
+        -v /sys/fs/cgroup:/sys/fs/cgroup:ro \
 "
 
 # USER_UID=$(id -u)

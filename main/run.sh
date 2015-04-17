@@ -22,18 +22,18 @@ XSOCK=/tmp/.X11-unix/
 #  -v /dev/snd:/dev/snd \
 
 X="$X \
- -v /tmp/:/tmp/ \
+ -v /tmp/:/tmp/:rw \
  -v /etc/passwd:/etc/passwd:ro \
  -v /etc/shadow:/etc/shadow:ro \
  -v /etc/group:/etc/group:ro \
  -v /etc/localtime:/etc/localtime:ro \
  -v /etc/sudoers:/etc/sudoers:ro -v /etc/sudoers.d/:/etc/sudoers.d/:ro \
- -v /home/:/home/ \
+ -v /home/:/home/:ro \
  -v /var/lib/dbus:/var/lib/dbus \
  -v /run/dbus/system_bus_socket:/run/dbus/system_bus_socket \
  -v /var/run/dbus/system_bus_socket:/var/run/dbus/system_bus_socket \
- -v /sys/fs/cgroup:/sys/fs/cgroup \
- -v /dev/:/dev/ \
+ -v /sys/fs/cgroup:/sys/fs/cgroup:ro \
+ -v /dev/:/dev/:rw \
 "
 
 # options for running terminal apps via docker run:

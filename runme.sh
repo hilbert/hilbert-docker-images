@@ -86,6 +86,7 @@ myrunner () {
 	-v /etc/shadow:/etc/shadow:ro \
 	-v /etc/group:/etc/group:ro \
 	-v /etc/localtime:/etc/localtime:ro \
+        -v /sys/fs/cgroup:/sys/fs/cgroup:ro \
         -v /etc/sudoers:/etc/sudoers:ro -v /etc/sudoers.d/:/etc/sudoers.d/:ro \
 	-v /home/:/home/:ro \
         -v /tmp/:/tmp/:rw \
