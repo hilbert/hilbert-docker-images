@@ -12,7 +12,7 @@ ARGS="$@"
   echo "Starting $APP ('$ARGS')"
 
 XSOCK=/tmp/.X11-unix/
-[ -z "$X" ] && X="NODISPLAY=1"
+[ -z "$X" ] && X="DISPLAY"
 
 # -v /tmp/:/tmp/ \
 #        -v /etc/machine-id:/etc/machine-id:ro \
@@ -23,27 +23,33 @@ XSOCK=/tmp/.X11-unix/
 
 X="$X \
  -v /tmp/:/tmp/:rw \
- -v /etc/passwd:/etc/passwd:ro \
- -v /etc/shadow:/etc/shadow:ro \
- -v /etc/group:/etc/group:ro \
- -v /etc/localtime:/etc/localtime:ro \
- -v /etc/sudoers:/etc/sudoers:ro -v /etc/sudoers.d/:/etc/sudoers.d/:ro \
- -v /home/:/home/:ro \
- -v /var/lib/dbus:/var/lib/dbus \
- -v /run/dbus/system_bus_socket:/run/dbus/system_bus_socket \
- -v /var/run/dbus/system_bus_socket:/var/run/dbus/system_bus_socket \
- -v /sys/fs/cgroup:/sys/fs/cgroup:ro \
  -v /dev/:/dev/:rw \
 "
 
+# -v /etc/passwd:/etc/passwd:ro \
+# -v /etc/shadow:/etc/shadow:ro \
+# -v /etc/group:/etc/group:ro \
+# -v /etc/localtime:/etc/localtime:ro \
+# -v /etc/sudoers:/etc/sudoers:ro -v /etc/sudoers.d/:/etc/sudoers.d/:ro \
+# -v /home/:/home/:ro \
+# -v /var/lib/dbus:/var/lib/dbus \
+# -v /run/dbus/system_bus_socket:/run/dbus/system_bus_socket \
+# -v /var/run/dbus/system_bus_socket:/var/run/dbus/system_bus_socket \
+# -v /sys/fs/cgroup:/sys/fs/cgroup:ro \
+
+
+# --device /dev/nvidia0:/dev/nvidia0 --device /dev/nvidiactl:/dev/nvidiactl --device /dev/nvidia-uvm:/dev/nvidia-uvm \
+
 # options for running terminal apps via docker run:
-RUNTERM="-it -a stdin -a stdout -a stderr --net host --privileged --ipc=host --pid=host "
+RUNTERM="-it -a stdin -a stdout -a stderr --privileged --net host --ipc=host --pid=host"
 OPTS="--skip-startup-files --no-kill-all-on-exit --quiet --skip-runit"
 
 # run --rm
 ID=$(docker create \
      $RUNTERM \
      -e $X \
+     --lxc-conf='lxc.cgroup.devices.allow=c 195:* rwm' \
+     --lxc-conf='lxc.cgroup.devices.allow=c 249:* rwm' \
      --lxc-conf='lxc.cgroup.devices.allow=c 226:* rwm' \
      --lxc-conf='lxc.cgroup.devices.allow=c 81:* rwm' \
      --lxc-conf='lxc.cgroup.devices.allow=c 116:* rwm' \
@@ -54,8 +60,10 @@ ID=$(docker create \
 docker start -ai $ID
 RET=$?
 
-docker stop -t 5 $ID > /dev/null 2>&1
-docker rm -f $ID > /dev/null 2>&1 
+docker stop -t 5 $ID 
+#> /dev/null 2>&1
+docker rm -f $ID 
+#> /dev/null 2>&1 
 
 exit $RET
 

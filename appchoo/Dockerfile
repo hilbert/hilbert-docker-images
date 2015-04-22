@@ -12,8 +12,8 @@ MAINTAINER Christian Stussak <stussak@mfo.de>
 
 # RUN apt-get -y update
 
-RUN DEBIAN_FRONTEND=noninteractive apt-get -q -y install dkms build-essential 
-RUN DEBIAN_FRONTEND=noninteractive apt-get -q -y install linux-headers-generic 
+## RUN DEBIAN_FRONTEND=noninteractive apt-get -q -y install dkms build-essential
+## RUN DEBIAN_FRONTEND=noninteractive apt-get -q -y install linux-headers-generic 
 
 
 RUN DEBIAN_FRONTEND=noninteractive apt-get -q -y install libgles1-mesa libgles2-mesa libegl1-mesa-drivers libgl1-mesa-dri mesa-vdpau-drivers
@@ -57,4 +57,11 @@ ADD http://www.mathematik.uni-kl.de/~motsak/files/BM/GPU_Test_Info_Linux64.tar.g
 # curl make gcc linux-headers libgcc 
 
 ## ENTRYPOINT [ "/usr/local/bin/appchoo" ]
+
+
+ADD NVIDIA-Linux-x86_64-340.76.run /usr/src/NVIDIA-Linux-x86_64-340.76.run
+RUN chmod +x usr/src/NVIDIA-Linux-x86_64-340.76.run 
+RUN /usr/src/NVIDIA-Linux-x86_64-340.76.run -s -N --no-kernel-module
+RUN rm /usr/src/NVIDIA-Linux-x86_64-340.76.run
+
 

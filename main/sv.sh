@@ -14,16 +14,17 @@ XSOCK=/tmp/.X11-unix/
 
 X="$X \
         -v /tmp/:/tmp/:rw \
-        -v /etc/passwd:/etc/passwd:ro \
-        -v /etc/shadow:/etc/shadow:ro \
-        -v /etc/group:/etc/group:ro \
-        -v /etc/localtime:/etc/localtime:ro \
-        -v /home/:/home/:ro \
         -v /dev/:/dev/:rw \
-        -v /var/:/var/:rw \
-        -v /run/:/run/:rw \
-        -v /sys/fs/cgroup:/sys/fs/cgroup:ro \
 "
+
+#        -v /etc/passwd:/etc/passwd:ro \
+#        -v /etc/shadow:/etc/shadow:ro \
+#        -v /etc/group:/etc/group:ro \
+#        -v /etc/localtime:/etc/localtime:ro \
+#        -v /home/:/home/:ro \
+#        -v /var/:/var/:rw \
+#        -v /run/:/run/:rw \
+#        -v /sys/fs/cgroup:/sys/fs/cgroup:ro \
 
 # USER_UID=$(id -u)
 mydeamon () {
@@ -34,9 +35,11 @@ mydeamon () {
 #  RUNTERM="--rm -it"
 
   docker run -d --privileged --net host --ipc=host --pid=host -P -e $X \
-        --lxc-conf='lxc.cgroup.devices.allow=c 226:* rwm' \
-        --lxc-conf='lxc.cgroup.devices.allow=c 81:* rwm' \
+        --lxc-conf='lxc.cgroup.devices.allow=c 195:* rwm' \
+        --lxc-conf='lxc.cgroup.devices.allow=c 249:* rwm' \
+	--lxc-conf='lxc.cgroup.devices.allow=c 226:* rwm' \
         --lxc-conf='lxc.cgroup.devices.allow=c 116:* rwm' \
+        --lxc-conf='lxc.cgroup.devices.allow=c  81:* rwm' \
         "$@"
 
   RET="$?"
