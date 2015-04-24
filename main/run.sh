@@ -41,18 +41,19 @@ X="$X \
 # --device /dev/nvidia0:/dev/nvidia0 --device /dev/nvidiactl:/dev/nvidiactl --device /dev/nvidia-uvm:/dev/nvidia-uvm \
 
 # options for running terminal apps via docker run:
-RUNTERM="-it -a stdin -a stdout -a stderr --privileged --net host --ipc=host --pid=host"
+RUNTERM="-it -a stdin -a stdout -a stderr --privileged --net=host --ipc=host --pid=host"
 OPTS="--skip-startup-files --no-kill-all-on-exit --quiet --skip-runit"
+
+#      --lxc-conf='lxc.cgroup.devices.allow=c 195:* rwm' \
+#     --lxc-conf='lxc.cgroup.devices.allow=c 249:* rwm' \
+#     --lxc-conf='lxc.cgroup.devices.allow=c 226:* rwm' \
+#     --lxc-conf='lxc.cgroup.devices.allow=c 81:* rwm' \
+#     --lxc-conf='lxc.cgroup.devices.allow=c 116:* rwm' \
 
 # run --rm
 ID=$(docker create \
      $RUNTERM \
      -e $X \
-     --lxc-conf='lxc.cgroup.devices.allow=c 195:* rwm' \
-     --lxc-conf='lxc.cgroup.devices.allow=c 249:* rwm' \
-     --lxc-conf='lxc.cgroup.devices.allow=c 226:* rwm' \
-     --lxc-conf='lxc.cgroup.devices.allow=c 81:* rwm' \
-     --lxc-conf='lxc.cgroup.devices.allow=c 116:* rwm' \
         "$U/$I:$APP" $OPTS -- \
 		$ARGS )
 #            /sbin/setuser $(whoami) \
