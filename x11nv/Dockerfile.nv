@@ -1,0 +1,6 @@
+FROM $IMG
+
+MAINTAINER Oleksandr Motsak <malex984@googlemail.com>
+
+RUN curl "http://us.download.nvidia.com/XFree86/Linux-x86_64/$VER/NVIDIA-Linux-x86_64-$VER.run" \
+    -o /tmp/nv && chmod +x /tmp/nv && /tmp/nv -s -N --no-kernel-module && rm -f /tmp/nv
