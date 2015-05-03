@@ -2,8 +2,14 @@ FROM malex984/dockapp:base
 
 MAINTAINER Oleksandr Motsak <malex984@googlemail.com>
 
-ADD ./docker-latest /usr/local/bin/docker
-COPY ./docker-compose /usr/local/bin/
+#RUN DEBIAN_FRONTEND=noninteractive apt-get -q -y install lxc-docker
+RUN curl -sSL https://get.docker.io/ubuntu/ | sudo sh
+
+#ADD https://get.docker.com/builds/Linux/x86_64/docker-latest /usr/local/bin/docker
+#RUN chmod +x /usr/local/bin/docker
+
+RUN curl -L https://github.com/docker/compose/releases/download/1.2.0/docker-compose-`uname -s`-`uname -m` > /usr/local/bin/docker-compose 
+RUN chmod +x /usr/local/bin/docker-compose
 
 # RUN chmod +x /usr/local/bin/docker /usr/local/bin/docker-compose
 # RUN ln -s $HOME/bin/docker-latest $HOME/bin/docker

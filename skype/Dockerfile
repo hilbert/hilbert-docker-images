@@ -22,7 +22,7 @@ RUN DEBIAN_FRONTEND=noninteractive apt-get install -q -y v4l-utils:i386
 # Install Skype (http://download.skype.com/linux/...)
 ADD http://download.skype.com/linux/skype-debian_4.3.0.37-1_i386.deb /usr/src/skype.deb
 
-RUN dpkg -i /usr/src/skype.deb || true && apt-get install -fy
+RUN dpkg -i /usr/src/skype.deb || true && DEBIAN_FRONTEND=noninteractive apt-get install -fy
 RUN rm -f /usr/src/skype.deb
 
 # Our own starter via apulse: 

@@ -1,4 +1,4 @@
-FROM phusion/baseimage
+FROM phusion/baseimage:0.9.16
 
 MAINTAINER Oleksandr Motsak <malex984@googlemail.com>
 
@@ -10,7 +10,7 @@ RUN DEBIAN_FRONTEND=noninteractive apt-get -y upgrade
 
 # dist-upgrade ?
 # RUN DEBIAN_FRONTEND=noninteractive apt-get -q -y install --no-install-recommends
-RUN DEBIAN_FRONTEND=noninteractive apt-get -y install aptitude
+RUN DEBIAN_FRONTEND=noninteractive apt-get -y install aptitude wget git
 
 ### RUN groupadd -r ur && useradd -r -g ur ur
 #RUN groupadd -f -g 1000 ur
@@ -24,6 +24,3 @@ RUN DEBIAN_FRONTEND=noninteractive apt-get -y install aptitude
 
 # Use baseimage-docker's init system.
 # CMD ["/sbin/my_init"]
-
-# Clean up APT when done.
-# RUN apt-get clean && rm -rf /var/lib/apt/lists/* /tmp/* /var/tmp/*

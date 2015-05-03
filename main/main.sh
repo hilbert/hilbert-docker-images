@@ -5,7 +5,8 @@ SELFDIR=`cd "$SELFDIR" && pwd`
 
 U=malex984
 I=dockapp
-
+#
+PREFIX="$U/$I"
 echo
 echo "Current Host: `uname -a`"
 echo "Current User: `id`"
@@ -80,7 +81,7 @@ while :
 do
  $SELFDIR/menu.sh \
      "Your choice please?" \
-     "A_Test_Application_A B_Same_Test_App Alsa_Test GUI_Shell Bash_in_MainGlueApp X11_Shell X11Server Xephyr Iceweasel Q3 Skype Cups_Server Media_Players AppChoo QUIT"
+     "A_Test_Application_A B_Same_Test_App Alsa_Test GUI_Shell Bash_in_MainGlueApp X11_Shell X11Server Xephyr Iceweasel Q3 Skype Cups_Server Media_Players AppChoo Test QUIT"
   APP="$?"
   case "$APP" in
 
@@ -90,12 +91,13 @@ do
       else
         echo "Starting X11: Xorg... "
         F="$XSOCK/.new.x11.id"
-        $SELFDIR/sv.sh x11 Xorg.sh Xorg "$F"
+        ID=$($SELFDIR/sv.sh 'x11' Xorg.sh Xorg "$F")
+        echo "Container: $ID???"
         sleep 3
-        ID=`docker exec x11 cat "$F"`
+        XID=`docker exec c_x11 cat "$F"`
         unset F
-        export DISPLAY=":$ID"
-        unset ID
+        export DISPLAY=":$XID"
+        unset XID
 #        export X="DISPLAY=$DISPLAY"
         ### XAUTH?
      fi
@@ -107,12 +109,13 @@ do
       else
         echo "Starting X11: Xephyr using $DISPLAY... "
         F="$XSOCK/.new.xephyr.id"
-        $SELFDIR/sv.sh x11 startXephyr.sh "$F"
+        ID=$($SELFDIR/sv.sh 'x11' startXephyr.sh "$F")
         sleep 3
-        ID=`docker exec x11 cat "$F"`
+        echo "Container: $ID???"
+        XID=`docker exec c_x11 cat "$F"`
         unset F
-        export DISPLAY=":$ID"
-        unset ID
+        export DISPLAY=":$XID"
+        unset XID
 #        export X="DISPLAY=$DISPLAY"
         ### XAUTH?
  
@@ -120,12 +123,20 @@ do
     ;;
 
     212)
-      echo "Starting cups... " && $SELFDIR/sv.sh cups /usr/local/bin/start_cups.sh
+      echo "Starting cups... " && $SELFDIR/sv.sh "$PREFIX:cups" /usr/local/bin/start_cups.sh
+    ;;
+
+    215)
+      if [ ! -z "$DISPLAY" ]; then
+        echo "Starting GUI shell for test... Please build appchoo yourself... " && $SELFDIR/run.sh test "rxvt-unicode -fn xft:terminus:pixelsize=12 -e bash"
+      else
+        echo "Please start X11 beforehand!"
+      fi
     ;;
 
     214)
       if [ ! -z "$DISPLAY" ]; then
-        echo "Starting GUI shell for appchoo... Please build appchoo yourself... " && $SELFDIR/run.sh appchoo "rxvt-unicode -fn xft:terminus:pixelsize=12 -e bash"
+        echo "Starting GUI shell for appchoo... Please build appchoo yourself... " && $SELFDIR/run.sh "$PREFIX:appchoo" "rxvt-unicode -fn xft:terminus:pixelsize=12 -e bash"
       else
         echo "Please start X11 beforehand!"
       fi
@@ -133,7 +144,7 @@ do
 
     213)
       if [ ! -z "$DISPLAY" ]; then
-        echo "Starting GUI shell... Please run cmus/vlc/mplaye/xine yourself... " && $SELFDIR/run.sh play "rxvt-unicode -fn xft:terminus:pixelsize=12 -e bash"
+        echo "Starting GUI shell... Please run cmus/vlc/mplaye/xine yourself... " && $SELFDIR/run.sh "$PREFIX:play" "rxvt-unicode -fn xft:terminus:pixelsize=12 -e bash"
       else
         echo "Please start X11 beforehand!"
       fi
@@ -141,7 +152,7 @@ do
 
     211)
       if [ ! -z "$DISPLAY" ]; then
-        echo "Starting skype... " && $SELFDIR/run.sh skype skype.sh
+        echo "Starting skype... " && $SELFDIR/run.sh "$PREFIX:skype" skype.sh
       else
         echo "Please start X11 beforehand!"
       fi
@@ -149,7 +160,7 @@ do
 
     210)
       if [ ! -z "$DISPLAY" ]; then
-        echo "Starting Q3... " && $SELFDIR/run.sh q3 /usr/games/openarena
+        echo "Starting Q3... " && $SELFDIR/run.sh "$PREFIX:q3" /usr/games/openarena
       else
         echo "Please start X11 beforehand!"
       fi
@@ -157,7 +168,7 @@ do
 
     209)
       if [ ! -z "$DISPLAY" ]; then
-        echo "Starting iceweasel/firefox?... " && $SELFDIR/run.sh iceweasel firefox
+        echo "Starting iceweasel/firefox?... " && $SELFDIR/run.sh "$PREFIX:iceweasel" firefox
       else
         echo "Please start X11 beforehand!"
       fi
@@ -165,7 +176,7 @@ do
 
     206)
       if [ ! -z "$DISPLAY" ]; then
-        echo "starting X11-SHELL for testing... " && $SELFDIR/run.sh xeyes "rxvt-unicode -fn xft:terminus:pixelsize=12 -e bash"
+        echo "starting X11-SHELL for testing... " && $SELFDIR/run.sh "$PREFIX:xeyes" "rxvt-unicode -fn xft:terminus:pixelsize=12 -e bash"
       else
         echo "Please start X11 beforehand!"
       fi
@@ -173,7 +184,7 @@ do
 
    204)
       if [ ! -z "$DISPLAY" ]; then
-        echo "Starting gui shell (gedit, g3dviewer? + X11-apps)... " && $SELFDIR/run.sh gui "rxvt-unicode -fn xft:terminus:pixelsize=12 -e bash"
+        echo "Starting gui shell (gedit, g3dviewer? + X11-apps)... " && $SELFDIR/run.sh "$PREFIX:gui" "rxvt-unicode -fn xft:terminus:pixelsize=12 -e bash"
       else
         echo "Please start X11 beforehand!"
       fi
@@ -188,7 +199,7 @@ do
     ;;
 
     203)
-      echo "Starting Alsa sound test on plughw:0,0/1... " && $SELFDIR/run.sh alsa /usr/local/bin/soundtest.sh
+      echo "Starting Alsa sound test on plughw:0,0/1... " && $SELFDIR/run.sh "$PREFIX:alsa" /usr/local/bin/soundtest.sh
     ;;
 
     205)
@@ -248,8 +259,7 @@ done
 #docker pull "$U/$I:xeyes"
 #docker pull "$U/$I:gui"
 #docker pull "$U/$I:x11"
-#docker pull "$U/$I:x11vb"
 #docker pull "$U/$I:skype"
 #docker pull "$U/$I:q3"
 #docker pull "$U/$I:iceweasel"
-#docker pull "$U/$I:cups-in-docker"
+#docker pull "$U/$I:cups"

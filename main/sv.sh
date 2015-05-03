@@ -1,11 +1,34 @@
 #! /bin/bash
 
-U=malex984
-I=dockapp
-
-USER_UID=$(id -u)
 
 APP="$1"
+
+# USER_UID=$(id -u)
+
+U=malex984
+I=dockapp
+#IMG="$U/$I:$APP"
+
+ID=$(docker images | awk '{ print "[" $1 ":" $2 "]" }' | sort | uniq | grep "\[$APP\]" )
+
+if [ ! -z "$ID" ]; then  
+  IMG="$APP"
+  APP=$(echo "$IMG" | sed 's@^.*:@@g')
+  if [ "$APP" = "latest" ]; then
+    APP=$(echo "$IMG" | sed -e 's@:.*$@@g' -e 's@/@_@g')  
+  fi
+else
+  ID=$(docker images | awk '{ print "[" $1 "]" }' | sort | uniq | grep "\[$APP\]" )
+  
+  if [ ! -z "$ID" ]; then  
+    IMG="$APP:latest"
+  else
+    IMG="$U/$I:$APP"
+  fi  
+fi
+
+APP="c_$APP"
+
 shift
 ARGS="$@"
 
@@ -14,6 +37,7 @@ XSOCK=/tmp/.X11-unix/
 
 X="$X \
         -v /tmp/:/tmp/:rw \
+        -v /run/:/run/:rw \
         -v /dev/:/dev/:rw \
 "
 
@@ -79,11 +103,11 @@ mydeamon () {
 ##  /sbin/my_init --skip-startup-files --no-kill-all-on-exit --quiet --skip-runit \
 # -e DOCKER_TLS_VERIFY=1 -e DOCKER_CERT_PATH=/home/ur/??? \
 
-echo
-echo "Starting service $APP ('$ARGS')"
+# echo
+# echo "Starting service $APP ('$ARGS')"
 
 OPTS="--skip-startup-files --no-kill-all-on-exit --quiet --skip-runit"
 # --name $APP 
 
-mydeamon "$U/$I:$APP" $OPTS -- $ARGS # "/sbin/setuser" "ur" "..."?
+mydeamon --name "$APP" "$IMG" $OPTS -- $ARGS # "/sbin/setuser" "ur" "..."?
 

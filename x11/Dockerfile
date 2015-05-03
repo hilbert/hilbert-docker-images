@@ -16,8 +16,7 @@ COPY Xorg.sh /usr/local/bin/
 COPY startXephyr.sh /usr/local/bin/
 
 # ADD https://github.com/IMAGINARY/xfullscreen/archive/master.tar.gz /usr/src/xfullscreen.tar.gz
-
-COPY xfullscreen/wmfullscreen xfullscreen/xfullscreen /usr/local/bin/
+# COPY xfullscreen/wmfullscreen xfullscreen/xfullscreen /usr/local/bin/
 
 # CMD Xorg
 ## --privileged --net=host -v /dev/dri/:/dev/dri/ -v /dev/input/:/dev/input/ -v /tmp/.X11-unix/:/tmp/.X11-unix/ 

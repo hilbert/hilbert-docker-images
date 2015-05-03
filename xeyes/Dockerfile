@@ -5,9 +5,6 @@ MAINTAINER Oleksandr Motsak <malex984@googlemail.com>
 RUN DEBIAN_FRONTEND=noninteractive apt-get -q -y install xauth 
 RUN DEBIAN_FRONTEND=noninteractive apt-get -q -y install x11-apps
 RUN DEBIAN_FRONTEND=noninteractive apt-get -q -y install rxvt-unicode
-RUN DEBIAN_FRONTEND=noninteractive apt-get -q -y install xdotool
-
-ADD https://github.com/IMAGINARY/xfullscreen/archive/master.tar.gz /usr/src/xfullscreen.tar.gz
 
 # ENV XLIB_SKIP_ARGB_VISUALS 1
 

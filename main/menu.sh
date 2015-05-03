@@ -3,13 +3,13 @@
 U=malex984
 I=dockapp
 
-IM="$U/$I:menu"
+IMG="$U/$I:menu"
 
 #PP="$1"
 #shift
 #CH="$@"
 
-ID=$(docker ps -a | grep "$IM" | awk '{ print $1 }')
+ID=$(docker ps -a | grep "$IMG" | awk '{ print $1 }')
 echo $N
 
 if [ -z $ID ]; then 
@@ -21,7 +21,7 @@ if [ -z $ID ]; then
   #exit $?
 
   #   --name menu \
-  ID=$(docker create $RUNTERM --net=none "$IM" $OPTS -- "/usr/local/bin/menu.sh" "$@")
+  ID=$(docker create $RUNTERM --net=none "$IMG" $OPTS -- "/usr/local/bin/menu.sh" "$@")
   #docker ps -a
 fi
 

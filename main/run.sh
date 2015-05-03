@@ -1,15 +1,36 @@
 #! /bin/bash
 
-U=malex984
-I=dockapp
 
-USER_UID=$(id -u)
+# USER_UID=$(id -u)
 APP="$1"
 shift
 ARGS="$@"
 
+U=malex984
+I=dockapp
+
+ID=$(docker images | awk '{ print "[" $1 ":" $2 "]" }' | sort | uniq | grep "\[$APP\]" )
+
+if [ ! -z "$ID" ]; then  
+  IMG="$APP"
+  APP=$(echo "$IMG" | sed 's@^.*:@@g')  
+  if [ "$APP" = "latest" ]; then
+    APP=$(echo "$IMG" | sed -e 's@:.*$@@g' -e 's@/@_@g')  
+  fi
+else
+  ID=$(docker images | awk '{ print "[" $1 "]" }' | sort | uniq | grep "\[$APP\]" )
+  
+  if [ ! -z "$ID" ]; then  
+    IMG="$APP:latest"
+  else
+    IMG="$U/$I:$APP"
+  fi  
+fi
+
+APP="c_$APP"
+
   echo
-  echo "Starting $APP ('$ARGS')"
+  echo "Starting '$IMG' ('$ARGS') under the name '$APP'"
 
 XSOCK=/tmp/.X11-unix/
 [ -z "$X" ] && X="DISPLAY"
@@ -23,6 +44,7 @@ XSOCK=/tmp/.X11-unix/
 
 X="$X \
  -v /tmp/:/tmp/:rw \
+ -v /run/:/run/:rw \
  -v /dev/:/dev/:rw \
 "
 
@@ -52,18 +74,18 @@ OPTS="--skip-startup-files --no-kill-all-on-exit --quiet --skip-runit"
 
 # run --rm
 ID=$(docker create \
-     $RUNTERM \
+     $RUNTERM --name "$APP" \
      -e $X \
-        "$U/$I:$APP" $OPTS -- \
+        "$IMG" $OPTS -- \
 		$ARGS )
 #            /sbin/setuser $(whoami) \
 
-docker start -ai $ID
+docker start -ai "$ID"
 RET=$?
 
-docker stop -t 5 $ID 
+docker stop -t 5 "$ID"
 #> /dev/null 2>&1
-docker rm -f $ID 
+docker rm -f "$ID"
 #> /dev/null 2>&1 
 
 exit $RET

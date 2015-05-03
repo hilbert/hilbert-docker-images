@@ -15,6 +15,14 @@ RUN DEBIAN_FRONTEND=noninteractive apt-get -q -y install alsa alsa-tools
 # ADD 01_pulseaudio /etc/my_init.d/01_pulseaudio
 
 COPY soundtest.sh /usr/local/bin/
+ADD http://www.alsa-project.org/alsa-info.sh /usr/local/bin/alsa-info.sh
+
+# RUN DEBIAN_FRONTEND=noninteractive apt-get install -q -y build-essential cmake libglib2.0-dev libasound2-dev
+# RUN git clone https://github.com/i-rinat/apulse.git /usr/src/apulse/
+# RUN mkdir -p /tmp/build && cd /tmp/build && \
+#    cmake -DCMAKE_INSTALL_PREFIX=/usr -DCMAKE_BUILD_TYPE=Release /usr/src/apulse/ && \
+#    make && make install
+
 
 # RUN DEBIAN_FRONTEND=noninteractive apt-get -q -y install --no-install-recommends cmus
 # RUN DEBIAN_FRONTEND=noninteractive apt-get -q -y install --no-install-recommends paprefs

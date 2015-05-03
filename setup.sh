@@ -3,8 +3,8 @@
 U=malex984
 I=dockapp
 
-##### old: debian:wheezy ???
-#docker pull phusion/baseimage
+docker pull phusion/baseimage:0.9.16
+
 #docker tag phusion/baseimage:0.9.16 "$U/$I:base"
 
 
@@ -22,33 +22,17 @@ do
   echo "Building $d -> $U/$I:$d...."
   cat "$d/Dockerfile"
   echo
-  docker ps -s -a | grep "$d"
+  docker ps -sa | grep "$d"
   # docker stop "$d"
   # docker rm -f "$d"
 
-  cd "$d"
-  docker build --pull=false -t "$U/$I:$d" "." || exit 1
-  docker rmi $(docker images -q -f dangling=true)
-  cd -
+  docker build --pull=false --force-rm=true --rm=true -t "$U/$I:$d" "$d" || exit 1
+
   echo
 #  docker push "$U/$I:$d"
 done
 
+docker rmi $(docker images -q -f dangling=true)
+
 docker images -a
 docker ps -a
-
-
-
-#E: Unable to locate package sdl
-#E: Unable to locate package sdl_image
-#E: Unable to locate package libpng
-#E: Unable to locate package jpeg
-
-#E: Unable to locate package mesa-dri-swrast
-#E: Unable to locate package xorg-server-xephyr
-#E: Package 'xkeyboard-config' has no installation candidate
-#E: Unable to locate package xkbcomp
-
-# E: Unable to locate package libqt5gui5
-# E: Unable to locate package libqt5widgets5
-
