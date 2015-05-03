@@ -27,14 +27,13 @@ do
   # docker rm -f "$d"
 
   cd "$d"
-  docker build --pull=false -t "$U/$I:$d" "."
+  docker build --pull=false -t "$U/$I:$d" "." || exit 1
+  docker rmi $(docker images -q -f dangling=true)
   cd -
   echo
 #  docker push "$U/$I:$d"
 done
 
-docker images -a
-docker rmi $(docker images -q -f dangling=true)
 docker images -a
 docker ps -a
 

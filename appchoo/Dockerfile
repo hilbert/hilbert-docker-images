@@ -59,9 +59,16 @@ ADD http://www.mathematik.uni-kl.de/~motsak/files/BM/GPU_Test_Info_Linux64.tar.g
 ## ENTRYPOINT [ "/usr/local/bin/appchoo" ]
 
 
-ADD NVIDIA-Linux-x86_64-340.76.run /usr/src/NVIDIA-Linux-x86_64-340.76.run
-RUN chmod +x usr/src/NVIDIA-Linux-x86_64-340.76.run 
-RUN /usr/src/NVIDIA-Linux-x86_64-340.76.run -s -N --no-kernel-module
-RUN rm /usr/src/NVIDIA-Linux-x86_64-340.76.run
+#ADD NVIDIA-Linux-x86_64-340.76.run /usr/src/NVIDIA-Linux-x86_64-340.76.run
+#RUN chmod +x usr/src/NVIDIA-Linux-x86_64-340.76.run 
+#RUN /usr/src/NVIDIA-Linux-x86_64-340.76.run -s -N --no-kernel-module
+#RUN rm /usr/src/NVIDIA-Linux-x86_64-340.76.run
+
+
+# ENV VBOX_VERSION    4.3.26
+## ADD VirtualBox-4.3.26-98988-Linux_amd64.run /tmp/
+# ADD http://dlc-cdn.sun.com/virtualbox/4.3.26/VirtualBox-4.3.26-98988-Linux_amd64.run /usr/src/
+ADD VBoxLinuxAdditions.run /tmp/
+RUN chmod +x /tmp/VBoxLinuxAdditions.run && /tmp/VBoxLinuxAdditions.run && rm /tmp/VBoxLinuxAdditions.run || rm /tmp/VBoxLinuxAdditions.run
 
 
