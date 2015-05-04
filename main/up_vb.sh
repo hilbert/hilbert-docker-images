@@ -66,7 +66,7 @@ RUN cd /tmp/ && \
     wget -q "http://download.virtualbox.org/virtualbox/$VER/VBoxGuestAdditions_$VER.iso" && \
     7z x "VBoxGuestAdditions_$VER.iso" -y -bd -ir'!VBoxLinuxAdditions.run'
 
-RUN sh /tmp/VBoxLinuxAdditions.run || cat /var/log/vboxadd-install.log
+RUN (sh /tmp/VBoxLinuxAdditions.run; cat /var/log/vboxadd-install.log )
 RUN mkdir -p /usr/lib/xorg/modules/drivers/ /usr/lib/x86_64-linux-gnu/dri/ && \
     chmod go+rx /usr/lib/xorg/modules/drivers/ /usr/lib/x86_64-linux-gnu/dri/ && \
     ln -s /usr/lib/x86_64-linux-gnu/VBoxOGL.so /usr/lib/x86_64-linux-gnu/dri/vboxvideo_dri.so && \
