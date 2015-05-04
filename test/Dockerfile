@@ -68,7 +68,8 @@ RUN git clone https://github.com/chjj/compton.git /usr/src/compton/
 
 ADD http://www.forchheimer.se/transset-df/transset-df-6.tar.gz /usr/src/
 
-RUN DEBIAN_FRONTEND=noninteractive apt-get -q -y install libxv1 x11perf glmark2 
+# x11perf 
+RUN DEBIAN_FRONTEND=noninteractive apt-get -q -y install libxv1 glmark2 
 COPY bm_gpu.sh /usr/src/
 
 RUN DEBIAN_FRONTEND=noninteractive apt-get -q -y install python-tk
