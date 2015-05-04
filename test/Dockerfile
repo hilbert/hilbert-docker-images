@@ -63,6 +63,7 @@ COPY test_sys.sh ilkh.sh test_x11.sh test_nv.sh test_vbox.sh /usr/local/bin/
 
 RUN DEBIAN_FRONTEND=noninteractive apt-get install -q -y v4l-utils
 
+ADD http://www.forchheimer.se/transset-df/transset-df-6.tar.gz /usr/src/
 
 # RUN DEBIAN_FRONTEND=noninteractive apt-get -q -y install gtk2.0-examples qt4-qtconfig gedit
 

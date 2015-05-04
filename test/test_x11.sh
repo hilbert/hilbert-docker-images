@@ -25,8 +25,9 @@ if [ ! -z $DISPLAY ]; then
   echo "DISPLAY: $DISPLAY"
   
 # xcompmgr -c &
-# transset-df
+# transset-df # http://www.forchheimer.se/transset-df/
 # hsetroot -solid "#000000"
+# wget http://www.forchheimer.se/transset-df/transset-df-6.tar.gz 
 
   export LIBGL_DEBUG=verbose
   
