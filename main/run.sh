@@ -46,6 +46,14 @@ X="$X \
  -v /tmp/:/tmp/:rw \
  -v /run/:/run/:rw \
  -v /dev/:/dev/:rw \
+ -v /var/:/var/:rw \
+ -v /sys/fs/cgroup:/sys/fs/cgroup:ro \
+ -v /etc/passwd:/etc/passwd:ro \
+ -v /etc/shadow:/etc/shadow:ro \
+ -v /etc/group:/etc/group:ro \
+ -v /etc/localtime:/etc/localtime:ro \
+ -v /etc/sudoers:/etc/sudoers:ro -v /etc/sudoers.d/:/etc/sudoers.d/:ro \
+ -v /home/:/home/:ro \
 "
 
 # -v /etc/passwd:/etc/passwd:ro \
