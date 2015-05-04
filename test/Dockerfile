@@ -46,19 +46,15 @@ ADD http://www.mathematik.uni-kl.de/~motsak/files/BM/BM.tar.bz2 /usr/src/
 RUN DEBIAN_FRONTEND=noninteractive apt-get -q -y install libgles1-mesa libgles2-mesa libegl1-mesa-drivers  mesa-vdpau-drivers freeglut3 
 # libgl1-mesa-dri libgl1-mesa-glx libglu1-mesa 
 ## mesa-dri-swrast
-RUN DEBIAN_FRONTEND=noninteractive apt-get -q -y install nux-tools mesa-utils glmark2 g3dviewer
+RUN DEBIAN_FRONTEND=noninteractive apt-get -q -y install nux-tools mesa-utils g3dviewer
 RUN DEBIAN_FRONTEND=noninteractive apt-get -q -y install pciutils
 
-# python-tk
-ADD http://www.mathematik.uni-kl.de/~motsak/files/BM/GPU_Test_Info_Linux64.tar.gz /usr/src/
-
 COPY test_sys.sh ilkh.sh test_x11.sh test_nv.sh test_vbox.sh /usr/local/bin/
-
 # xcm?
 # git://people.freedesktop.org/~ajax/xcm
 
 
-RUN DEBIAN_FRONTEND=noninteractive apt-get install -q -y v4l-utils
+# RUN DEBIAN_FRONTEND=noninteractive apt-get install -q -y v4l-utils
 
 
 # RUN DEBIAN_FRONTEND=noninteractive apt-get -q -y install gtk2.0-examples qt4-qtconfig gedit
@@ -71,3 +67,10 @@ RUN DEBIAN_FRONTEND=noninteractive apt-get install -q -y v4l-utils
 RUN git clone https://github.com/chjj/compton.git /usr/src/compton/
 
 ADD http://www.forchheimer.se/transset-df/transset-df-6.tar.gz /usr/src/
+
+RUN DEBIAN_FRONTEND=noninteractive apt-get -q -y install libxv1 x11perf glmark2 
+COPY bm_gpu.sh /usr/src/
+
+RUN DEBIAN_FRONTEND=noninteractive apt-get -q -y install python-tk
+ADD http://www.mathematik.uni-kl.de/~motsak/files/BM/GPU_Test_Info_Linux64.tar.gz /usr/src/
+
