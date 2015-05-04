@@ -33,10 +33,11 @@ share images as much as possible).
 5. Now assuming a running X11 (on host or inside a docker container) one can choose any application to run (e.g. `Test`) or Quit.
 
 
-The sequence of actions looks approximately as follows:
+## The sequence of actions looks approximately as follows:
+
 ![Approximate Sequence Diagram](http://www.websequencediagrams.com/cgi-bin/cdraw?lz=dGl0bGUgRHluYW1pYyBEb2NrZXIgQXBwbGljYXRpb24KCnBhcnRpY2lwYW50IEhvc3QKbm90ZSBvdmVyAAoFOiAKSG9zdCBMaW51eCB3aXRoAD8HCmVuZCBub3RlCgoAHQUtPisAKgYuL3J1bm1lLnNoCgBQDiI6TWFpbiIAJgkACQc6IDptYWluL21haW4AMAVsb29wIHRoZSBtYWluIGdsdWUgAA4FcnVuIHVudGlsIFF1aXQASxFlbnUiCgoAXgcAWQZlbnUAWgVlbnUvbWVudS5zaAoAIwctLT4tAHgJY2hvc2VuIEFwcC9TZXJ2aWNlIG9yAGAGZGVzdHJveQBXCmFsdCBQdWxsL1J1biBkZWFtb24gOgAvBwCBYBAARgciAIEMCgAKCgCBbwhzdgCBEAYAJAgAghQFABsKZXhlYyAAVgllbHNlAHQKYW5kIEQAgRkHOkFwcEEAgmAQQXBwQQBwDQAMBQCCaQhydQCCawUAIAcAgwwFABkHAHAFAEwFABUIAIIiDGV4aXQgY29kZSAAghMLAGUGAIEbBgCDGQYAgwIILT4tAIRDBgAvCQCCSQwAhAwGZW5kCgplbmQKCgoKCgoK&s=modern-blue)
 
-
+## Currently we host the following images:
 
 * `:base` serves as the common root for all my images. Thus it is the only image that needs to update & upgrade packages.
 * `:dd` contains the docker cli and thus serves as a basis for `:main` which in turn pulls and launches further images.
@@ -51,26 +52,32 @@ The sequence of actions looks approximately as follows:
 * `:play` contains several media players like `cmus`, `vlc`, `mplayer`, `xine`.
 * `:test` for building and testing applications before creating standalone specialized images
 
+### Services:
+
 Some applications may need further deamons to run in background. Here is a list of server images:
+
 * `:x11` is an Xorg/Xephyr service
 * `:cups` is supposed to run CUPS server (:6631) - seems to start but has to be thoughly tested.
 
-The dependencies between images are as follows: 
+## The dependencies between images are as follows: 
 ![Dependencies between docker images](deps.png)
 
+## TODO List:
 
-DONE:
+### DONE:
+
 * `runme.sh` can use the currently running X11 of the host machine.
 * `runme.sh` and `main/*.sh` correctly handle DISPLAY comming from host or from x11/xephyr container
 * user can start `xephyr` in order to run our apps in a windowed mode
 * 3rd party tools are currently insorporated into `:test`
 
-Further steps:
+### Further steps:
+
 * switch to GUI menu (appchoo) in case of available X11
 * make use of composite X11 manager (e.g. compton) and qclosebutton
 * test printing via cups!
 * test under Mac OS X whether the user still can use `xsocat.sh` e.g. in case of  `boot2docker`
-  (e.g. following: `https://github.com/docker/docker/issues/8710`, and
+  (e.g. following: (https://github.com/docker/docker/issues/8710), and
   makeing sure to fix your firewall, and X11 settings to accept incoming connections)
 * make a nice logo for the app (e.g. whales following each other while being driven by BASH :) )
 
