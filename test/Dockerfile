@@ -12,17 +12,12 @@ ENV LIBGL_DEBUG=verbose
 RUN DEBIAN_FRONTEND=noninteractive apt-get -q -y install xauth x11-apps 
 RUN DEBIAN_FRONTEND=noninteractive apt-get -q -y install rxvt-unicode
 
-RUN DEBIAN_FRONTEND=noninteractive apt-get -q -y install xcompmgr 
-
+# RUN DEBIAN_FRONTEND=noninteractive apt-get -q -y install xcompmgr 
 # RUN DEBIAN_FRONTEND=noninteractive apt-get -q -y install xkeyboard-config xkbcomp
-
+# RUN DEBIAN_FRONTEND=noninteractive apt-get -q -y install git
 
 RUN DEBIAN_FRONTEND=noninteractive apt-get -q -y install build-essential
-
-
 RUN DEBIAN_FRONTEND=noninteractive apt-get -q -y install xdotool
-
-RUN DEBIAN_FRONTEND=noninteractive apt-get -q -y install git
 
 RUN git clone https://github.com/IMAGINARY/xfullscreen.git /usr/src/xfullscreen/
 RUN ln -s /usr/src/xfullscreen/*fullscreen /usr/local/bin/
@@ -39,6 +34,8 @@ RUN cd /usr/src/qclosebutton && qmake && make && cp qclosebutton /usr/local/bin/
 COPY appchoo.bin qclosebutton.bin /usr/local/bin/
 
 ADD http://xdialog.free.fr/Xdialog-2.3.1.tar.bz2 /usr/src/
+
+
 
 
 # TODO: Find corresponding tools or their analogs...
@@ -63,8 +60,14 @@ COPY test_sys.sh ilkh.sh test_x11.sh test_nv.sh test_vbox.sh /usr/local/bin/
 
 RUN DEBIAN_FRONTEND=noninteractive apt-get install -q -y v4l-utils
 
-ADD http://www.forchheimer.se/transset-df/transset-df-6.tar.gz /usr/src/
 
 # RUN DEBIAN_FRONTEND=noninteractive apt-get -q -y install gtk2.0-examples qt4-qtconfig gedit
 
+# https://github.com/chjj/compton
+#RUN DEBIAN_FRONTEND=noninteractive apt-get -q -y install libx11 libxcomposite libxdamage libxfixes libXext libxrender libXrandr libXinerama
+#RUN DEBIAN_FRONTEND=noninteractive apt-get -q -y install xproto x11proto 
+#RUN DEBIAN_FRONTEND=noninteractive apt-get -q -y install x11-utils
+#RUN DEBIAN_FRONTEND=noninteractive apt-get -q -y install libpcre libconfig libdrm libGL libdbus
+RUN git clone https://github.com/chjj/compton.git /usr/src/compton/
 
+ADD http://www.forchheimer.se/transset-df/transset-df-6.tar.gz /usr/src/
