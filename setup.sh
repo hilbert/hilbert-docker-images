@@ -11,12 +11,10 @@ docker pull phusion/baseimage:0.9.16
 docker images -a
 docker ps -a -s
 
-# ALL: base dd main appa menu alsa xeyes gui play iceweasel skype q3 x11 cups x11vb;
+# ALL: base dd main appa menu alsa xeyes gui play iceweasel skype q3 x11 cups ;
 
 # for dependencies please check out depsgen.sh!
-#qclosebutton xeyes appchoo  ;
-# for d in main alsa xeyes x11 x11vb ;
-for d in base dd main menu appa alsa xeyes x11 gui ;
+for d in base dd main menu appa alsa xeyes test cups x11 gui play iceweasel skype q3 ;
 do
   echo
   echo "Building $d -> $U/$I:$d...."
