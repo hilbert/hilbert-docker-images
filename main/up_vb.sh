@@ -68,9 +68,14 @@ RUN cd /tmp/ && \
 
 RUN (sh /tmp/VBoxLinuxAdditions.run; cat /var/log/vboxadd-install.log )
 RUN mkdir -p /usr/lib/xorg/modules/drivers/ /usr/lib/x86_64-linux-gnu/dri/ && \
-    chmod go+rx /usr/lib/xorg/modules/drivers/ /usr/lib/x86_64-linux-gnu/dri/ && \
-    ln -s /usr/lib/x86_64-linux-gnu/VBoxOGL.so /usr/lib/x86_64-linux-gnu/dri/vboxvideo_dri.so && \
-    ln -s /usr/lib/x86_64-linux-gnu/VBoxGuestAdditions/vboxvideo_drv_115.so /usr/lib/xorg/modules/drivers/vboxvideo_drv.so
+    chmod go+rx /usr/lib/xorg/modules/drivers/ /usr/lib/x86_64-linux-gnu/dri/ 
+
+RUN test -e /usr/lib/x86_64-linux-gnu/dri/vboxvideo_dri.so || \
+    ln -s /usr/lib/x86_64-linux-gnu/VBoxOGL.so \
+            /usr/lib/x86_64-linux-gnu/dri/vboxvideo_dri.so
+RUN test -e /usr/lib/xorg/modules/drivers/vboxvideo_drv.so || \
+    ln -s /usr/lib/x86_64-linux-gnu/VBoxGuestAdditions/vboxvideo_drv_115.so \
+            /usr/lib/xorg/modules/drivers/vboxvideo_drv.so
 
 RUN DEBIAN_FRONTEND=noninteractive apt-get purge -qqy --auto-remove p7zip-full && \
     rm -f  /tmp/VBoxGuestAdditions_$VER.iso && mv /tmp/VBoxLinuxAdditions.run /usr/src
