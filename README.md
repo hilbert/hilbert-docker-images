@@ -33,7 +33,7 @@ share images as much as possible).
 5. Now assuming a running X11 (on host or inside a docker container) one can choose any application to run (e.g. `Test`) or Quit.
 
 
-## The sequence of actions looks approximately as follows:
+## The sequence of actions 3..5 looks approximately as follows:
 
 ![Approximate Sequence Diagram](http://www.websequencediagrams.com/cgi-bin/cdraw?lz=dGl0bGUgRHluYW1pYyBEb2NrZXIgQXBwbGljYXRpb24KCnBhcnRpY2lwYW50IEhvc3QKbm90ZSBvdmVyAAoFOiAKSG9zdCBMaW51eCB3aXRoAD8HCmVuZCBub3RlCgoAHQUtPisAKgYuL3J1bm1lLnNoCgBQDiI6TWFpbiIAJgkACQc6IDptYWluL21haW4AMAVsb29wIHRoZSBtYWluIGdsdWUgAA4FcnVuIHVudGlsIFF1aXQASxFlbnUiCgoAXgcAWQZlbnUAWgVlbnUvbWVudS5zaAoAIwctLT4tAHgJY2hvc2VuIEFwcC9TZXJ2aWNlIG9yAGAGZGVzdHJveQBXCmFsdCBQdWxsL1J1biBkZWFtb24gOgAvBwCBYBAARgciAIEMCgAKCgCBbwhzdgCBEAYAJAgAghQFABsKZXhlYyAAVgllbHNlAHQKYW5kIEQAgRkHOkFwcEEAgmAQQXBwQQBwDQAMBQCCaQhydQCCawUAIAcAgwwFABkHAHAFAEwFABUIAIIiDGV4aXQgY29kZSAAghMLAGUGAIEbBgCDGQYAgwIILT4tAIRDBgAvCQCCSQwAhAwGZW5kCgplbmQKCgoKCgoK&s=modern-blue)
 
@@ -81,4 +81,19 @@ Some applications may need further deamons to run in background. Here is a list 
   makeing sure to fix your firewall, and X11 settings to accept incoming connections)
 * make a nice logo for the app (e.g. whales following each other while being driven by BASH :) )
 
+
+
+## Problems:
+
+### X11 would not create a new terminal with the following error message:
+
+```
+xterm: Error 32, errno 2: No such file or directory
+Reason: get_pty: not enough ptys
+```
+
+It seems that somebody clears permissions on `/dev/pts/ptmx` in the
+course of the docker mounting `/dev` or using it by containers... 
+
+Quick Fix is `sudo chmod a+rw /dev/pts/ptmx`
 
