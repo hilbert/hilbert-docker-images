@@ -31,21 +31,16 @@ RUN DEBIAN_FRONTEND=noninteractive apt-get -q -y install qt4-default qt4-qmake
 RUN git clone https://github.com/IMAGINARY/qclosebutton.git /usr/src/qclosebutton/
 RUN cd /usr/src/qclosebutton && qmake && make && cp qclosebutton /usr/local/bin/ && make clean
 
-COPY appchoo.bin qclosebutton.bin /usr/local/bin/
-
-ADD http://xdialog.free.fr/Xdialog-2.3.1.tar.bz2 /usr/src/
-
-
+# COPY appchoo.bin qclosebutton.bin /usr/local/bin/
+# ADD http://xdialog.free.fr/Xdialog-2.3.1.tar.bz2 /usr/src/
 
 
 # TODO: Find corresponding tools or their analogs...
-ADD http://www.mathematik.uni-kl.de/~motsak/files/BM/BM.tar.bz2 /usr/src/
+# ADD http://www.mathematik.uni-kl.de/~motsak/files/BM/BM.tar.bz2 /usr/src/
 
 # fbsuite seems to be rather outdated, and unusable on 64 bit ubuntu14.04 :(
 
 RUN DEBIAN_FRONTEND=noninteractive apt-get -q -y install libgles1-mesa libgles2-mesa libegl1-mesa-drivers  mesa-vdpau-drivers freeglut3 
-# libgl1-mesa-dri libgl1-mesa-glx libglu1-mesa 
-## mesa-dri-swrast
 RUN DEBIAN_FRONTEND=noninteractive apt-get -q -y install nux-tools mesa-utils g3dviewer
 RUN DEBIAN_FRONTEND=noninteractive apt-get -q -y install pciutils
 
@@ -55,9 +50,24 @@ COPY test_sys.sh ilkh.sh test_x11.sh test_nv.sh test_vbox.sh /usr/local/bin/
 
 
 # RUN DEBIAN_FRONTEND=noninteractive apt-get install -q -y v4l-utils
-
-
 # RUN DEBIAN_FRONTEND=noninteractive apt-get -q -y install gtk2.0-examples qt4-qtconfig gedit
+
+
+# ADD http://www.forchheimer.se/transset-df/transset-df-6.tar.gz /usr/src/
+
+# x11perf 
+RUN DEBIAN_FRONTEND=noninteractive apt-get -q -y install glmark2 
+
+## http://www.mathematik.uni-kl.de/~motsak/files/BM/GPU_Test_Info_Linux64.tar.gz 
+RUN DEBIAN_FRONTEND=noninteractive apt-get -q -y install libxv1 python-tk
+COPY GpuTest_Linux_x64_0.7.0.tar.bz2 /usr/src/
+RUN tar -xjvf /usr/src/GpuTest_Linux_x64_0.7.0.tar.bz2 -C /usr/src/ && ln -s /usr/src/GpuTest_Linux_x64_0.7.0/GpuTest-all.sh /usr/local/bin/
+
+# libGL libEGL libGLESv2
+RUN git clone https://github.com/glmark2/glmark2.git /usr/src/glmark2/
+
+COPY bm_gpu.sh /usr/src/
+
 
 # https://github.com/chjj/compton
 #RUN DEBIAN_FRONTEND=noninteractive apt-get -q -y install libx11 libxcomposite libxdamage libxfixes libXext libxrender libXrandr libXinerama
@@ -65,13 +75,3 @@ COPY test_sys.sh ilkh.sh test_x11.sh test_nv.sh test_vbox.sh /usr/local/bin/
 #RUN DEBIAN_FRONTEND=noninteractive apt-get -q -y install x11-utils
 #RUN DEBIAN_FRONTEND=noninteractive apt-get -q -y install libpcre libconfig libdrm libGL libdbus
 RUN git clone https://github.com/chjj/compton.git /usr/src/compton/
-
-ADD http://www.forchheimer.se/transset-df/transset-df-6.tar.gz /usr/src/
-
-# x11perf 
-RUN DEBIAN_FRONTEND=noninteractive apt-get -q -y install libxv1 glmark2 
-COPY bm_gpu.sh /usr/src/
-
-RUN DEBIAN_FRONTEND=noninteractive apt-get -q -y install python-tk
-ADD http://www.mathematik.uni-kl.de/~motsak/files/BM/GPU_Test_Info_Linux64.tar.gz /usr/src/
-

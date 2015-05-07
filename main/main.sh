@@ -128,7 +128,8 @@ do
 
     215)
       if [ ! -z "$DISPLAY" ]; then
-        echo "Starting GUI shell for test... Please build appchoo yourself... " && $SELFDIR/run.sh test "rxvt-unicode -fn xft:terminus:pixelsize=12 -e bash"
+        echo "Starting GUI shell for test... Please build appchoo yourself... " && $SELFDIR/run.sh 'test' bash
+	# "rxvt-unicode -fn xft:terminus:pixelsize=12 -e bash"
       else
         echo "Please start X11 beforehand!"
       fi
