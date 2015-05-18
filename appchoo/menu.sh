@@ -9,10 +9,12 @@ cd "$SELFDIR"
 APP=appchoo
 ARGS="$@"
 
-if [ ( (-z "$ARGS" ) -o ( ! -r "$ARGS" ) ) -a (-e "./$APP.list" ) ]; 
+[ -z "$ARGS" ] && ARGS="./$APP.list"
+[ ! -r "$ARGS" ] && ARGS="./$APP.list"
+[ ! -r "$ARGS" ] && ARGS=""
+
+if [ -z "$ARGS" ];
 then
-  ARGS=./$APP.list
-else
   echo "Sorry: cannot read arguments from '$ARGS' and './$APP.list' :( "
   exit 1
 fi

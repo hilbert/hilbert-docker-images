@@ -2,7 +2,7 @@ FROM malex984/dockapp:base
 
 MAINTAINER Oleksandr Motsak <malex984@googlemail.com>
 
-ENV LIBGL_DEBUG=verbose
+# ENV LIBGL_DEBUG=verbose
 # ENV XLIB_SKIP_ARGB_VISUALS 1
 
 # set the following if any QT GUI look like an empty rectangular window

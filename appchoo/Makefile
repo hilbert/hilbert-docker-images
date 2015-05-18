@@ -19,3 +19,13 @@ clean:
 	rm -f $(APP).list imgs/*.jpg
 	rmdir imgs
 
+RUNTERM="-it -a stdin -a stdout -a stderr"
+OPTS="--skip-startup-files --no-kill-all-on-exit --quiet --skip-runit"
+#docker run --rm $RUNTERM --net=none "$U/$I:menu" $OPTS -- "/usr/local/bin/menu.sh" "$@"
+
+run:
+	### [ -z "${DISPLAY}" ] && exit 1
+	xhost + || exit 1
+	docker run --rm -e DISPLAY $RUNTERM --net=none -v /tmp/:/tmp/:rw $(IMG) $OPTS -- menu.sh
+	echo $?
+
