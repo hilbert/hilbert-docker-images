@@ -5,6 +5,7 @@ TMP=$2
 
 exec 6<> "$TMP"
 $XORG -displayfd 6 1>/dev/null 2>&1
+# xhost +si:localuser:username
 xhost +
 exec 6>&-
 
