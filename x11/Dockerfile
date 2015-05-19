@@ -3,9 +3,12 @@ FROM malex984/dockapp:base
 MAINTAINER Oleksandr Motsak <malex984@googlemail.com>
 
 RUN DEBIAN_FRONTEND=noninteractive apt-get -q -y install xserver-xorg xserver-xorg-video-all
-RUN DEBIAN_FRONTEND=noninteractive apt-get -q -y install libgles1-mesa libgles2-mesa libegl1-mesa-drivers libgl1-mesa-dri mesa-vdpau-drivers freeglut3 libgl1-mesa-glx libglu1-mesa
-RUN DEBIAN_FRONTEND=noninteractive apt-get -q -y install nux-tools mesa-utils
-RUN DEBIAN_FRONTEND=noninteractive apt-get -q -y install xserver-xephyr xcompmgr unagi
+RUN DEBIAN_FRONTEND=noninteractive apt-get -q -y install \
+libgl1-mesa-dri libgl1-mesa-glx libglu1-mesa libgles1-mesa libgles2-mesa libegl1-mesa-drivers \
+mesa-vdpau-drivers freeglut3 mesa-utils
+
+RUN DEBIAN_FRONTEND=noninteractive apt-get -q -y install xserver-xephyr xpra
+# xcompmgr unagi
 ## compiz  
 #  libx11 libxmu libxi
 

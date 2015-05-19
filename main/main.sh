@@ -129,7 +129,7 @@ do
     215)
       if [ ! -z "$DISPLAY" ]; then
         echo "Starting GUI shell for test... Please build appchoo yourself... " && $SELFDIR/run.sh 'test' bash
-	# "rxvt-unicode -fn xft:terminus:pixelsize=12 -e bash"
+	# "rxvt-unicode -fn xft:terminus:pixelsize=12 -e bash" ## xterm?
       else
         echo "Please start X11 beforehand!"
       fi
@@ -137,7 +137,8 @@ do
 
     214)
       if [ ! -z "$DISPLAY" ]; then
-        echo "Starting GUI shell for appchoo... Please build appchoo yourself... " && $SELFDIR/run.sh "$PREFIX:appchoo" "rxvt-unicode -fn xft:terminus:pixelsize=12 -e bash"
+        echo "Starting GUI shell for appchoo... Please build appchoo yourself... " && $SELFDIR/run.sh "$PREFIX:appchoo" xterm
+        # "rxvt-unicode -fn xft:terminus:pixelsize=12 -e bash"
       else
         echo "Please start X11 beforehand!"
       fi
@@ -145,7 +146,8 @@ do
 
     213)
       if [ ! -z "$DISPLAY" ]; then
-        echo "Starting GUI shell... Please run cmus/vlc/mplaye/xine yourself... " && $SELFDIR/run.sh "$PREFIX:play" "rxvt-unicode -fn xft:terminus:pixelsize=12 -e bash"
+        echo "Starting GUI shell... Please run cmus/vlc/mplaye/xine yourself... " && $SELFDIR/run.sh "$PREFIX:play" xterm
+        # "rxvt-unicode -fn xft:terminus:pixelsize=12 -e bash"
       else
         echo "Please start X11 beforehand!"
       fi
@@ -177,7 +179,8 @@ do
 
     206)
       if [ ! -z "$DISPLAY" ]; then
-        echo "starting X11-SHELL for testing... " && $SELFDIR/run.sh "$PREFIX:xeyes" "rxvt-unicode -fn xft:terminus:pixelsize=12 -e bash"
+        echo "starting X11-SHELL for testing... " && $SELFDIR/run.sh "$PREFIX:xeyes" xterm
+        # "rxvt-unicode -fn xft:terminus:pixelsize=12 -e bash"
       else
         echo "Please start X11 beforehand!"
       fi
@@ -185,7 +188,8 @@ do
 
    204)
       if [ ! -z "$DISPLAY" ]; then
-        echo "Starting gui shell (gedit, g3dviewer? + X11-apps)... " && $SELFDIR/run.sh "$PREFIX:gui" "rxvt-unicode -fn xft:terminus:pixelsize=12 -e bash"
+        echo "Starting gui shell (gedit, g3dviewer? + X11-apps)... " && $SELFDIR/run.sh "$PREFIX:gui" xterm
+        # "rxvt-unicode -fn xft:terminus:pixelsize=12 -e bash"
       else
         echo "Please start X11 beforehand!"
       fi
