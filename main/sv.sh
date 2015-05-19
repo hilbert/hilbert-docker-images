@@ -33,13 +33,29 @@ shift
 ARGS="$@"
 
 XSOCK=/tmp/.X11-unix/
-[ -z "$X" ] && X="NODISPLAY=1"
-
+[ -z "$X" ] && X="DISPLAY=unix$DISPLAY"
+### -v /var/:/var/:rw \
+# -v /var/lib:/var/lib:rw \
+ 
 X="$X \
-        -v /tmp/:/tmp/:rw \
-        -v /run/:/run/:rw \
-        -v /dev/:/dev/:rw \
+ -v /tmp:/tmp:rw \
+ -v /run:/run:rw \
+ -v /dev:/dev:rw \
+ -v /var/log:/var/log:rw \
+ -v /var/run:/var/run:rw \
+ -v /etc/passwd:/etc/passwd:ro \
+ -v /etc/shadow:/etc/shadow:ro \
+ -v /etc/group:/etc/group:ro \
+ -v /etc/localtime:/etc/localtime:ro \
+ -v /etc/sudoers:/etc/sudoers:ro -v /etc/sudoers.d/:/etc/sudoers.d/:ro \
+ -v /home:/home:ro \
+ -v /dev/dri:/dev/dri \
+ -v /dev/input:/dev/input \
+ -v /tmp/.X11-unix:/tmp/.X11-unix \
+ -v /run/udev:/run/udev \
 "
+## --device /dev/snd \
+
 
 #        -v /etc/passwd:/etc/passwd:ro \
 #        -v /etc/shadow:/etc/shadow:ro \
@@ -64,7 +80,7 @@ mydeamon () {
 #        --lxc-conf='lxc.cgroup.devices.allow=c 116:* rwm' \
 #        --lxc-conf='lxc.cgroup.devices.allow=c  81:* rwm' \
 
-  docker run -d --privileged --net=host --ipc=host --pid=host -P -e $X \
+  docker run -it -d --privileged --net=host --ipc=host --pid=host -P -e $X \
         "$@"
 
   RET="$?"

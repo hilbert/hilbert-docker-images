@@ -8,6 +8,10 @@ ENV LIBGL_DEBUG=verbose
 # set the following if any QT GUI look like an empty rectangular window
 # ENV QT_X11_NO_MITSHM 1
 
+RUN DEBIAN_FRONTEND=noninteractive apt-get -y update
+RUN DEBIAN_FRONTEND=noninteractive apt-get -q -y install build-essential
+
+##RUN DEBIAN_FRONTEND=noninteractive apt-get -q -y install xserver-xorg-video-all
 RUN DEBIAN_FRONTEND=noninteractive apt-get -q -y install xauth x11-apps 
 RUN DEBIAN_FRONTEND=noninteractive apt-get -q -y install xterm
 
@@ -15,7 +19,6 @@ RUN DEBIAN_FRONTEND=noninteractive apt-get -q -y install xterm
 # RUN DEBIAN_FRONTEND=noninteractive apt-get -q -y install xkeyboard-config xkbcomp
 # RUN DEBIAN_FRONTEND=noninteractive apt-get -q -y install git
 
-RUN DEBIAN_FRONTEND=noninteractive apt-get -q -y install build-essential
 RUN DEBIAN_FRONTEND=noninteractive apt-get -q -y install xdotool
 
 RUN git clone https://github.com/IMAGINARY/xfullscreen.git /usr/src/xfullscreen/
@@ -54,14 +57,21 @@ COPY test_sys.sh ilkh.sh test_x11.sh test_nv.sh test_vbox.sh /usr/local/bin/
 
 # x11perf 
 RUN DEBIAN_FRONTEND=noninteractive apt-get -q -y install glmark2 
+ADD http://launchpadlibrarian.net/179163801/glmark2_2014.03-0ubuntu3_amd64.deb /usr/src/
+ADD http://launchpadlibrarian.net/179164175/glmark2-data_2014.03-0ubuntu3_all.deb /usr/src/
+#RUN sudo dpkg -i /usr/src/glmark2-data_2014.03-0ubuntu3_all.deb
+#RUN sudo dpkg -i /usr/src/glmark2_2014.03-0ubuntu3_amd64.deb
+
 
 ## http://www.mathematik.uni-kl.de/~motsak/files/BM/GPU_Test_Info_Linux64.tar.gz 
 RUN DEBIAN_FRONTEND=noninteractive apt-get -q -y install libxv1 python-tk
 COPY GpuTest_Linux_x64_0.7.0.tar.bz2 /usr/src/
 RUN tar -xjvf /usr/src/GpuTest_Linux_x64_0.7.0.tar.bz2 -C /usr/src/ && ln -s /usr/src/GpuTest_Linux_x64_0.7.0/GpuTest-all.sh /usr/local/bin/
 
-# libGL libEGL libGLESv2
-RUN git clone https://github.com/glmark2/glmark2.git /usr/src/glmark2/
+# libgl libjpeg-turbo libpng12 libx11 libxcb python2
+#  python2 ./waf configure --prefix=/usr --with-flavors x11-gl,x11-glesv2 &&  python2 ./waf &&  python2 ./waf install --destdir="$pkgdir/"
+#RUN DEBIAN_FRONTEND=noninteractive apt-get -q -y install libgl libegl libpng12 libx11 libxcb
+ADD https://launchpad.net/glmark2/trunk/2014.03/+download/glmark2-2014.03.tar.gz /usr/src/
 
 COPY bm_gpu.sh /usr/src/
 

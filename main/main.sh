@@ -79,6 +79,8 @@ echo "This is the main glue loop running on ${HOSTNAME}:"
 
 while :
 do
+ echo "Current X: '$X', DISPLAY: '$DISPLAY', XID: '$XID'"
+
  $SELFDIR/menu.sh \
      "Your choice please?" 200 \
      "A_Test_Application_A B_Same_Test_App Alsa_Test GUI_Shell Bash_in_MainGlueApp X11_Shell X11Server Xephyr Iceweasel Q3 Skype Cups_Server Media_Players AppChoo Test QUIT"
@@ -91,14 +93,12 @@ do
       else
         echo "Starting X11: Xorg... "
         F="$XSOCK/.new.x11.id"
-        ID=$($SELFDIR/sv.sh 'x11' Xorg.sh Xorg "$F")
-        echo "Container: $ID???"
-        sleep 3
-        XID=`docker exec c_x11 cat "$F"`
+        XID=$($SELFDIR/sv.sh 'x11' Xorg.sh Xorg "$F")
+        sleep 2
+        export DISPLAY=":$(cat $F)"
         unset F
-        export DISPLAY=":$XID"
-        unset XID
-#        export X="DISPLAY=$DISPLAY"
+        unset X
+#        export X="DISPLAY=unix$DISPLAY"
         ### XAUTH?
      fi
     ;;
@@ -109,16 +109,13 @@ do
       else
         echo "Starting X11: Xephyr using $DISPLAY... "
         F="$XSOCK/.new.xephyr.id"
-        ID=$($SELFDIR/sv.sh 'x11' startXephyr.sh "$F")
-        sleep 3
-        echo "Container: $ID???"
-        XID=`docker exec c_x11 cat "$F"`
+        XID=$($SELFDIR/sv.sh 'x11' startXephyr.sh "$F")
+        sleep 2
+        export DISPLAY=":$(cat $F)"
         unset F
-        export DISPLAY=":$XID"
-        unset XID
-#        export X="DISPLAY=$DISPLAY"
-        ### XAUTH?
- 
+        unset X
+#        export X="DISPLAY=unix$DISPLAY"
+        ### XAUTH? 
       fi
     ;;
 
@@ -216,8 +213,14 @@ do
       echo "Thank You!"
       echo
       echo "Quiting... please make sure to kill any services yourself... "
+      
+      if [ ! -z "$XID" ]; then
+        echo "Killing X11: $XID"
+        docker rm -vf $XID
+      fi
       echo "Leftover containers: "
       docker ps -a
+      
       exit 0
     ;;
   esac
