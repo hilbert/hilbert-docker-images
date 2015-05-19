@@ -1,6 +1,7 @@
 digraph deps{ graph [label="an arrow means that its source is based on the arrow's target", labelloc=b]; node [color=white]; rankdir = RL;
 ":alsa" -> ":base" ;
 ":appa" -> ":base" ;
+":appchoo" -> ":base" ;
 ":base" -> "phusion/baseimage:0.9.16" ;
 ":cups" -> ":base" ;
 ":dd" -> ":base" ;

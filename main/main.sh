@@ -80,7 +80,7 @@ echo "This is the main glue loop running on ${HOSTNAME}:"
 while :
 do
  $SELFDIR/menu.sh \
-     "Your choice please?" \
+     "Your choice please?" 200 \
      "A_Test_Application_A B_Same_Test_App Alsa_Test GUI_Shell Bash_in_MainGlueApp X11_Shell X11Server Xephyr Iceweasel Q3 Skype Cups_Server Media_Players AppChoo Test QUIT"
   APP="$?"
   case "$APP" in

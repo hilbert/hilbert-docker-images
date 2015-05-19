@@ -3,7 +3,7 @@
 U=malex984
 I=dockapp
 
-IMG="$U/$I:menu"
+IMG="$U/$I:appchoo"
 
 #PP="$1"
 #shift
@@ -21,7 +21,7 @@ if [ -z $ID ]; then
   #exit $?
 
   #   --name menu \
-  ID=$(docker create $RUNTERM --net=none "$IMG" $OPTS -- "/usr/local/bin/menu.sh" "$@")
+  ID=$(docker create $RUNTERM --net=none -e DISPLAY -v /tmp/:/tmp/:rw "$IMG" $OPTS -- "menu.sh" "$@")
   #docker ps -a
 fi
 

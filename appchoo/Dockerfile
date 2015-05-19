@@ -11,11 +11,13 @@ MAINTAINER Oleksandr Motsak <malex984@googlemail.com>
 ##RUN DEBIAN_FRONTEND=noninteractive apt-get -y update
 # RUN DEBIAN_FRONTEND=noninteractive apt-get -q -y install build-essential
 
-RUN DEBIAN_FRONTEND=noninteractive apt-get -q -y install libsdl-image1.2
+# imagemagic
+
+RUN DEBIAN_FRONTEND=noninteractive apt-get -q -y install libsdl-image1.2 libsdl-ttf2.0 libsdl-gfx1.2
 # -dev
 
 #RUN git clone https://github.com/porst17/appchoo.git /usr/src/appchoo/
 #RUN cd /usr/src/appchoo && make && cp appchoo /usr/local/bin/ && make clean
 
-COPY . /usr/local/bin/
+COPY appchoo menu.sh txt2jpg.sh FreeMonoBold.ttf /usr/local/bin/
 
