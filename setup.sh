@@ -40,8 +40,7 @@ do
   
   echo
 #  docker push "$U/$I:$d"
-  make -C $PWD push 
- 
+#  make -C $PWD push 
   cd .. 
 done
 
