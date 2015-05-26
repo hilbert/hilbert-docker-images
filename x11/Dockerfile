@@ -2,13 +2,17 @@ FROM malex984/dockapp:base
 
 MAINTAINER Oleksandr Motsak <malex984@googlemail.com>
 
+RUN DEBIAN_FRONTEND=noninteractive apt-get -y update
+
 RUN DEBIAN_FRONTEND=noninteractive apt-get -q -y install xserver-xorg xserver-xorg-video-all
 RUN DEBIAN_FRONTEND=noninteractive apt-get -q -y install \
 libgl1-mesa-dri libgl1-mesa-glx libglu1-mesa libgles1-mesa libgles2-mesa libegl1-mesa-drivers \
 mesa-vdpau-drivers freeglut3 mesa-utils
 
-RUN DEBIAN_FRONTEND=noninteractive apt-get -q -y install xserver-xephyr xpra
-# xcompmgr unagi
+RUN DEBIAN_FRONTEND=noninteractive apt-get -q -y install xserver-xephyr 
+RUN DEBIAN_FRONTEND=noninteractive apt-get -q -y install xcompmgr compton
+RUN DEBIAN_FRONTEND=noninteractive apt-get -q -y install xpra
+# unagi
 ## compiz  
 #  libx11 libxmu libxi
 

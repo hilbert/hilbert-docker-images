@@ -1,4 +1,4 @@
-FROM malex984/dockapp:base
+FROM malex984/dockapp:gui
 
 MAINTAINER Oleksandr Motsak <malex984@googlemail.com>
 
@@ -12,26 +12,24 @@ RUN DEBIAN_FRONTEND=noninteractive apt-get -y update
 RUN DEBIAN_FRONTEND=noninteractive apt-get -q -y install build-essential
 
 ##RUN DEBIAN_FRONTEND=noninteractive apt-get -q -y install xserver-xorg-video-all
-RUN DEBIAN_FRONTEND=noninteractive apt-get -q -y install xauth x11-apps 
-RUN DEBIAN_FRONTEND=noninteractive apt-get -q -y install xterm
+#RUN DEBIAN_FRONTEND=noninteractive apt-get -q -y install xauth x11-apps 
+#RUN DEBIAN_FRONTEND=noninteractive apt-get -q -y install xterm
 
-# RUN DEBIAN_FRONTEND=noninteractive apt-get -q -y install xcompmgr 
 # RUN DEBIAN_FRONTEND=noninteractive apt-get -q -y install xkeyboard-config xkbcomp
 # RUN DEBIAN_FRONTEND=noninteractive apt-get -q -y install git
 
-RUN DEBIAN_FRONTEND=noninteractive apt-get -q -y install xdotool
-
-RUN git clone https://github.com/IMAGINARY/xfullscreen.git /usr/src/xfullscreen/
-RUN ln -s /usr/src/xfullscreen/*fullscreen /usr/local/bin/
+#RUN DEBIAN_FRONTEND=noninteractive apt-get -q -y install xdotool
+#RUN git clone https://github.com/IMAGINARY/xfullscreen.git /usr/src/xfullscreen/
+#RUN ln -s /usr/src/xfullscreen/*fullscreen /usr/local/bin/
 
 #RUN DEBIAN_FRONTEND=noninteractive apt-get -q -y install libsdl-image1.2-dev
 #RUN git clone https://github.com/porst17/appchoo.git /usr/src/appchoo/
 #RUN cd /usr/src/appchoo && make && cp appchoo /usr/local/bin/ && make clean
 
 
-RUN DEBIAN_FRONTEND=noninteractive apt-get -q -y install qt4-default qt4-qmake 
-RUN git clone https://github.com/IMAGINARY/qclosebutton.git /usr/src/qclosebutton/
-RUN cd /usr/src/qclosebutton && qmake && make && cp qclosebutton /usr/local/bin/ && make clean
+#RUN DEBIAN_FRONTEND=noninteractive apt-get -q -y install qt4-default qt4-qmake 
+#RUN git clone https://github.com/IMAGINARY/qclosebutton.git /usr/src/qclosebutton/
+#RUN cd /usr/src/qclosebutton && qmake && make && cp qclosebutton /usr/local/bin/ && make clean
 
 # ADD http://xdialog.free.fr/Xdialog-2.3.1.tar.bz2 /usr/src/
 
@@ -40,7 +38,7 @@ RUN cd /usr/src/qclosebutton && qmake && make && cp qclosebutton /usr/local/bin/
 
 # fbsuite seems to be rather outdated, and unusable on 64 bit ubuntu14.04 :(
 
-RUN DEBIAN_FRONTEND=noninteractive apt-get -q -y install libgles1-mesa libgles2-mesa libegl1-mesa-drivers  mesa-vdpau-drivers freeglut3 
+RUN DEBIAN_FRONTEND=noninteractive apt-get -q -y install libgles1-mesa libgles2-mesa libegl1-mesa-drivers  mesa-vdpau-drivers freeglut3
 RUN DEBIAN_FRONTEND=noninteractive apt-get -q -y install nux-tools mesa-utils g3dviewer
 RUN DEBIAN_FRONTEND=noninteractive apt-get -q -y install pciutils
 
@@ -56,31 +54,27 @@ COPY test_sys.sh ilkh.sh test_x11.sh test_nv.sh test_vbox.sh /usr/local/bin/
 # ADD http://www.forchheimer.se/transset-df/transset-df-6.tar.gz /usr/src/
 
 # x11perf 
-RUN DEBIAN_FRONTEND=noninteractive apt-get -q -y install glmark2 
-ADD http://launchpadlibrarian.net/179163801/glmark2_2014.03-0ubuntu3_amd64.deb /usr/src/
-ADD http://launchpadlibrarian.net/179164175/glmark2-data_2014.03-0ubuntu3_all.deb /usr/src/
+RUN DEBIAN_FRONTEND=noninteractive apt-get -q -y install glmark2
+#ADD http://launchpadlibrarian.net/179163801/glmark2_2014.03-0ubuntu3_amd64.deb /usr/src/
+#ADD http://launchpadlibrarian.net/179164175/glmark2-data_2014.03-0ubuntu3_all.deb /usr/src/
 #RUN sudo dpkg -i /usr/src/glmark2-data_2014.03-0ubuntu3_all.deb
 #RUN sudo dpkg -i /usr/src/glmark2_2014.03-0ubuntu3_amd64.deb
 
 
 ## http://www.mathematik.uni-kl.de/~motsak/files/BM/GPU_Test_Info_Linux64.tar.gz 
-RUN DEBIAN_FRONTEND=noninteractive apt-get -q -y install libxv1 python-tk
+# python-tk
+RUN DEBIAN_FRONTEND=noninteractive apt-get -q -y install libxv1
 COPY GpuTest_Linux_x64_0.7.0.tar.bz2 /usr/src/
 RUN tar -xjvf /usr/src/GpuTest_Linux_x64_0.7.0.tar.bz2 -C /usr/src/ && ln -s /usr/src/GpuTest_Linux_x64_0.7.0/GpuTest-all.sh /usr/local/bin/
 
 # libgl libjpeg-turbo libpng12 libx11 libxcb python2
 #  python2 ./waf configure --prefix=/usr --with-flavors x11-gl,x11-glesv2 &&  python2 ./waf &&  python2 ./waf install --destdir="$pkgdir/"
 #RUN DEBIAN_FRONTEND=noninteractive apt-get -q -y install libgl libegl libpng12 libx11 libxcb
-ADD https://launchpad.net/glmark2/trunk/2014.03/+download/glmark2-2014.03.tar.gz /usr/src/
+#ADD https://launchpad.net/glmark2/trunk/2014.03/+download/glmark2-2014.03.tar.gz /usr/src/
 
 COPY bm_gpu.sh /usr/src/
 
 
-# https://github.com/chjj/compton
-#RUN DEBIAN_FRONTEND=noninteractive apt-get -q -y install libx11 libxcomposite libxdamage libxfixes libXext libxrender libXrandr libXinerama
-#RUN DEBIAN_FRONTEND=noninteractive apt-get -q -y install xproto x11proto 
-#RUN DEBIAN_FRONTEND=noninteractive apt-get -q -y install x11-utils
-#RUN DEBIAN_FRONTEND=noninteractive apt-get -q -y install libpcre libconfig libdrm libGL libdbus
-RUN git clone https://github.com/chjj/compton.git /usr/src/compton/
+# RUN DEBIAN_FRONTEND=noninteractive apt-get -q -y install xpra
 
-RUN DEBIAN_FRONTEND=noninteractive apt-get -q -y install xpra
+

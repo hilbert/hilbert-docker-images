@@ -1,6 +1,8 @@
 #! /bin/bash
 set -e
 
+ARGS="$@"
+
 U=malex984
 I=dockapp
 IM="$U/$I:main"
@@ -127,7 +129,7 @@ echo
 #$(env | grep -v -E '^DISPLAY=' | cut -d= -f1 | awk '{print "-e", $1}') \
  
 # --name main 
-myrunner "$IM" --no-kill-all-on-exit --skip-runit -- /usr/local/bin/main.sh "$@"
+myrunner "$IM" --no-kill-all-on-exit --skip-runit -- /usr/local/bin/main.sh $ARGS
 #    /sbin/setuser $(whoami) \
 
 echo ".... Finished glue.... (exit code: $RET)"

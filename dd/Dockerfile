@@ -8,8 +8,8 @@ RUN curl -sSL https://get.docker.io/ubuntu/ | sudo sh
 #ADD https://get.docker.com/builds/Linux/x86_64/docker-latest /usr/local/bin/docker
 #RUN chmod +x /usr/local/bin/docker
 
-RUN curl -L https://github.com/docker/compose/releases/download/1.2.0/docker-compose-`uname -s`-`uname -m` > /usr/local/bin/docker-compose 
-RUN chmod +x /usr/local/bin/docker-compose
+#RUN curl -L https://github.com/docker/compose/releases/download/1.2.0/docker-compose-`uname -s`-`uname -m` > /usr/local/bin/docker-compose 
+#RUN chmod +x /usr/local/bin/docker-compose
 
 # RUN chmod +x /usr/local/bin/docker /usr/local/bin/docker-compose
 # RUN ln -s $HOME/bin/docker-latest $HOME/bin/docker
@@ -17,6 +17,9 @@ RUN chmod +x /usr/local/bin/docker-compose
 
 # nsenter does not work from inside a container :(
 # ADD ./baseimage-docker-nsenter ./docker-bash /usr/local/bin/
+
+ENV DOCKER_HOST unix:///var/run/docker.sock
+ENV NO_PROXY /var/run/docker.sock
 
 # RUN groupadd -f -g 998 docker
 # RUN usermod -a -G docker ur

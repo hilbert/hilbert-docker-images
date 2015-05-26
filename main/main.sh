@@ -32,6 +32,8 @@ case "$OSTYPE" in
      fi
      echo "We now enable anyone to connect to this X11..."
      xhost +
+     xcompmgr &
+     compton &
      X="DISPLAY -e XAUTHORITY=$XAUTH"
    else
 # Detect a Virtual Box VM!?
@@ -185,7 +187,7 @@ do
 
    204)
       if [ ! -z "$DISPLAY" ]; then
-        echo "Starting gui shell (gedit, g3dviewer? + X11-apps)... " && $SELFDIR/run.sh "$PREFIX:gui" xterm
+        echo "Starting gui shell (with X11-apps)... " && $SELFDIR/run.sh "$PREFIX:gui" launch.sh
         # "rxvt-unicode -fn xft:terminus:pixelsize=12 -e bash"
       else
         echo "Please start X11 beforehand!"
@@ -205,8 +207,12 @@ do
     ;;
 
     205)
-      echo "Starting BASH..." && /bin/bash
+      echo "Starting BASH..." && bash
     ;;
+
+
+
+
 
     *)
       echo

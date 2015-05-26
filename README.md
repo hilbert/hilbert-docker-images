@@ -12,8 +12,8 @@ share images as much as possible).
     Since some of them are quite big please do consider building them instead of pulling!
     Run (and change) `setup.sh` in order to pull the base image and build starting images.
     *We assume the host linux to run docker service.*
-2. `customize.sh`: Customize them.
-    Running `customize.sh` such a host will enable one to detect known hardware or kernel modules (e.g. VirtualBox Guest Additions or NVidia driver)
+2. `:main/customize.sh`: Customize them.
+    Running `:main/customize.sh` such a host will enable one to detect known hardware or kernel modules (e.g. VirtualBox Guest Additions or NVidia driver)
     in order to localize/customize some starting images (e.g. `:x11` and `:test`) 
     under corresponding tag name (e.g. `:test.nv.340.76` or `:x11.vb.4.3.26`),
     which than will be tagged with local names (e.g. `test:latest` or `x11:latest`). 

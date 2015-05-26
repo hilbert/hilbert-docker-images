@@ -8,7 +8,7 @@ MAINTAINER Oleksandr Motsak <malex984@googlemail.com>
 # set the following if any QT GUI look like an empty rectangular window
 # ENV QT_X11_NO_MITSHM 1
 
-##RUN DEBIAN_FRONTEND=noninteractive apt-get -y update
+RUN DEBIAN_FRONTEND=noninteractive apt-get -y update
 # RUN DEBIAN_FRONTEND=noninteractive apt-get -q -y install build-essential
 
 # imagemagic

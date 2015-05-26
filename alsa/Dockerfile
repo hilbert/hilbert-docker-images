@@ -2,7 +2,10 @@ FROM malex984/dockapp:base
 
 MAINTAINER Oleksandr Motsak <malex984@googlemail.com>
 
-RUN DEBIAN_FRONTEND=noninteractive apt-get -q -y install alsa alsa-tools 
+RUN DEBIAN_FRONTEND=noninteractive apt-get -y update
+RUN DEBIAN_FRONTEND=noninteractive apt-get -q -y install alsa alsa-tools
+RUN DEBIAN_FRONTEND=noninteractive apt-get -q -y install alsa-utils
+
 # pulseaudio
 
 # RUN usermod -a -G pulse-access ur

@@ -3,6 +3,10 @@
 F="$1"
 shift
 
+CMD=$1
+shift
+
+
 DISPLAY_NUM=0
 unset HAS_DISPLAY_NUM
 
@@ -30,6 +34,9 @@ do
 		then
 			# write the display number to the log file
 			echo $DISPLAY_NUM > "$F"
+			xcompmgr &
+			compton &
+			$CMD &
 			wait $PID
 			exit 0
 		fi

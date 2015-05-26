@@ -3,9 +3,11 @@ FROM malex984/dockapp:dd
 MAINTAINER Oleksandr Motsak <malex984@googlemail.com>
 
 RUN DEBIAN_FRONTEND=noninteractive apt-get -y update
-RUN DEBIAN_FRONTEND=noninteractive apt-get -q -y install xauth
 
-COPY main.sh menu.sh run.sh sv.sh A.sh /usr/local/bin/
+ENV DOCKER_HOST unix:///var/run/docker.sock
+ENV NO_PROXY /var/run/docker.sock
+
+COPY customize.sh test_nv.sh test_vbox.sh up_nv.sh up_vb.sh ilkh.sh Dockerfile_nv Dockerfile_vb /usr/local/bin/
 
 # VOLUME ...
 # CMD /usr/local/bin/main.sh
