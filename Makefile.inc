@@ -55,6 +55,9 @@ ${TS}: ${DF} ${SS} ${ACOPYFILES}
 	cd ${mkfile_dir} && docker build --pull=false --force-rm=true --rm=true -t ${IMG} ${mkfile_dir}
 	docker images | grep "${U}/${I} " | grep ${APP} > $@
 
+push: ${TS}
+	docker push "${IMG}"
+
 force_look :
 	true
 

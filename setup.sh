@@ -8,7 +8,7 @@ cd "$SELFDIR"
 ARGS="$@"
 
 if [ -z "$ARGS" ]; then
-    ARGS="base dd main up appa appchoo alsa xeyes gui test x11 play iceweasel skype q3 cups xbmc"
+    ARGS=" base dd main up appa appchoo alsa xeyes gui x11 play iceweasel skype q3 cups xbmc test "
 fi
 
 U=malex984
@@ -35,8 +35,10 @@ do
   # docker rm -f "$d"
 
   make -C "$(PWD)" || docker build --pull=false --force-rm=true --rm=true -t "$U/$I:$d" "$d" || exit 1
-
+  
   echo
+  make -C "$(PWD)" push 
+  
 #  docker push "$U/$I:$d"
 done
 
