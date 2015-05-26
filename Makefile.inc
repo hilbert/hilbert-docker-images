@@ -51,15 +51,22 @@ ${top_dir}/phusion_baseimage_0.9.16.timestamp:
 	docker images | grep -E 'phusion[\/]baseimage *0[\.]9[\.]16 ' > $@
 
 
-${TS}: ${DF} ${SS} ${ACOPYFILES}
-	cd ${mkfile_dir} && docker build --pull=false --force-rm=true --rm=true -t ${IMG} ${mkfile_dir}
+DOCKER_BUILD_OPTS=--pull=false --force-rm=true --rm=true
+# --no-cache=true
+
+
+${TS}: ${DF} ${SS} ${ACOPYFILES} $(abspath $(lastword $(MAKEFILE_LIST))) ${mkfile_dir}/Makefile
+	cd ${mkfile_dir} && docker build ${DOCKER_BUILD_OPTS} -t ${IMG} ${mkfile_dir}
 	docker images | grep "${U}/${I} " | grep ${APP} > $@
+
+
 
 push: ${TS}
 	docker push "${IMG}"
 
-force_look :
-	true
+
+#force_look:
+#	true
 
 
 .SILENT :
