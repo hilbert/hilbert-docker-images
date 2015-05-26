@@ -28,18 +28,21 @@ for d in $ARGS ;
 do
   echo
   echo "Building $d -> $U/$I:$d...."
-  cat "$d/Dockerfile"
+  cd $d
+  
+  cat "./Dockerfile"
   echo
   docker ps -sa | grep "$d"
   # docker stop "$d"
   # docker rm -f "$d"
 
-  make -C "$(PWD)" || docker build --pull=false --force-rm=true --rm=true -t "$U/$I:$d" "$d" || exit 1
+  make -C $(PWD) || docker build --pull=false --force-rm=true --rm=true -t "$U/$I:$d" "." || exit 1
   
   echo
-  make -C "$(PWD)" push 
-  
 #  docker push "$U/$I:$d"
+  make -C $(PWD) push 
+ 
+  cd .. 
 done
 
 docker rmi $(docker images -q -f dangling=true)
