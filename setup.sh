@@ -36,11 +36,11 @@ do
   # docker stop "$d"
   # docker rm -f "$d"
 
-  make -C $(PWD) || docker build --pull=false --force-rm=true --rm=true -t "$U/$I:$d" "." || exit 1
+  make -C $PWD || docker build --pull=false --force-rm=true --rm=true -t "$U/$I:$d" "." || exit 1
   
   echo
 #  docker push "$U/$I:$d"
-  make -C $(PWD) push 
+  make -C $PWD push 
  
   cd .. 
 done
