@@ -99,6 +99,11 @@ Quick Fix is `sudo chmod a+rw /dev/pts/ptmx`
 
 
 ## Docker shortcuts:
+### Cleanup dangling images
+```
+docker rmi $(docker images -f "dangling=true" -q)
+```
+
 ### Cleanup dockapp-related images:
 ```
 docker images | grep malex984/dockapp | awk ' { print $1 ":" $2 } ' | xargs docker rmi
