@@ -3,6 +3,8 @@ ECHO=echo
 SHELL=/bin/bash
 GREP=grep
 SED=sed
+MAKE=make
+DOCKER=docker
 
 U := malex984
 I := dockapp
@@ -40,27 +42,30 @@ debug:
 	echo "Current Dockerfile: ${DF}"
 	echo "Base: ${BASETEG} -> ${BASE}, Req: ${SS}"
 	echo "Target: ${TS}"
-	echo "Additions: ${ACOPYFILES}"
-	echo "Top data: ${mkp}, ${top_dir}"
-	echo "${ACOPYFILES}, ${ACOPYFILES2}"
+	echo "Top dir: ${top_dir}"
+	echo "Deps: ${ACOPYFILES}, ${ACOPYFILES2}"
 
 build: ${TS}
 
 ${SS}:
-	cd ${top_dir}/${BASETEG}/ && make -C ${top_dir}/${BASETEG}/
+	cd ${top_dir}/${BASETEG}/ && $(MAKE) -C ${top_dir}/${BASETEG}/
 
 ${top_dir}/phusion_baseimage_0.9.16.timestamp:
-	docker pull 'phusion/baseimage:0.9.16'
-	docker images | grep -E 'phusion[\/]baseimage *0[\.]9[\.]16 ' > $@
+	$(DOCKER) pull 'phusion/baseimage:0.9.16'
+	$(DOCKER) images | grep -E 'phusion[\/]baseimage *0[\.]9[\.]16 ' > $@
 
 
 DOCKER_BUILD_OPTS=--pull=false --force-rm=true --rm=true
 # --no-cache=true
 
-### this Makefile.inc: $(abspath $(lastword $(MAKEFILE_LIST))) 
-${TS}: ${DF} ${SS} ${ACOPYFILES} ${ACOPYFILES2} ${mkfile_dir}/Makefile
+${TS}: ${DF} ${SS} ${ACOPYFILES} ${ACOPYFILES2}
 	cd ${mkfile_dir} && docker build ${DOCKER_BUILD_OPTS} -t ${IMG} ${mkfile_dir}
-	docker images | grep "${U}/${I} " | grep ${APP} > $@
+	docker images | $(GREP) "${U}/${I} " | $(GREP) ${APP} > $@
+
+rebuild: ${DF} ${SS} ${ACOPYFILES} ${ACOPYFILES2} ${mkfile_dir}/Makefile $(abspath $(lastword $(MAKEFILE_LIST))) 
+	$(RM) -f ${TS}
+	$(MAKE) -C ${mkfile_dir}/ ${TS}
+
 
 test: $(TS) check
 
