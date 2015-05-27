@@ -15,7 +15,7 @@ RUNTERM=-it -a stdin -a stdout -a stderr --ipc=host --privileged --net=host --pi
 OPTS=--skip-startup-files --no-kill-all-on-exit --quiet --skip-runit
 
 check: $(TS)
-	### [ -z "${DISPLAY}" ] && exit 1
+	test -z "${DISPLAY}" || xhost +
 	docker ps -a
-	docker run --rm ${RUNTERM} $(IMG) ${OPTS} -- ${CMD} ${ARGS}
+	docker run --rm -e DISPLAY ${RUNTERM} $(IMG) ${OPTS} -- ${CMD} ${ARGS}
 

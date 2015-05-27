@@ -1,10 +1,19 @@
 #!/bin/bash
 
-F="$1"
-shift
+#F="$1"
+#shift
 
-CMD=$1
-shift
+#CMD="$1"
+#shift
+
+if [ ! -z "$DISPLAY" ]; then
+  CMD=Xephyr
+else
+  echo "ORIGINAL DISPLAY:$DISPLAY"
+  CMD=Xorg
+fi
+
+ARGS="$@"
 
 
 DISPLAY_NUM=0
@@ -22,8 +31,8 @@ do
         fi;
     done
 
-
-	Xephyr :$DISPLAY_NUM $@ & 2> /dev/null
+        echo "Trying to run [$CMD :$DISPLAY_NUM $ARGS]..."
+	$CMD :$DISPLAY_NUM $ARGS & 2>&1
 	PID=$!
 	# while Xephyr is still running
 	while ps -o pid | grep -q "^[[:space:]]*"$PID"[[:space:]]*$"
@@ -32,11 +41,19 @@ do
 		# test if it aquired the X11 lock file
 		if grep -q "^[[:space:]]*"$PID"[[:space:]]*$" `find /tmp/ | grep "^/tmp/\.X"$DISPLAY_NUM"-lock$"`
 		then
-			# write the display number to the log file
-			echo $DISPLAY_NUM > "$F"
-			xcompmgr &
+
+			xhost +
+			xcompmgr -fF -I-.002 -O-.003 -D1 &
+			# TODO: choose a comp. manager...
 			compton &
-			$CMD &
+			### TODO: VB GA detection!?
+			[ -e "/etc/X11/Xsession.d/98vboxadd-xclient" ] && sudo sh /etc/X11/Xsession.d/98vboxadd-xclient
+
+			
+			# write the display number to the log file
+			echo "DISPLAY_NUM:$DISPLAY_NUM"
+			# > "$F"
+			
 			wait $PID
 			exit 0
 		fi

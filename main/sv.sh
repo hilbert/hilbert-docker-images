@@ -32,28 +32,30 @@ APP="c_$APP"
 shift
 ARGS="$@"
 
-XSOCK=/tmp/.X11-unix/
-[ -z "$X" ] && X="DISPLAY=unix$DISPLAY"
+# XSOCK=/tmp/.X11-unix/
+
+[ -z "$X" ] && X="DISPLAY"
+X="$X -v /etc/localtime:/etc/localtime:ro -v /tmp/:/tmp/:rw "
+
+# -v /tmp:/tmp:rw \
+# -v /run:/run:rw \
+# -v /dev:/dev:rw \
+# -v /var/log:/var/log:rw \
+# -v /var/run:/var/run:rw \
+# -v /etc/passwd:/etc/passwd:ro \
+# -v /etc/shadow:/etc/shadow:ro \
+# -v /etc/group:/etc/group:ro \
+# -v /etc/localtime:/etc/localtime:ro \
+# -v /etc/sudoers:/etc/sudoers:ro -v /etc/sudoers.d/:/etc/sudoers.d/:ro \
+# -v /home:/home:ro \
+# -v /dev/dri:/dev/dri \
+# -v /dev/input:/dev/input \
+# -v /tmp/.X11-unix:/tmp/.X11-unix \
+# -v /run/udev:/run/udev \
+
 ### -v /var/:/var/:rw \
 # -v /var/lib:/var/lib:rw \
- 
-X="$X \
- -v /tmp:/tmp:rw \
- -v /run:/run:rw \
- -v /dev:/dev:rw \
- -v /var/log:/var/log:rw \
- -v /var/run:/var/run:rw \
- -v /etc/passwd:/etc/passwd:ro \
- -v /etc/shadow:/etc/shadow:ro \
- -v /etc/group:/etc/group:ro \
- -v /etc/localtime:/etc/localtime:ro \
- -v /etc/sudoers:/etc/sudoers:ro -v /etc/sudoers.d/:/etc/sudoers.d/:ro \
- -v /home:/home:ro \
- -v /dev/dri:/dev/dri \
- -v /dev/input:/dev/input \
- -v /tmp/.X11-unix:/tmp/.X11-unix \
- -v /run/udev:/run/udev \
-"
+
 ## --device /dev/snd \
 
 
@@ -66,30 +68,7 @@ X="$X \
 #        -v /run/:/run/:rw \
 #        -v /sys/fs/cgroup:/sys/fs/cgroup:ro \
 
-# USER_UID=$(id -u)
-mydeamon () {
-# -u $(whoami) -w "$HOME" \
-# $(env | cut -d= -f1 | awk '{print "-e", $1}') \
 
-# options for running terminal apps via docker run:
-#  RUNTERM="--rm -it"
-
-#        --lxc-conf='lxc.cgroup.devices.allow=c 195:* rwm' \
-#        --lxc-conf='lxc.cgroup.devices.allow=c 249:* rwm' \
-#	 --lxc-conf='lxc.cgroup.devices.allow=c 226:* rwm' \
-#        --lxc-conf='lxc.cgroup.devices.allow=c 116:* rwm' \
-#        --lxc-conf='lxc.cgroup.devices.allow=c  81:* rwm' \
-
-  docker run -it -d --privileged --net=host --ipc=host --pid=host -P -e $X \
-        "$@"
-
-  RET="$?"
-
-#  echo "Service ($APP) id: $ID"
-#  docker start $ID
-
-  exit $RET
-}
 #        -e DOCKER_HOST=unix:///var/run/docker.sock -e NO_PROXY=/var/run/docker.sock \
 #        -e CUPS_USER_ADMIN=vagrant -e CUPS_USER_PASSWORD=vagrant -p 6631:631/tcp \
 # -v /var/run/docker.sock:/var/run/docker.sock \
@@ -119,11 +98,42 @@ mydeamon () {
 ##  /sbin/my_init --skip-startup-files --no-kill-all-on-exit --quiet --skip-runit \
 # -e DOCKER_TLS_VERIFY=1 -e DOCKER_CERT_PATH=/home/ur/??? \
 
+# USER_UID=$(id -u)
+mydeamon () {
+# -u $(whoami) -w "$HOME" \
+# $(env | cut -d= -f1 | awk '{print "-e", $1}') \
+
+# options for running terminal apps via docker run:
+#  RUNTERM="--rm -it"
+
+#        --lxc-conf='lxc.cgroup.devices.allow=c 195:* rwm' \
+#        --lxc-conf='lxc.cgroup.devices.allow=c 249:* rwm' \
+#	 --lxc-conf='lxc.cgroup.devices.allow=c 226:* rwm' \
+#        --lxc-conf='lxc.cgroup.devices.allow=c 116:* rwm' \
+#        --lxc-conf='lxc.cgroup.devices.allow=c  81:* rwm' \
+
+  R="--ipc=host --net=host --pid=host --privileged"
+
+# -v /dev/shm:/dev/shm -v /dev/dri:/dev/dri 
+
+  docker run -d $R -P -e $X \
+        "$@"
+
+  RET="$?"
+
+#  echo "Service ($APP) id: $ID"
+#  docker start $ID
+
+  exit $RET
+}
+
 # echo
 # echo "Starting service $APP ('$ARGS')"
 
-OPTS="--skip-startup-files --no-kill-all-on-exit --quiet --skip-runit"
+# 
+OPTS="--skip-startup-files --quiet --skip-runit --no-kill-all-on-exit"
 # --name $APP 
 
-mydeamon --name "$APP" "$IMG" $OPTS -- $ARGS # "/sbin/setuser" "ur" "..."?
+mydeamon --name "$APP" "$IMG" $OPTS -- $ARGS
+# "/sbin/setuser" "ur" "..."?
 

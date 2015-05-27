@@ -11,16 +11,18 @@ mesa-vdpau-drivers freeglut3 mesa-utils
 
 RUN DEBIAN_FRONTEND=noninteractive apt-get -q -y install xserver-xephyr 
 RUN DEBIAN_FRONTEND=noninteractive apt-get -q -y install xcompmgr compton
-RUN DEBIAN_FRONTEND=noninteractive apt-get -q -y install xpra
+RUN DEBIAN_FRONTEND=noninteractive apt-get -q -y install xauth x11-xserver-utils
+# RUN DEBIAN_FRONTEND=noninteractive apt-get -q -y install openbox
 # unagi
 ## compiz  
 #  libx11 libxmu libxi
 
 # VOLUME /tmp/.X11-unix/
 
-COPY Xorg.sh /usr/local/bin/
 # see testXephyr.sh
-COPY startXephyr.sh /usr/local/bin/
+COPY Xorg.sh startXephyr.sh /usr/local/bin/
+COPY .xinitrc /root/
+COPY .xinitrc /
 
 # ADD https://github.com/IMAGINARY/xfullscreen/archive/master.tar.gz /usr/src/xfullscreen.tar.gz
 # COPY xfullscreen/wmfullscreen xfullscreen/xfullscreen /usr/local/bin/

@@ -25,7 +25,11 @@ DF:=${mkfile_dir}/Dockerfile
 BASE:=$(shell $(GREP) -m 1 -iE '^ *FROM' ${DF} | $(SED) -e 's@^ *FROM  *@@g' -e 's@[:/ ]@_@g')
 BASETEG:=$(shell $(GREP) -m 1 -iE '^ *FROM' ${DF} | $(SED) -e 's@^ *FROM *@@g' -e 's@${REPO}:@@g' -e 's@[:/ ]@_@g')
 
+
 ACOPYFILES:=$(patsubst %,${mkfile_dir}/%,${COPYFILES})
+
+COPYFILES2:=$(shell $(GREP) -iE '^ *COPY ' ${DF} | $(SED) -e 's@^ *COPY  *@@g' -e 's@ /.*@@g' | xargs)
+ACOPYFILES2:=$(patsubst %,${mkfile_dir}/%,${COPYFILES2})
 
 TS:=${top_dir}/${U}_${I}_${APP}.timestamp
 SS:=${top_dir}/${BASE}.timestamp
@@ -38,8 +42,7 @@ debug:
 	echo "Target: ${TS}"
 	echo "Additions: ${ACOPYFILES}"
 	echo "Top data: ${mkp}, ${top_dir}"
-
-#	echo "$(MAKEFILE_LIST)"
+	echo "${ACOPYFILES}, ${ACOPYFILES2}"
 
 build: ${TS}
 
@@ -54,12 +57,12 @@ ${top_dir}/phusion_baseimage_0.9.16.timestamp:
 DOCKER_BUILD_OPTS=--pull=false --force-rm=true --rm=true
 # --no-cache=true
 
-
-${TS}: ${DF} ${SS} ${ACOPYFILES} $(abspath $(lastword $(MAKEFILE_LIST))) ${mkfile_dir}/Makefile
+### this Makefile.inc: $(abspath $(lastword $(MAKEFILE_LIST))) 
+${TS}: ${DF} ${SS} ${ACOPYFILES} ${ACOPYFILES2} ${mkfile_dir}/Makefile
 	cd ${mkfile_dir} && docker build ${DOCKER_BUILD_OPTS} -t ${IMG} ${mkfile_dir}
 	docker images | grep "${U}/${I} " | grep ${APP} > $@
 
-
+test: $(TS) check
 
 push: ${TS}
 	docker push "${IMG}"

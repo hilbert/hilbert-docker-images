@@ -2,7 +2,7 @@ FROM malex984/dockapp:base
 
 MAINTAINER Oleksandr Motsak <malex984@googlemail.com>
 
-COPY ./A.sh /usr/local/bin/
+COPY A.sh /usr/local/bin/
 
 # ENV HOME /home/ur
 # RUN chown ur:ur $HOME/bin/A.sh

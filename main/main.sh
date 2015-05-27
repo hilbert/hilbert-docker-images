@@ -94,11 +94,10 @@ do
         echo "There seems to be X11 running already..."
       else
         echo "Starting X11: Xorg... "
-        F="$XSOCK/.new.x11.id"
-        XID=$($SELFDIR/sv.sh 'x11' Xorg.sh Xorg "$F")
+        XID=$($SELFDIR/sv.sh 'x11' startXephyr.sh)
         sleep 2
-        export DISPLAY=":$(cat $F)"
-        unset F
+	docker logs $XID 2>&1 | grep DISPLAY
+        export DISPLAY=$(docker logs $XID 2>&1 | grep DISPLAY_NUM | sed s@DISPLAY_NUM@@g)
         unset X
 #        export X="DISPLAY=unix$DISPLAY"
         ### XAUTH?
@@ -110,11 +109,10 @@ do
         echo "Please start X11 beforehand!"
       else
         echo "Starting X11: Xephyr using $DISPLAY... "
-        F="$XSOCK/.new.xephyr.id"
-        XID=$($SELFDIR/sv.sh 'x11' startXephyr.sh "$F")
+        XID=$($SELFDIR/sv.sh 'x11' startXephyr.sh)
         sleep 2
-        export DISPLAY=":$(cat $F)"
-        unset F
+	docker logs $XID 2>&1 | grep DISPLAY
+        export DISPLAY=$(docker logs $XID 2>&1 | grep DISPLAY_NUM | sed s@DISPLAY_NUM@@g)
         unset X
 #        export X="DISPLAY=unix$DISPLAY"
         ### XAUTH? 
