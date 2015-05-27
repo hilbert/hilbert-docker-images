@@ -97,3 +97,15 @@ course of the docker mounting `/dev` or using it by containers...
 
 Quick Fix is `sudo chmod a+rw /dev/pts/ptmx`
 
+
+## Docker shortcuts:
+### Cleanup dockapp-related images:
+```
+docker images | grep malex984/dockapp | awk ' { print $1 ":" $2 } ' | xargs docker rmi
+docker rmi x11 test
+```
+
+### Cleanup all containers:
+```
+docker ps -aq | xargs docker rm -fv
+```
