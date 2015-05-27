@@ -67,6 +67,11 @@ test: $(TS) check
 push: ${TS}
 	docker push "${IMG}"
 
+# ${SS}
+pull:
+	docker pull "${IMG}"
+	docker images | grep "${U}/${I} " | grep ${APP} > ${TS}
+
 
 #force_look:
 #	true
