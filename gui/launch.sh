@@ -5,20 +5,26 @@ SELFDIR=`cd "$SELFDIR" && pwd`
 
 cd "$SELFDIR"
 
-CMD="$1"
+CMD=$1
 
 if [ -z "$CMD" ]; then
   CMD=xterm
   ARGS=""
 else
   shift
-  ARGS="$@"
+  ARGS=$@
 fi
+
+# xhost +
+xcompmgr -fF -I-.002 -O-.003 -D1 &
+# xcompmgr &
+# TODO: choose a comp. manager...
+compton &
 
 # requires: qclosebutton (qt4-default)
 # xdotool
 
-qclosebutton "$SELFDIR/x_64x64.png" xfullscreen "$CMD" $ARGS >> /tmp/launch.log 2>&1
+qclosebutton "$SELFDIR/x_64x64.png" xfullscreen $CMD $ARGS 2>&1
 
 exit $?
 
