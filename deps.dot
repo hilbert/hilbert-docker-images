@@ -11,6 +11,7 @@ digraph deps{ graph [label="an arrow means that its source is based on the arrow
 ":play" -> ":gui" ;
 ":q3" -> ":xeyes" ;
 ":skype" -> ":base" ;
+":surfer" -> ":gui" ;
 ":test" -> ":gui" ;
 ":up" -> ":dd" ;
 ":x11" -> ":base" ;
