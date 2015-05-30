@@ -35,6 +35,10 @@ fi
 
 
 VER=$(cat /sys/module/nvidia/version)
+
+$(SELFDIR)/test_nv.sh
+
+
 echo "NV Version: '$VER'"
 
 IN="$SELFDIR/Dockerfile_nv"

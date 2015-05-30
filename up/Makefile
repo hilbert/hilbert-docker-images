@@ -7,7 +7,7 @@ clean:
 
 
 CMD=customize.sh
-ARGS=test x11
+ARGS=up
 
 ##HIP=`ip route show 0.0.0.0/0 | grep -Eo 'via \S+' | awk '{ print \$1 }'`
 #        --add-host=dockerhost:$(HIP) 
@@ -22,9 +22,11 @@ RUNTERM=-it -a stdin -a stdout -a stderr --ipc=host --privileged --net=host --pi
 
 OPTS=--skip-startup-files --no-kill-all-on-exit --quiet --skip-runit
 
-check:
+check: $(TS)
 	docker ps -a
 	docker run --rm ${RUNTERM} $(IMG) ${OPTS} -- ${CMD} ${ARGS}
+	docker ps -a
+	docker images
 	
 
 

@@ -35,7 +35,11 @@ fi
 
 
 VER=$(cat /sys/module/vboxvideo/version)
+
+$(SELFDIR)/test_vbox.sh
+
 echo "Current Virtual Box 'vboxvideo'-module version: '$VER'"
+
 
 
 IN="$SELFDIR/Dockerfile_vb"
