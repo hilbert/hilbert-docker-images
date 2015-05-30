@@ -41,6 +41,12 @@ do
 		# test if it aquired the X11 lock file
 		if grep -q "^[[:space:]]*"$PID"[[:space:]]*$" `find /tmp/ | grep "^/tmp/\.X"$DISPLAY_NUM"-lock$"`
 		then
+	
+			# write the display number to the log file
+			echo "DISPLAY_NUM:$DISPLAY_NUM"
+			# > "$F"
+
+			export DISPLAY=":$DISPLAY_NUM"
 
 			xhost +
 			xcompmgr -fF -I-.002 -O-.003 -D1 &
@@ -49,11 +55,7 @@ do
 			### TODO: VB GA detection!?
 			[ -e "/etc/X11/Xsession.d/98vboxadd-xclient" ] && sudo sh /etc/X11/Xsession.d/98vboxadd-xclient
 
-			
-			# write the display number to the log file
-			echo "DISPLAY_NUM:$DISPLAY_NUM"
-			# > "$F"
-			
+					
 			wait $PID
 			exit 0
 		fi

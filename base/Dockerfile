@@ -10,7 +10,7 @@ RUN DEBIAN_FRONTEND=noninteractive apt-get -y upgrade
 
 # dist-upgrade ?
 # RUN DEBIAN_FRONTEND=noninteractive apt-get -q -y install --no-install-recommends
-RUN DEBIAN_FRONTEND=noninteractive apt-get -y install aptitude wget git
+RUN DEBIAN_FRONTEND=noninteractive apt-get -y install aptitude wget curl git
 
 ### RUN groupadd -r ur && useradd -r -g ur ur
 #RUN groupadd -f -g 1000 ur
