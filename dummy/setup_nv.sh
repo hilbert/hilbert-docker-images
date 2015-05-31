@@ -23,7 +23,9 @@ chmod go+rx /usr/lib/xorg/modules/drivers/ /usr/lib/x86_64-linux-gnu/dri/
 
 /tmp/nv -s -N --no-kernel-module 2>&1 || true
 
-# rm -f /tmp/nv
+rm -f /tmp/nv
+
+DEBIAN_FRONTEND=noninteractive apt-get install -fy
 
 # NVIDIA_VERSION="$VER"
 

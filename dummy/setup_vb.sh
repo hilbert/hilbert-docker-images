@@ -15,10 +15,10 @@ VER=$(cat /sys/module/vboxvideo/version)
 
 echo "Current Virtual Box 'vboxvideo'-module version: '$VER'"
 
-cd /tmp/ && \
-wget -q "http://download.virtualbox.org/virtualbox/$VER/VBoxGuestAdditions_$VER.iso" && \
-7z x "VBoxGuestAdditions_$VER.iso" -y -bd -ir'!VBoxLinuxAdditions.run' && \
-rm -f "VBoxGuestAdditions_$VER.iso"
+cd /tmp/ && wget -q "http://download.virtualbox.org/virtualbox/$VER/VBoxGuestAdditions_$VER.iso" || exit 1
+
+7z x "/tmp/VBoxGuestAdditions_$VER.iso" -y -bd -ir'!VBoxLinuxAdditions.run' || exit 1
+
 
 mkdir -p /usr/lib/xorg/modules/drivers/ /usr/lib/x86_64-linux-gnu/dri/ && \
     chmod go+rx /usr/lib/xorg/modules/drivers/ /usr/lib/x86_64-linux-gnu/dri/
@@ -28,7 +28,8 @@ cat /var/log/vboxadd-install.log
 
 DEBIAN_FRONTEND=noninteractive apt-get install -fy
 
-# DEBIAN_FRONTEND=noninteractive apt-get -q -y install libx11-6 libxcomposite1 libxdamage1 libxext6 libxfixes3 libxmu6 libxt6 xserver-xorg-core
+# DEBIAN_FRONTEND=noninteractive apt-get -q -y install 
+# libx11-6 libxcomposite1 libxdamage1 libxext6 libxfixes3 libxmu6 libxt6 xserver-xorg-core
 # xorg-video-abi-18
 
 test -e /usr/lib/x86_64-linux-gnu/dri/vboxvideo_dri.so || \
@@ -39,8 +40,9 @@ test -e /usr/lib/xorg/modules/drivers/vboxvideo_drv.so || \
     ln -s /usr/lib/x86_64-linux-gnu/VBoxGuestAdditions/vboxvideo_drv_115.so \
             /usr/lib/xorg/modules/drivers/vboxvideo_drv.so
 
-#rm -f  /tmp/VBoxLinuxAdditions.run
-
+echo "Cleaning up:" 
+ls -la /tmp/VBoxLinuxAdditions.run "/tmp/VBoxGuestAdditions_$VER.iso"
+rm -f /tmp/VBoxLinuxAdditions.run "/tmp/VBoxGuestAdditions_$VER.iso"
 
 # VBOX_VERSION="$VER"
 echo "Setting up VBox LIBGL: '$VER' is done!" 

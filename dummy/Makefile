@@ -22,7 +22,10 @@ check: $(TS) clean
 	docker ps -a
 	docker run ${RUNTERM} --name c_dummy tmp ${OPTS} -- ${CMD} ${ARGS}
 	docker start c_dummy
-	docker exec c_dummy bash -c "tar czvf /tmp/OGL.tgz --dereference `docker diff c_dummy | grep '^A /usr/' | grep -v '^A /usr/src' | sed 's@^A @@g' | xargs `"
+	docker diff c_dummy
+	docker exec c_dummy bash -c "tar czvf /tmp/OGL.tgz --recursion --dereference /usr/lib/x86_64-linux-gnu/ `docker diff c_dummy | grep -E '^A /(usr|etc|sbin)/' | grep -vE '^A /usr/(src|lib)' | sed 's@^A @@g' | xargs `"
+	docker rmi -f ogl || true
+	cat /tmp/OGL.tgz | docker import --change "VOLUME /usr/" --change "VOLUME /etc/" --change "VOLUME /sbin/" - dummyogl
 	docker rmi -f --no-prune=false dummy || true
 	docker commit c_dummy dummy
 	docker rm -vf c_dummy
@@ -32,4 +35,5 @@ check: $(TS) clean
 clean:
 	docker rm -vf c_tmp c_dummy || true
 	docker rmi -f --no-prune=false tmp || true
+	docker images -q -f dangling=true | xargs docker rmi || true
 
