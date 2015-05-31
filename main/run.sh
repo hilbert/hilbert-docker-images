@@ -45,21 +45,8 @@ XSOCK=/tmp/.X11-unix/
 ## -v /sys/fs/cgroup:/sys/fs/cgroup:ro \
 # -v /var/lib:/var/lib:rw \
 X="$X \
- -v /tmp:/tmp:rw \
- -v /run:/run:rw \
- -v /dev:/dev:rw \
- -v /var/log:/var/log:rw \
- -v /var/run:/var/run:rw \
- -v /etc/passwd:/etc/passwd:ro \
- -v /etc/shadow:/etc/shadow:ro \
- -v /etc/group:/etc/group:ro \
  -v /etc/localtime:/etc/localtime:ro \
- -v /etc/sudoers:/etc/sudoers:ro -v /etc/sudoers.d/:/etc/sudoers.d/:ro \
- -v /home:/home:ro \
--v /dev/dri:/dev/dri \
--v /dev/input:/dev/input \
--v /tmp/.X11-unix:/tmp/.X11-unix \
--v /run/udev:/run/udev \
+ -v /dev:/dev:rw -v /tmp/:/tmp/:rw -v /run/udev:/run/udev
 "
 
 # -v /etc/passwd:/etc/passwd:ro \

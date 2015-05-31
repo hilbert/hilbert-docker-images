@@ -35,7 +35,7 @@ ARGS="$@"
 # XSOCK=/tmp/.X11-unix/
 
 [ -z "$X" ] && X="DISPLAY"
-X="$X -v /etc/localtime:/etc/localtime:ro -v /tmp/:/tmp/:rw "
+X="$X -v /etc/localtime:/etc/localtime:ro -v /dev:/dev:rw -v /tmp/:/tmp/:rw -v /run/udev:/run/udev "
 
 # -v /tmp:/tmp:rw \
 # -v /run:/run:rw \
@@ -48,10 +48,8 @@ X="$X -v /etc/localtime:/etc/localtime:ro -v /tmp/:/tmp/:rw "
 # -v /etc/localtime:/etc/localtime:ro \
 # -v /etc/sudoers:/etc/sudoers:ro -v /etc/sudoers.d/:/etc/sudoers.d/:ro \
 # -v /home:/home:ro \
-# -v /dev/dri:/dev/dri \
-# -v /dev/input:/dev/input \
+# -v /dev/dri:/dev/dri  -v /dev/input:/dev/input -v /run/udev:/run/udev \
 # -v /tmp/.X11-unix:/tmp/.X11-unix \
-# -v /run/udev:/run/udev \
 
 ### -v /var/:/var/:rw \
 # -v /var/lib:/var/lib:rw \
