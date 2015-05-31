@@ -60,32 +60,35 @@ ${SS}:
 
 ${top_dir}/phusion_baseimage_0.9.16.timestamp:
 	$(DOCKER) pull 'phusion/baseimage:0.9.16'
-	$(DOCKER) images | grep -E 'phusion[\/]baseimage *0[\.]9[\.]16 ' > $@
+	$(DOCKER) images | $(GREP) -E 'phusion[\/]baseimage *0[\.]9[\.]16 ' > $@
 
 
 DOCKER_BUILD_OPTS=--pull=false --force-rm=true --rm=true
 # --no-cache=true
 
 ${TS}: ${DF} ${SS} ${ACOPYFILES} ${ACOPYFILES2}
-	cd ${mkfile_dir} && docker build ${DOCKER_BUILD_OPTS} -t ${IMG} ${mkfile_dir}
-	docker images | $(GREP) "${U}/${I} " | $(GREP) ${APP} > $@
+	cd ${mkfile_dir} && $(DOCKER) build ${DOCKER_BUILD_OPTS} -t ${IMG} ${mkfile_dir}
+	$(DOCKER) images | $(GREP) "${U}/${I} " | $(GREP) ${APP} > $@
 
 rebuild: ${DF} ${SS} ${ACOPYFILES} ${ACOPYFILES2} ${mkfile_dir}/Makefile $(abspath $(lastword $(MAKEFILE_LIST))) 
 	$(RM) -f ${TS}
 	$(MAKE) -C ${mkfile_dir}/ ${TS}
 
-
 test: $(TS) check
 
 push: ${TS}
-	docker push "${IMG}"
+	$(DOCKER) push "${IMG}"
 
 # ${SS}
 pull:
-	docker pull "${IMG}"
-	docker images | grep "${U}/${I} " | grep ${APP} > ${TS}
+	$(DOCKER) pull "${IMG}"
+	$(DOCKER) images | $(GREP) "${U}/${I} " | $(GREP) ${APP} > ${TS}
 
-
+cleanup:
+	(cd ${make_dir}; $(MAKE) -i -k -C ${make_dir} clean || true; cd - )
+	$(RM) -f ${TS}
+	$(DOCKER) rmi "${IMG}"
+	
 #force_look:
 #	true
 
