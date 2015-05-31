@@ -22,10 +22,21 @@ mkdir -p /usr/lib/xorg/modules/drivers/ /usr/lib/x86_64-linux-gnu/dri/ && \
 chmod go+rx /usr/lib/xorg/modules/drivers/ /usr/lib/x86_64-linux-gnu/dri/
 
 /tmp/nv -s -N --no-kernel-module 2>&1 || true
+cat /var/log/nvidia-installer.log
 
-rm -f /tmp/nv
+#rm -f /tmp/nv
 
 DEBIAN_FRONTEND=noninteractive apt-get install -fy
+
+ls -la /usr/lib/xorg/modules/drivers/ /usr/lib/x86_64-linux-gnu/dri/
+
+#test -e /usr/lib/x86_64-linux-gnu/dri/vboxvideo_dri.so || \
+#    ln -s /usr/lib/x86_64-linux-gnu/VBoxOGL.so \
+#            /usr/lib/x86_64-linux-gnu/dri/vboxvideo_dri.so
+
+test -e /usr/lib/xorg/modules/drivers/nvidia_drv.so || \
+    ln -s /usr/X11R6/lib/modules/drivers/nvidia_drv.so
+            /usr/lib/xorg/modules/drivers/nvidia_drv.so
 
 # NVIDIA_VERSION="$VER"
 
