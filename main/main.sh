@@ -125,7 +125,7 @@ do
 
     215)
       if [ ! -z "$DISPLAY" ]; then
-        echo "Starting GUI shell for test... Please build appchoo yourself... " && $SELFDIR/run.sh 'test' bash
+        echo "Starting GUI shell for test... Please build appchoo yourself... " && $SELFDIR/run.sh 'test' launch.sh
 	# "rxvt-unicode -fn xft:terminus:pixelsize=12 -e bash" ## xterm?
       else
         echo "Please start X11 beforehand!"
@@ -134,7 +134,8 @@ do
 
     214)
       if [ ! -z "$DISPLAY" ]; then
-        echo "Starting GUI shell for appchoo... Please build appchoo yourself... " && $SELFDIR/run.sh "$PREFIX:appchoo" xterm
+        echo "Starting GUI shell for appchoo... Please build appchoo yourself... " 
+	$SELFDIR/run.sh "$PREFIX:appchoo" xterm || $SELFDIR/run.sh "$PREFIX:appchoo" bash
         # "rxvt-unicode -fn xft:terminus:pixelsize=12 -e bash"
       else
         echo "Please start X11 beforehand!"
@@ -143,7 +144,7 @@ do
 
     213)
       if [ ! -z "$DISPLAY" ]; then
-        echo "Starting GUI shell... Please run cmus/vlc/mplaye/xine yourself... " && $SELFDIR/run.sh "$PREFIX:play" xterm
+        echo "Starting GUI shell... Please run cmus/vlc/mplaye/xine yourself... " && $SELFDIR/run.sh "$PREFIX:play" launch.sh
         # "rxvt-unicode -fn xft:terminus:pixelsize=12 -e bash"
       else
         echo "Please start X11 beforehand!"
@@ -176,7 +177,8 @@ do
 
     206)
       if [ ! -z "$DISPLAY" ]; then
-        echo "starting X11-SHELL for testing... " && $SELFDIR/run.sh "$PREFIX:xeyes" xterm
+        echo "starting X11-SHELL for testing... " 
+   	$SELFDIR/run.sh "$PREFIX:xeyes" xterm || $SELFDIR/run.sh "$PREFIX:xeyes" bash
         # "rxvt-unicode -fn xft:terminus:pixelsize=12 -e bash"
       else
         echo "Please start X11 beforehand!"
@@ -201,7 +203,8 @@ do
     ;;
 
     203)
-      echo "Starting Alsa sound test on plughw:0,0/1... " && $SELFDIR/run.sh "$PREFIX:alsa" /usr/local/bin/soundtest.sh
+      echo "Starting Alsa sound test on plughw:0,0/1... " 
+      $SELFDIR/run.sh "$PREFIX:alsa" soundtest.sh
     ;;
 
     205)

@@ -8,7 +8,11 @@ cd "$SELFDIR"
 CMD=$1
 
 if [ -z "$CMD" ]; then
-  CMD=xterm
+  if [ -z "$DISPLAY" ]; then 
+    CMD=bash
+  else
+    CMD=xterm
+  fi
   ARGS=""
 else
   shift
