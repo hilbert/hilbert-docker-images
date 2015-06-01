@@ -18,7 +18,8 @@ GL := /tmp/OGL
 EXECFILES := 
 #/bin/true /lib/x86_64-linux-gnu/libc.so.6 /lib64/ld-linux-x86-64.so.2 /usr/lib/x86_64-linux-gnu/ 
 
-${GL}.tgz, ${DS}: clean ${TS}
+# , ${DS}
+${GL}.tgz: clean ${TS}
 	docker ps -a
 	docker images
 	docker run ${RUNTERM} --name $C ${IMG} ${OPTS} -- bash -c 'setup.sh' #	docker start $C && sleep 1
@@ -32,7 +33,7 @@ ${GL}.tgz, ${DS}: clean ${TS}
 	ls -la ${GL}.tgz
 
 #	docker rmi -f ogl || true
-check: ${GL}.tgz
+check: ${TS} ${GL}.tgz
 	mkdir -p ${GL} && tar xzvf ${GL}.tgz -C ${GL}
 	docker ps -a
 	docker run ${RUNTERM} --rm malex984/dockapp:dummy ${OPTS} -- bash -c "ls -lR $(GL)/ | grep -i vbox" 
