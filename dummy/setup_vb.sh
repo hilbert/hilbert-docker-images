@@ -14,14 +14,13 @@ VER=$(cat /sys/module/vboxvideo/version)
 # "$SELFDIR/test_vbox.sh"
 
 echo "Current Virtual Box 'vboxvideo'-module version: '$VER'"
-
+cd /tmp/ ;
 
 if [ ! -e "/tmp/VBoxLinuxAdditions.run" ]; then
-
    echo "Downloading .iso..."
 
    test -e "/tmp/VBoxGuestAdditions_$VER.iso" || \
-   ( cd /tmp/ ;  wget "http://download.virtualbox.org/virtualbox/$VER/VBoxGuestAdditions_$VER.iso"  || exit 1; )
+   (  wget "http://download.virtualbox.org/virtualbox/$VER/VBoxGuestAdditions_$VER.iso"  || exit 1; )
 
    echo "Extracting .run..."
    7z x "/tmp/VBoxGuestAdditions_$VER.iso" -y -bd -ir'!VBoxLinuxAdditions.run' || exit 1
