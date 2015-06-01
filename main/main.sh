@@ -85,7 +85,7 @@ do
 
  $SELFDIR/menu.sh \
      "Your choice please?" 200 \
-     "A_Test_Application_A B_Same_Test_App Alsa_Test GUI_Shell Bash_in_MainGlueApp X11_Shell X11Server Xephyr Iceweasel Q3 Skype Cups_Server Media_Players AppChoo Test QUIT"
+     "A_Test_Application_A B_Same_Test_App Alsa_Test GUI_Shell Bash_in_MainGlueApp X11_Shell X11Server Xephyr Iceweasel Q3 Skype Cups_Server Media_Players Surfer Test QUIT"
   APP="$?"
   case "$APP" in
 
@@ -125,7 +125,7 @@ do
 
     215)
       if [ ! -z "$DISPLAY" ]; then
-        echo "Starting GUI shell for test... Please build appchoo yourself... " && $SELFDIR/run.sh 'test' launch.sh
+        echo "Starting GUI shell for test... Please build test yourself... " && $SELFDIR/run.sh 'test' launch.sh
 	# "rxvt-unicode -fn xft:terminus:pixelsize=12 -e bash" ## xterm?
       else
         echo "Please start X11 beforehand!"
@@ -134,8 +134,9 @@ do
 
     214)
       if [ ! -z "$DISPLAY" ]; then
-        echo "Starting GUI shell for appchoo... Please build appchoo yourself... " 
-	$SELFDIR/run.sh "$PREFIX:appchoo" xterm || $SELFDIR/run.sh "$PREFIX:appchoo" bash
+        echo "Starting GUI shell for surfer... Please build surfer yourself... " 
+	$SELFDIR/run.sh "$PREFIX:surfer" launch.sh /opt/SURFER/SURFER
+#	$SELFDIR/run.sh "$PREFIX:appchoo" bash
         # "rxvt-unicode -fn xft:terminus:pixelsize=12 -e bash"
       else
         echo "Please start X11 beforehand!"
