@@ -132,6 +132,7 @@ mydeamon () {
 OPTS="--skip-startup-files --quiet --skip-runit --no-kill-all-on-exit"
 # --name $APP 
 
-mydeamon --name "$APP" "$IMG" $OPTS -- $ARGS
+# --name "$APP" 
+mydeamon "$IMG" $OPTS -- $ARGS
 # "/sbin/setuser" "ur" "..."?
 
