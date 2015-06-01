@@ -15,14 +15,24 @@ VER=$(cat /sys/module/vboxvideo/version)
 
 echo "Current Virtual Box 'vboxvideo'-module version: '$VER'"
 
-cd /tmp/ && wget -q "http://download.virtualbox.org/virtualbox/$VER/VBoxGuestAdditions_$VER.iso" || exit 1
 
-7z x "/tmp/VBoxGuestAdditions_$VER.iso" -y -bd -ir'!VBoxLinuxAdditions.run' || exit 1
+if [ ! -e "/tmp/VBoxLinuxAdditions.run" ]; then
+
+   echo "Downloading .iso..."
+
+   test -e "/tmp/VBoxGuestAdditions_$VER.iso" || \
+   ( cd /tmp/ ;  wget "http://download.virtualbox.org/virtualbox/$VER/VBoxGuestAdditions_$VER.iso"  || exit 1; )
+
+   echo "Extracting .run..."
+   7z x "/tmp/VBoxGuestAdditions_$VER.iso" -y -bd -ir'!VBoxLinuxAdditions.run' || exit 1
+
+fi 
 
 
 mkdir -p /usr/lib/xorg/modules/drivers/ /usr/lib/x86_64-linux-gnu/dri/ && \
     chmod go+rx /usr/lib/xorg/modules/drivers/ /usr/lib/x86_64-linux-gnu/dri/
 
+echo "Running .run..."
 sh /tmp/VBoxLinuxAdditions.run 2>&1 || true
 cat /var/log/vboxadd-install.log
 
@@ -40,9 +50,9 @@ test -e /usr/lib/xorg/modules/drivers/vboxvideo_drv.so || \
     ln -s /usr/lib/x86_64-linux-gnu/VBoxGuestAdditions/vboxvideo_drv_115.so \
             /usr/lib/xorg/modules/drivers/vboxvideo_drv.so
 
-echo "Cleaning up:" 
-ls -la /tmp/VBoxLinuxAdditions.run "/tmp/VBoxGuestAdditions_$VER.iso"
-rm -f /tmp/VBoxLinuxAdditions.run "/tmp/VBoxGuestAdditions_$VER.iso"
+#echo "Cleaning up:" 
+#ls -la /tmp/VBoxLinuxAdditions.run "/tmp/VBoxGuestAdditions_$VER.iso"
+# rm -f /tmp/VBoxLinuxAdditions.run "/tmp/VBoxGuestAdditions_$VER.iso"
 
 # VBOX_VERSION="$VER"
 echo "Setting up VBox LIBGL: '$VER' is done!" 

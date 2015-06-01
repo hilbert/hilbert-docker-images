@@ -15,7 +15,10 @@ VER=$(cat /sys/module/nvidia/version)
 
 echo "NV Version: '$VER'"
 
-curl "http://us.download.nvidia.com/XFree86/Linux-x86_64/$VER/NVIDIA-Linux-x86_64-$VER.run" -o /tmp/nv && \
+
+test -e "/tmp/nv" || \
+(curl "http://us.download.nvidia.com/XFree86/Linux-x86_64/$VER/NVIDIA-Linux-x86_64-$VER.run" -o /tmp/nv || exit 1; )
+
 chmod +x /tmp/nv
 
 mkdir -p /usr/lib/xorg/modules/drivers/ /usr/lib/x86_64-linux-gnu/dri/ && \
