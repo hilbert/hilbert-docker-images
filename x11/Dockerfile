@@ -17,6 +17,8 @@ RUN DEBIAN_FRONTEND=noninteractive apt-get -q -y install xauth x11-xserver-utils
 ## compiz  
 #  libx11 libxmu libxi
 
+RUN DEBIAN_FRONTEND=noninteractive apt-get -q -y install libx11-6 libxcomposite1 libxdamage1 libxext6 libxfixes3 libxmu6 libxt6 libxv1 libglapi-mesa
+
 # VOLUME /tmp/.X11-unix/
 
 # see testXephyr.sh

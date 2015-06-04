@@ -9,7 +9,7 @@ ENV LIBGL_DEBUG=verbose
 # ENV QT_X11_NO_MITSHM 1
 
 RUN DEBIAN_FRONTEND=noninteractive apt-get -y update
-RUN DEBIAN_FRONTEND=noninteractive apt-get -q -y install build-essential
+#RUN DEBIAN_FRONTEND=noninteractive apt-get -q -y install build-essential
 
 ##RUN DEBIAN_FRONTEND=noninteractive apt-get -q -y install xserver-xorg-video-all
 #RUN DEBIAN_FRONTEND=noninteractive apt-get -q -y install xauth x11-apps 
@@ -39,7 +39,7 @@ RUN DEBIAN_FRONTEND=noninteractive apt-get -q -y install build-essential
 # fbsuite seems to be rather outdated, and unusable on 64 bit ubuntu14.04 :(
 
 RUN DEBIAN_FRONTEND=noninteractive apt-get -q -y install libgles1-mesa libgles2-mesa libegl1-mesa-drivers  mesa-vdpau-drivers freeglut3
-RUN DEBIAN_FRONTEND=noninteractive apt-get -q -y install nux-tools mesa-utils g3dviewer
+RUN DEBIAN_FRONTEND=noninteractive apt-get -q -y install nux-tools mesa-utils
 RUN DEBIAN_FRONTEND=noninteractive apt-get -q -y install pciutils
 
 COPY test_sys.sh ilkh.sh test_x11.sh test_nv.sh test_vbox.sh /usr/local/bin/
@@ -76,5 +76,5 @@ COPY bm_gpu.sh /usr/src/
 
 
 # RUN DEBIAN_FRONTEND=noninteractive apt-get -q -y install xpra
-
+RUN DEBIAN_FRONTEND=noninteractive apt-get -q -y install g3dviewer
 

@@ -36,6 +36,8 @@ COPY qclosebutton launch.sh x_64x64.png /usr/local/bin/
 #RUN DEBIAN_FRONTEND=noninteractive apt-get -q -y install libpcre libconfig libdrm libGL libdbus
 # RUN git clone https://github.com/chjj/compton.git /usr/src/compton/
 
+RUN DEBIAN_FRONTEND=noninteractive apt-get -q -y install libx11-6 libxcomposite1 libxdamage1 libxext6 libxfixes3 libxmu6 libxt6 libxv1 libglapi-mesa
+
 
 # Clean up APT when done.
 # RUN apt-get clean && rm -rf /var/lib/apt/lists/* /tmp/* /var/tmp/*

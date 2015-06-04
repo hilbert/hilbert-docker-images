@@ -6,6 +6,8 @@
 #CMD="$1"
 #shift
 
+setup_ogl.sh 2>&1
+
 if [ ! -z "$DISPLAY" ]; then
   CMD=Xephyr
 else
@@ -49,12 +51,15 @@ do
 			export DISPLAY=":$DISPLAY_NUM"
 
 			xhost +
-			xcompmgr -fF -I-.002 -O-.003 -D1 &
-			# TODO: choose a comp. manager...
-			compton &
-			### TODO: VB GA detection!?
-			[ -e "/etc/X11/Xsession.d/98vboxadd-xclient" ] && sudo sh /etc/X11/Xsession.d/98vboxadd-xclient
+#			xcompmgr -fF -I-.002 -O-.003 -D1 &
+#			# TODO: choose a comp. manager...
+#			compton &
+#			### TODO: VB GA detection!?
 
+#  			if [ -e "/etc/X11/Xsession.d/98vboxadd-xclient" ]; then 
+#    				echo "Trying to run '/etc/X11/Xsession.d/98vboxadd-xclient'..."
+#    				sudo sh /etc/X11/Xsession.d/98vboxadd-xclient 2>&1
+#  			fi
 					
 			wait $PID
 			exit 0

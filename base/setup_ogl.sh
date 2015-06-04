@@ -26,10 +26,10 @@ if [ -e "$GL" ]; then
   echo "Running ldconfig..."
   sudo ldconfig 
   
-  if [ -e "/etc/X11/Xsession.d/98vboxadd-xclient" ]; then 
-    echo "Trying to run '/etc/X11/Xsession.d/98vboxadd-xclient'..."
-    sudo sh /etc/X11/Xsession.d/98vboxadd-xclient || true
-  fi
+#  if [ -e "/etc/X11/Xsession.d/98vboxadd-xclient" ]; then 
+#    echo "Trying to run '/etc/X11/Xsession.d/98vboxadd-xclient'..."
+#    sudo sh /etc/X11/Xsession.d/98vboxadd-xclient || true
+#  fi
 fi
 
 touch "$T"
