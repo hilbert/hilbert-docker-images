@@ -5,7 +5,7 @@ include ../Makefile.inc
 RUNTERM=-it -a stdin -a stdout -a stderr
 OPTS=--skip-startup-files --no-kill-all-on-exit --quiet --skip-runit
 
-CMD=bash
+CMD=bash -c 'setup_ogl.sh /tmp/OGL.tgz; echo "Sleeping..."; sleep 3; echo "All is done!"'
 check: $(TS)
 	docker run --rm ${RUNTERM} -v /tmp/:/tmp/:rw $(IMG) ${OPTS} -- ${CMD}
 

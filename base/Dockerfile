@@ -24,3 +24,5 @@ RUN DEBIAN_FRONTEND=noninteractive apt-get -y install aptitude wget curl git
 
 # Use baseimage-docker's init system.
 # CMD ["/sbin/my_init"]
+
+COPY setup_ogl.sh  /usr/local/bin/
