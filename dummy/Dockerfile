@@ -1,4 +1,4 @@
-FROM malex984/dockapp:base
+FROM malex984/dockapp:x11
 
 MAINTAINER Oleksandr Motsak <malex984@googlemail.com>
 
