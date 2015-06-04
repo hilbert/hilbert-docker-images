@@ -26,7 +26,7 @@ ${GL}.tgz: ${TS}
 	sudo rm -Rf ${GL}* || true 
 	docker ps -a
 	docker images
-	docker run ${RUNTERM} --name $C ${IMG} ${OPTS} -- bash -c 'setup.sh' #	docker start $C && sleep 1
+	docker run ${RUNTERM} --name $C ${IMG} ${OPTS} -- bash -c 'customize.sh' #	docker start $C && sleep 1
 	docker commit --change "VOLUME /usr/" --change "VOLUME /etc/" --change "VOLUME /opt/" $C $D
 	docker diff $C > ${mkfile_dir}/${APP}_${D}.diff
 	docker run ${RUNTERM} --rm $D ${OPTS} -- bash -c "tar czvf $(GL).tgz --hard-dereference --dereference ${ADDFILES} `docker diff $C | grep -E '^A /(usr|etc|sbin)/' | grep -iE 'vbox' | grep -vE '^A /usr/(src|share/doc|share/man)' | sed 's@^A @@g' | xargs `"

@@ -17,7 +17,7 @@ mesa-vdpau-drivers freeglut3 mesa-utils libglu1
 # xserver-xorg-core \
 # xorg-video-abi-19 
 
-COPY test_nv.sh test_vbox.sh setup_nv.sh setup_vb.sh setup.sh ilkh.sh /usr/local/bin/
+COPY test_nv.sh test_vbox.sh setup_nv.sh setup_vb.sh customize.sh ilkh.sh /usr/local/bin/
 
 # Clean up APT when done.
 RUN apt-get clean && rm -rf /var/lib/apt/lists/* /tmp/* /var/tmp/*
