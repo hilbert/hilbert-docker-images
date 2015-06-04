@@ -12,9 +12,13 @@ share images as much as possible).
     Since some of them are quite big please do consider building them instead of pulling!
     Run (and change) `setup.sh` in order to pull the base image and build starting images.
     *We assume the host linux to run docker service.*
-2. `:main/customize.sh`: Customize them.
-    Running `:main/customize.sh` such a host will enable one to detect known hardware or kernel modules (e.g. VirtualBox Guest Additions or NVidia driver)
-    in order to localize/customize some starting images (e.g. `:x11` and `:test`) 
+2. We are experimenting with different customization approaches:
+  * `:dummy` contains `customize.sh` which performs customization to the running :dummy container, 
+    these customization changes can than be detected with `docker diff` and 
+    archived together (e.g. `/tmp/OGL.tgz`) for later use by `:base/setup_ogl.sh`.
+  * `:up/customize.sh`: Customize each libGL-needing image (e.g. `:x11` and `:test` by default for now):
+    Running `:up/customize.sh` such a host will enable one to detect known hardware or kernel modules (e.g. VirtualBox Guest Additions or NVidia driver)
+    in order to localize/customize some starting images  
     under corresponding tag name (e.g. `:test.nv.340.76` or `:x11.vb.4.3.26`),
     which than will be tagged with local names (e.g. `test:latest` or `x11:latest`). 
     *We assume host system to be fully pre-configured (and all necessary kernel modules installed and loaded).*
@@ -106,8 +110,8 @@ docker rmi $(docker images -f "dangling=true" -q)
 
 ### Cleanup dockapp-related images:
 ```
-docker images | grep malex984/dockapp | awk ' { print $1 ":" $2 } ' | xargs docker rmi
-docker rmi x11 test
+docker images | grep malex984/dockapp | awk ' { print $1 ":" $2 } ' | xargs docker rmi -f 
+docker rmi -f x11 test dummy
 ```
 
 ### Cleanup all containers:
