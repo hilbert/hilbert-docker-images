@@ -1,4 +1,3 @@
-
 #!/bin/bash
 
 SELFDIR=`dirname "$0"`

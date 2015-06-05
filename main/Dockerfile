@@ -5,7 +5,7 @@ MAINTAINER Oleksandr Motsak <malex984@googlemail.com>
 RUN DEBIAN_FRONTEND=noninteractive apt-get -y update
 RUN DEBIAN_FRONTEND=noninteractive apt-get -q -y install xauth
 
-COPY main.sh menu.sh run.sh sv.sh A.sh /usr/local/bin/
+COPY main.sh menu.sh run.sh sv.sh A.sh generate_ogl.sh /usr/local/bin/
 
 # VOLUME ...
 # CMD /usr/local/bin/main.sh

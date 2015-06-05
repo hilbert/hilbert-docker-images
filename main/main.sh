@@ -85,7 +85,7 @@ do
 
  $SELFDIR/menu.sh \
      "Your choice please?" 200 \
-     "A_Test_Application_A B_Same_Test_App Alsa_Test GUI_Shell Bash_in_MainGlueApp X11_Shell X11Server Xephyr Iceweasel Q3 Skype Cups_Server Media_Players Surfer Test QUIT"
+     "A_Test_Application_A LIBGL_CUSTOMIZATION Alsa_Test GUI_Shell Bash_in_MainGlueApp X11_Shell X11Server Xephyr Iceweasel Q3 Skype Cups_Server Media_Players Surfer Test QUIT"
   APP="$?"
   case "$APP" in
 
@@ -200,7 +200,9 @@ do
     ;;
 
     202)
-      echo "Starting AppA2... " && $SELFDIR/A.sh "BBBBBBBBBBBBBB!"
+      echo "Generating /tmp/OGL.tgz with the use of malex984/dockapp:dummy... "
+      $SELFDIR/generate_ogl.sh malex984/dockapp:dummy /tmp/OGL.tgz
+      
     ;;
 
     203)
