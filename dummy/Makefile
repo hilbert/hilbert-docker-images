@@ -50,7 +50,7 @@ check: ${TS} ${GL}
 
 clean:
 	rm -f ${DS} ${mkfile_dir}/${APP}_${D}.diff || true
-	sudo rm -Rf "$(GL)" || true 
+	rm -Rf "$(GL)" || true 
 	docker rm -vf $C || true
 	docker rmi -f --no-prune=false $D || true
 	docker images -q -f dangling=true | xargs docker rmi || true

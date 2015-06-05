@@ -7,8 +7,8 @@ CMD=launch.sh xterm -e bash /usr/src/bm_gpu.sh
 RUNTERM=-it -a stdin -a stdout -a stderr --ipc=host --privileged --net=host --pid=host
 OPTS=--skip-startup-files --no-kill-all-on-exit --quiet --skip-runit
 
-check:
-	### [ -z "${DISPLAY}" ] && exit 1
+### [ -z "${DISPLAY}" ] && exit 1
+check: $(TS)
 	xhost + || exit 1
 	docker ps -a
 	docker run --rm -e DISPLAY ${RUNTERM} -v /tmp/:/tmp/:rw $(IMG) ${OPTS} -- ${CMD}

@@ -7,7 +7,7 @@ CMD=xterm
 RUNTERM=-it -a stdin -a stdout -a stderr
 OPTS=--skip-startup-files --no-kill-all-on-exit --quiet --skip-runit
 
-check:
+check: $(TS)
 	### [ -z "${DISPLAY}" ] && exit 1
 	xhost + || exit 1
 	docker ps -a

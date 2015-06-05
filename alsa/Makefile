@@ -7,5 +7,5 @@ OPTS=--skip-startup-files --no-kill-all-on-exit --quiet --skip-runit
 
 CMD=soundtest.sh
 check: $(TS)
-	docker run --rm ${RUNTERM} --net=none -v /tmp/:/tmp/:rw $(IMG) ${OPTS} -- ${CMD}
+	docker run -e DISPLAY --rm ${RUNTERM} --net=none -v /tmp/:/tmp/:rw $(IMG) ${OPTS} -- ${CMD}
 

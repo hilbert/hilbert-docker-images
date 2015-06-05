@@ -43,11 +43,11 @@ docker commit $C $D
 
 ## pre-cleaup:
 docker rm -vf $C 1>&2
-sudo rm -Rf $G 1>&2 || true
+rm -Rf $G 1>&2 || true
 
 ## generate target archive $G:
 # TODO: --recursion ? ADDEDFILES=/bin/true /lib/x86_64-linux-gnu/libc.so.6 /lib64/ld-linux-x86-64.so.2 /usr/lib/x86_64-linux-gnu/ ?
-docker run $R --rm $D $O -- bash -c "tar czvf $G --hard-dereference --dereference $A"
+docker run $R --rm $D $O -- bash -c "tar czvf $G --hard-dereference --dereference $A && chmod a+rw $G"
 
 ## post-cleanup:
 docker rmi -f --no-prune=false $D 1>&2 || true

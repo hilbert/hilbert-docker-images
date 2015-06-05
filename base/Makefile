@@ -7,5 +7,5 @@ OPTS=--skip-startup-files --no-kill-all-on-exit --quiet --skip-runit
 
 CMD=bash -c 'setup_ogl.sh /tmp/OGL.tgz; echo "Sleeping..."; sleep 3; echo "All is done!"'
 check: $(TS)
-	docker run --rm ${RUNTERM} -v /tmp/:/tmp/:rw $(IMG) ${OPTS} -- ${CMD}
+	docker run --rm -e DISPLAY ${RUNTERM} -v /tmp/:/tmp/:rw $(IMG) ${OPTS} -- ${CMD}
 
