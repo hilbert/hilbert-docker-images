@@ -5,7 +5,7 @@ SELFDIR=`cd "$SELFDIR" && pwd`
 
 cd "$SELFDIR"
 
-setup_ogl.sh
+time setup_ogl.sh
 
 if [ -e "/etc/X11/Xsession.d/98vboxadd-xclient" ]; then 
     echo "Trying to run '/etc/X11/Xsession.d/98vboxadd-xclient'..."
