@@ -5,6 +5,7 @@ digraph deps{ graph [label="an arrow means that its source is based on the arrow
 ":base" -> "phusion/baseimage:0.9.16" ;
 ":cups" -> ":base" ;
 ":dd" -> ":base" ;
+":dummy" -> ":x11" ;
 ":gui" -> ":xeyes" ;
 ":iceweasel" -> ":gui" ;
 ":main" -> ":dd" ;
