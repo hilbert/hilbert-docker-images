@@ -18,12 +18,4 @@ digraph deps{ graph [label="an arrow means that its source is based on the arrow
 ":x11" -> ":base" ;
 ":xbmc" -> ":xeyes" ;
 ":xeyes" -> ":alsa" ;
-":x11.nv.V.E.R" -> ":x11" ;
-":x11.vb.V.E.R" -> ":x11" ;
-":test.nv.V.E.R" -> ":test" ;
-":test.vb.V.E.R" -> ":test" ;
-"x11:latest" -> ":x11.nv.V.E.R" [dir=none color="blue" ] ;
-"test:latest" -> ":test.nv.V.E.R" [dir=none color="blue" ] ;
-"x11:latest" [color="blue" style="dashed"]; 
-"test:latest" [color="blue" style="dashed"]; 
 }
