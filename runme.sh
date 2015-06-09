@@ -1,7 +1,10 @@
 #! /bin/bash
 set -e
 
-ARGS="$@"
+OGL="202"
+XXX="207"
+
+[ -e /tmp/OGL.tgz ] && OGL=""
 
 U=malex984
 I=dockapp
@@ -37,6 +40,7 @@ case "$OSTYPE" in
      echo "We now enable anyone to connect to this X11..."
      xhost +
      X="DISPLAY -e XAUTHORITY=$XAUTH"
+     XXX=""
    else
 # Detect a Virtual Box VM!?
      echo "Please start one of X11 servers before using any GUI apps... "
@@ -55,6 +59,7 @@ case "$OSTYPE" in
   echo "X11 should 'Allow connections from network clients & Your firewall should not block incomming connections to X11'"
 #  # X11 instead of XQuartz? Xpara?
   open -a XQuartz # --args xterm $PWD/xsocat.sh #?
+  XXX=""
  ;;
 esac
 
@@ -76,25 +81,58 @@ export X
 #	return
 #    fi
 
+
+ARGS=() #ARGS="$@"
+
+if [ $# -gt 0 ]; then
+  while [ ! -z "$1" ]; do
+    ARGS=("${ARGS[@]}" "$1") # ARGS+=($1)
+    if [ ! -z "$OGL" ]; then 
+    if [ "x$1" = "x$OGL" ]; then
+      OGL=""
+    fi
+    fi
+    if [ ! -z "$XXX" ]; then 
+    if [ "x$1" = "x$XXX" ]; then
+      XXX=""
+    fi
+    fi
+    shift
+  done
+fi
+
+if [ ! -z "$OGL" ]; then
+    ARGS=("${ARGS[@]}" "$OGL") # ARGS+=($1)
+fi
+
+if [ ! -z "$XXX" ]; then
+    ARGS=("${ARGS[@]}" "$XXX") # ARGS+=($1)
+fi
+
+
+#/etc/inittab
+
 RET=0
 myrunner () {
  ID=$(docker ps -a | grep "$IM" | awk '{ print $1 }')
 
+
+#	-v /etc/passwd:/etc/passwd:ro \
+#	-v /etc/shadow:/etc/shadow:ro \
+#	-v /etc/group:/etc/group:ro \
+#        -v /etc/sudoers:/etc/sudoers:ro -v /etc/sudoers.d/:/etc/sudoers.d/:ro \
+#	-v /home/:/home/:ro \
+#	-v /dev/:/dev/:rw \
+#	-v /var/:/var/:rw \
+#	-v /run/:/run/:rw \
+#       -e DOCKER_HOST=unix:///var/run/docker.sock -e NO_PROXY=/var/run/docker.sock 
  if [ -z $ID ]; then 
    # run --rm 
-   ID=$(docker create -ti --net host --privileged --ipc=host --pid=host \
+   ID=$(docker create -ti --privileged --net host --ipc=host --pid=host \
         --add-host=dockerhost:$HIP \
-	-v /etc/passwd:/etc/passwd:ro \
-	-v /etc/shadow:/etc/shadow:ro \
-	-v /etc/group:/etc/group:ro \
 	-v /etc/localtime:/etc/localtime:ro \
-        -v /etc/sudoers:/etc/sudoers:ro -v /etc/sudoers.d/:/etc/sudoers.d/:ro \
-	-v /home/:/home/:ro \
-        -v /tmp/:/tmp/:rw \
-        -e $X -e DOCKER_HOST=unix:///var/run/docker.sock -e NO_PROXY=/var/run/docker.sock \
-	-v /dev/:/dev/:rw \
-	-v /var/:/var/:rw \
-	-v /run/:/run/:rw \
+        -v /dev:/dev:rw -v /tmp/:/tmp/:rw -v /run/udev:/run/udev -v /var/run/docker.sock:/var/run/docker.sock \
+        -e $X \
 	"$@" )
  fi
 #      -v /sys/fs/cgroup:/sys/fs/cgroup:ro \
@@ -108,6 +146,7 @@ myrunner () {
 
 # return $RET
 }
+
 # -v /tmp/.X11-unix:/tmp/.X11-unix \
 # -v /var/run/docker.sock:/var/run/docker.sock \
 # --add-host=dockerhost:$HIP --net host \ ## --net bridge \
@@ -129,7 +168,9 @@ echo
 #$(env | grep -v -E '^DISPLAY=' | cut -d= -f1 | awk '{print "-e", $1}') \
  
 # --name main 
-myrunner "$IM" --no-kill-all-on-exit --skip-runit -- /usr/local/bin/main.sh $ARGS
+myrunner "$IM" --no-kill-all-on-exit --skip-runit -- /usr/local/bin/main.sh "${ARGS[@]}"
+#$ARGS
+
 #    /sbin/setuser $(whoami) \
 
 echo ".... Finished glue.... (exit code: $RET)"

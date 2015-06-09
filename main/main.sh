@@ -1,5 +1,14 @@
 #! /bin/bash
 
+ARGS=() #ARGS="$@"
+
+if [ $# -gt 0 ]; then
+  while [ "$1" != "" ]; do
+    ARGS=("${ARGS[@]}" "$1") # ARGS+=($1)
+    shift
+  done
+fi
+
 SELFDIR=`dirname "$0"`
 SELFDIR=`cd "$SELFDIR" && pwd`
 
@@ -79,16 +88,25 @@ echo
 echo "This is the main glue loop running on ${HOSTNAME}:"
 # uname -a
 
+
 while :
 do
  echo "Current X: '$X', DISPLAY: '$DISPLAY', XID: '$XID'"
+ echo "Current commands '${ARGS[@]}' to be processed first..."
 
- $SELFDIR/menu.sh \
+ if [ ! ${#ARGS[@]} -gt 0 ]; then
+   $SELFDIR/menu.sh \
      "Your choice please?" 200 \
      "A_Test_Application_A LIBGL_CUSTOMIZATION Alsa_Test GUI_Shell Bash_in_MainGlueApp X11_Shell X11Server Xephyr Iceweasel Q3 Skype Cups_Server Media_Players Surfer Test QUIT"
-  APP="$?"
-  case "$APP" in
+   ARGS=("$?")
+ fi
 
+ APP="${ARGS[0]}" # get 1st  array element
+ ARGS=("${ARGS[@]:1}") # remove it from array
+
+ echo "Processing command '$APP'..."
+
+ case "$APP" in
     207)
       if [ ! -z "$DISPLAY" ]; then
         echo "There seems to be X11 running already..."
