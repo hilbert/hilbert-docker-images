@@ -114,7 +114,7 @@ Vagrant.configure(2) do |config|
 
   config.vm.provision "shell", inline: <<-SHELL
     DEBIAN_FRONTEND=noninteractive apt-get update  -qq
-    DEBIAN_FRONTEND=noninteractive apt-get install -qqy --force-yes p7zip-full curl wget pciutils sudo xauth 
+    DEBIAN_FRONTEND=noninteractive apt-get install -qqy --force-yes p7zip-full curl wget pciutils sudo xauth x11-xserver-utils
     wget -q -nc -c -O "/usr/local/bin/vb_ga.sh" "https://raw.githubusercontent.com/malex984/dockapp/poc0/vb_ga.sh"
     sh /usr/local/bin/vb_ga.sh
     wget -q -nc -c -O "/usr/local/bin/runme.sh" "https://raw.githubusercontent.com/malex984/dockapp/poc0/runme.sh"
