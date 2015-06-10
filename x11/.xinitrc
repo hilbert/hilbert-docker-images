@@ -6,7 +6,7 @@ xcompmgr -fF -I-.002 -O-.003 -D1 &
 # TODO: choose a comp. manager...
 compton &
 ### TODO: VB GA detection!?
-[ -x "/etc/X11/Xsession.d/98vboxadd-xclient" ] && sudo sh /etc/X11/Xsession.d/98vboxadd-xclient
+#[ -x "/etc/X11/Xsession.d/98vboxadd-xclient" ] && sudo sh /etc/X11/Xsession.d/98vboxadd-xclient
 
 # xrdb -merge .Xdefaults &
 
@@ -35,7 +35,4 @@ export LC_CTYPE="en_US.UTF-8"
 #sudo VBoxClient-all 
 
 # ~/98vboxadd-xclient
-
-
-
 # exec openbox

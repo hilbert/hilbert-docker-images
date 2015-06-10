@@ -6,7 +6,7 @@
 #CMD="$1"
 #shift
 
-setup_ogl.sh 2>&1
+# setup_ogl.sh 2>&1
 
 if [ ! -z "$DISPLAY" ]; then
   CMD=Xephyr
@@ -51,7 +51,7 @@ do
 			export DISPLAY=":$DISPLAY_NUM"
 
 			xhost +
-#			xcompmgr -fF -I-.002 -O-.003 -D1 &
+			xcompmgr -fF -I-.002 -O-.003 -D1 &
 #			# TODO: choose a comp. manager...
 #			compton &
 #			### TODO: VB GA detection!?

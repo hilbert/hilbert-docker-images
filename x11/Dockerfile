@@ -17,14 +17,16 @@ RUN DEBIAN_FRONTEND=noninteractive apt-get -q -y install xauth x11-xserver-utils
 ## compiz  
 #  libx11 libxmu libxi
 
-RUN DEBIAN_FRONTEND=noninteractive apt-get -q -y install libx11-6 libxcomposite1 libxdamage1 libxext6 libxfixes3 libxmu6 libxt6 libxv1 libglapi-mesa
-
 # VOLUME /tmp/.X11-unix/
 
 # see testXephyr.sh
 COPY Xorg.sh startXephyr.sh /usr/local/bin/
-COPY .xinitrc /root/
-COPY .xinitrc /
+
+#COPY .xinitrc /root/
+#COPY .xinitrc /
+
+RUN DEBIAN_FRONTEND=noninteractive apt-get install -qqy --force-yes xterm xinit x11-apps libglapi-mesa libglu1
+RUN perl -pi -e 's@^ *allowed_users=.*$@allowed_users=anybody@' /etc/X11/Xwrapper.config
 
 # ADD https://github.com/IMAGINARY/xfullscreen/archive/master.tar.gz /usr/src/xfullscreen.tar.gz
 # COPY xfullscreen/wmfullscreen xfullscreen/xfullscreen /usr/local/bin/
