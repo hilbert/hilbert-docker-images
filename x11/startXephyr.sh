@@ -6,7 +6,7 @@
 #CMD="$1"
 #shift
 
-# setup_ogl.sh 2>&1
+time setup_ogl.sh 2>&1
 
 if [ ! -z "$DISPLAY" ]; then
   CMD=Xephyr
