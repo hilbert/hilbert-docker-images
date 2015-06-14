@@ -114,10 +114,12 @@ Vagrant.configure(2) do |config|
 
   config.vm.provision "shell", inline: <<-SHELL
     DEBIAN_FRONTEND=noninteractive apt-get update  -qq
-    DEBIAN_FRONTEND=noninteractive apt-get install -qqy --force-yes p7zip-full curl wget pciutils sudo xauth x11-xserver-utils
+    DEBIAN_FRONTEND=noninteractive apt-get install -qqy --force-yes p7zip-full curl wget pciutils sudo xauth svgalib-bin x11-xserver-utils
     wget -q -nc -c -O "/usr/local/bin/vb_ga.sh" "https://raw.githubusercontent.com/malex984/dockapp/poc0/vb_ga.sh"
     sh /usr/local/bin/vb_ga.sh
     wget -q -nc -c -O "/usr/local/bin/runme.sh" "https://raw.githubusercontent.com/malex984/dockapp/poc0/runme.sh"
+    su - vagrant -c 'cd && wget -q -nc -c -O "~/.bash_login" "https://raw.githubusercontent.com/malex984/dockapp/poc0/.bash_login"'
+    perl -pi -e 's%exec /sbin/getty -8 38400 tty1%exec /bin/login -f vagrant < /dev/tty1 > /dev/tty1 2>&1 %' /etc/init/tty1.conf
     chmod +x /usr/local/bin/runme.sh
     gpasswd -a vagrant video
     gpasswd -a vagrant audio
@@ -129,6 +131,8 @@ Vagrant.configure(2) do |config|
   SHELL
 #    su - vagrant -c 'cp /vagrant/.xinitrc ~/'
 #    perl -pi -e 's@^ *allowed_users=.*$@allowed_users=anybody@' /etc/X11/Xwrapper.config
+
+
 
 #  config.vm.synced_folder ".", "/vagrant"
 

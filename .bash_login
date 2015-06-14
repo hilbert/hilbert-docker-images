@@ -1,0 +1,18 @@
+if [ -n "$SSH_CLIENT" ] || [ -n "$SSH_TTY" ]; then
+  : echo "SSH shell..."
+else
+  case $(ps -o comm= -p $PPID) in
+    sshd|*/sshd) 
+      : echo "SSH shell..."
+    ;;
+    *) 
+      if [ $(tty | sed -e "s/.*tty\(.*\)/\1/") = "tty1" ]; then 
+         sudo savetextmode
+         runme.sh 
+	 sudo textmode 
+      fi
+    ;;
+  esac
+fi
+
+

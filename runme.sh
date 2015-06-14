@@ -1,14 +1,29 @@
 #! /bin/bash
 set -e
 
-OGL="202"
-XXX="207"
+XXX=""
+# "207" # prestart X11
 
-[ -e /tmp/OGL.tgz ] && OGL=""
 
+
+
+OGL=(202 0)
+### TODO: update OGL.tgz whenever we update :dummy
+if [ -e /tmp/OGL.tgz ]; then 
+  OGL=()
+else
+  if [ -e $HOME/OGL.tgz ]; then 
+    cp $HOME/OGL.tgz /tmp/
+    OGL=()
+  fi
+fi
+  
 U=malex984
 I=dockapp
 IM="$U/$I:main"
+
+docker pull $IM
+
 HIP=`ip route show 0.0.0.0/0 | grep -Eo 'via \S+' | awk '{ print \$2 }'`
 
 echo
@@ -82,33 +97,6 @@ export X
 #    fi
 
 
-ARGS=() #ARGS="$@"
-
-if [ $# -gt 0 ]; then
-  while [ ! -z "$1" ]; do
-    ARGS=("${ARGS[@]}" "$1") # ARGS+=($1)
-    if [ ! -z "$OGL" ]; then 
-    if [ "x$1" = "x$OGL" ]; then
-      OGL=""
-    fi
-    fi
-    if [ ! -z "$XXX" ]; then 
-    if [ "x$1" = "x$XXX" ]; then
-      XXX=""
-    fi
-    fi
-    shift
-  done
-fi
-
-if [ ! -z "$OGL" ]; then
-    ARGS=("${ARGS[@]}" "$OGL") # ARGS+=($1)
-fi
-
-if [ ! -z "$XXX" ]; then
-    ARGS=("${ARGS[@]}" "$XXX") # ARGS+=($1)
-fi
-
 
 #/etc/inittab
 
@@ -166,12 +154,49 @@ echo
 
 #-u $(whoami) -w "$HOME" \
 #$(env | grep -v -E '^DISPLAY=' | cut -d= -f1 | awk '{print "-e", $1}') \
- 
+
+if [ ! -z "${OGL[@]}" ]; then 
+  echo "Run customizations (${OGL[@]})..."
+  docker pull "$U/$I:dummy"
+  myrunner "$IM" --no-kill-all-on-exit --skip-runit -- /usr/local/bin/main.sh "${OGL[@]}"
+
+  if [ -e /tmp/OGL.tgz ]; then 
+    cp /tmp/OGL.tgz $HOME/
+    OGL=()
+  else
+    echo "***** Sorry: customizations (${OGL[@]}) failed!"
+    exit 1
+  fi
+fi  
+
+
+ARGS=() #ARGS="$@"
+
+if [ $# -gt 0 ]; then
+  while [ ! -z "$1" ]; do
+    ARGS=("${ARGS[@]}" "$1") # ARGS+=($1)
+    if [ ! -z "$XXX" ]; then 
+    if [ "x$1" = "x$XXX" ]; then
+      XXX=""
+    fi
+    fi
+    shift
+  done
+fi
+
+if [ ! -z "$XXX" ]; then
+  docker pull "$U/$I:x11"
+  ARGS=("${ARGS[@]}" "$XXX") # ARGS+=($1)
+fi
+
+
+echo "Running :main with (${ARGS[@]})..."
 # --name main 
 myrunner "$IM" --no-kill-all-on-exit --skip-runit -- /usr/local/bin/main.sh "${ARGS[@]}"
 #$ARGS
-
 #    /sbin/setuser $(whoami) \
+
+
 
 echo ".... Finished glue.... (exit code: $RET)"
 
