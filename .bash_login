@@ -6,7 +6,7 @@ else
       : echo "SSH shell..."
     ;;
     *) 
-      if [ $(tty | sed -e "s/.*tty\(.*\)/\1/") = "tty1" ]; then 
+      if [ $(tty | sed -e "s/^.*\(tty.*\)$/\1/") = "tty1" ]; then 
          sudo savetextmode
          runme.sh 
 	 sudo textmode 
