@@ -118,7 +118,7 @@ Vagrant.configure(2) do |config|
     wget -q -nc -c -O "/usr/local/bin/vb_ga.sh" "https://raw.githubusercontent.com/malex984/dockapp/poc0/vb_ga.sh"
     sh /usr/local/bin/vb_ga.sh
     wget -q -nc -c -O "/usr/local/bin/runme.sh" "https://raw.githubusercontent.com/malex984/dockapp/poc0/runme.sh"
-    su - vagrant -c 'cd && wget -q -nc -c -O "~/.bash_login" "https://raw.githubusercontent.com/malex984/dockapp/poc0/.bash_login"'
+    su - vagrant -c 'cd && wget -q -nc -c -O ".bash_login" "https://raw.githubusercontent.com/malex984/dockapp/poc0/.bash_login"'
     perl -pi -e 's%exec /sbin/getty -8 38400 tty1%exec /bin/login -f vagrant < /dev/tty1 > /dev/tty1 2>&1 %' /etc/init/tty1.conf
     chmod +x /usr/local/bin/runme.sh
     gpasswd -a vagrant video
