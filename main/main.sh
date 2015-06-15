@@ -127,7 +127,7 @@ do
         echo "Please start X11 beforehand!"
       else
         echo "Starting X11: Xephyr using $DISPLAY... "
-        XID=$($SELFDIR/sv.sh 'x11' startXephyr.sh)
+        XID=$($SELFDIR/sv.sh 'dummy' startXephyr.sh)
         sleep 2
 	docker logs $XID 2>&1 | grep DISPLAY
         export DISPLAY=$(docker logs $XID 2>&1 | grep DISPLAY_NUM | tail -n 1 | sed s@DISPLAY_NUM@@g)

@@ -155,10 +155,12 @@ echo
 #-u $(whoami) -w "$HOME" \
 #$(env | grep -v -E '^DISPLAY=' | cut -d= -f1 | awk '{print "-e", $1}') \
 
-if [ ! -z "${OGL[@]}" ]; then 
+O="${OGL[@]}"
+if [ ! -z "$O" ]; then 
+  unset O
   echo "Run customizations (${OGL[@]})..."
   docker pull "$U/$I:dummy"
-  myrunner "$IM" --no-kill-all-on-exit --skip-runit -- /usr/local/bin/main.sh "${OGL[@]}"
+  myrunner "$IM" --no-kill-all-on-exit --skip-runit -- /usr/local/bin/main.sh $O
 
   if [ -e /tmp/OGL.tgz ]; then 
     cp /tmp/OGL.tgz $HOME/
