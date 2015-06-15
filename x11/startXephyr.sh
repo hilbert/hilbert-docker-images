@@ -8,13 +8,6 @@
 
 time setup_ogl.sh 2>&1
 
-if [ ! -z "$DISPLAY" ]; then
-  CMD=Xephyr
-else
-  echo "ORIGINAL DISPLAY:$DISPLAY"
-  CMD=Xorg
-fi
-
 ARGS="$@"
 
 
@@ -33,9 +26,26 @@ do
         fi;
     done
 
-        echo "Trying to run [$CMD :$DISPLAY_NUM $ARGS]..."
-	$CMD :$DISPLAY_NUM $ARGS & 2>&1
-	PID=$!
+	# write the display number to the log file
+        echo "DISPLAY_NUM:$DISPLAY_NUM" > /tmp/x.id
+	echo "DISPLAY_NUM:$DISPLAY_NUM"
+	# > "$F"
+
+	if [ ! -z "$DISPLAY" ]; then
+	    CMD=Xephyr
+            echo "Trying to run [$CMD :$DISPLAY_NUM $ARGS]..."
+    	    $CMD :$DISPLAY_NUM $ARGS 2>&1 &
+	    PID=$!
+	else
+	    echo "ORIGINAL DISPLAY:$DISPLAY"
+	    CMD=startx
+            echo "Trying to run [$CMD -- :$DISPLAY_NUM $ARGS]..."
+    	    $CMD -- :$DISPLAY_NUM $ARGS 2>&1 &
+	    PID=$!
+	fi
+
+	
+	
 	# while Xephyr is still running
 	while ps -o pid | grep -q "^[[:space:]]*"$PID"[[:space:]]*$"
 	do
@@ -44,18 +54,14 @@ do
 		if grep -q "^[[:space:]]*"$PID"[[:space:]]*$" `find /tmp/ | grep "^/tmp/\.X"$DISPLAY_NUM"-lock$"`
 		then
 	
-			# write the display number to the log file
-			echo "DISPLAY_NUM:$DISPLAY_NUM"
-			# > "$F"
-
-			export DISPLAY=":$DISPLAY_NUM"
-
-			xhost +
-			xcompmgr -fF -I-.002 -O-.003 -D1 &
+#			export DISPLAY=":$DISPLAY_NUM"
+#
+#			xhost +
+#			xcompmgr -fF -I-.002 -O-.003 -D1 &
 #			# TODO: choose a comp. manager...
 #			compton &
 #			### TODO: VB GA detection!?
-
+#
 #  			if [ -e "/etc/X11/Xsession.d/98vboxadd-xclient" ]; then 
 #    				echo "Trying to run '/etc/X11/Xsession.d/98vboxadd-xclient'..."
 #    				sudo sh /etc/X11/Xsession.d/98vboxadd-xclient 2>&1
