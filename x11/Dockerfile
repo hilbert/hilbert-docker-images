@@ -2,11 +2,10 @@ FROM malex984/dockapp:base
 
 MAINTAINER Oleksandr Motsak <malex984@googlemail.com>
 
-RUN DEBIAN_FRONTEND=noninteractive apt-get -y update
-
-RUN DEBIAN_FRONTEND=noninteractive apt-get -q -y install xserver-xorg xserver-xorg-video-all \
+RUN DEBIAN_FRONTEND=noninteractive apt-get -y update && \
+    DEBIAN_FRONTEND=noninteractive apt-get -q -y install xserver-xorg xserver-xorg-video-all \
  libx11-6 libxcomposite1 libxdamage1 libxext6 libxfixes3 libxmu6 libxt6 libxv1 \
- xserver-xephyr xauth x11-xserver-utils xcompmgr compton  openbox
+ xserver-xephyr xauth x11-xserver-utils xcompmgr compton openbox
 
 # xorg-video-abi-18
 # xserver-xorg-core \
