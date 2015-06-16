@@ -1,11 +1,7 @@
 #! /bin/bash
 set -e
 
-XXX=""
-# "207" # prestart X11
-
-
-
+XXX="207" # prestart X11
 
 OGL=(202 0)
 ### TODO: update OGL.tgz whenever we update :dummy
