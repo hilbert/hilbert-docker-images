@@ -3,11 +3,14 @@ FROM malex984/dockapp:base
 
 MAINTAINER Oleksandr Motsak <malex984@googlemail.com>
 
+RUN DEBIAN_FRONTEND=noninteractive apt-get -y -q update
+
 # RUN apt-get update
 # Install cups
 
 RUN DEBIAN_FRONTEND=noninteractive apt-get -q -y install cups cups-pdf
 RUN DEBIAN_FRONTEND=noninteractive apt-get -q -y install whois
+RUN DEBIAN_FRONTEND=noninteractive apt-get -q -y install cups-bsd 
 
 # cups-bsd for lp* tools!
 
@@ -28,13 +31,14 @@ COPY etc-pam.d-cups /etc/pam.d/cups
 
 ENV CUPS_USER_ADMIN cups
 ENV CUPS_USER_PASSWORD cups
-# useradd $CUPS_USER_ADMIN --system -G root,lpadmin --no-create-home --password $(mkpasswd $CUPS_USER_PASSWORD)
+
+# RUN useradd $CUPS_USER_ADMIN --system -G root,lpadmin --no-create-home --password $(mkpasswd $CUPS_USER_PASSWORD)
 
 COPY start_cups.sh /usr/local/bin/
+RUN chmod +x /usr/local/bin/start_cups.sh
 
 EXPOSE 631
 
-# RUN chmod +x /usr/local/bin/start_cups.sh
 # CMD ["/usr/local/bin/start_cups.sh"]
 
 # Clean up APT when done.
