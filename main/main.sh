@@ -138,7 +138,7 @@ do
     ;;
 
     212)
-      echo "Starting cups... " && $SELFDIR/sv.sh "$PREFIX:cups" /usr/local/bin/start_cups.sh
+      echo "Starting cups... " && $SELFDIR/sv.sh "cups" start_cups.sh
     ;;
 
     215)
@@ -153,7 +153,7 @@ do
     214)
       if [ ! -z "$DISPLAY" ]; then
         echo "Starting GUI shell for surfer... Please build surfer yourself... " 
-	$SELFDIR/run.sh "$PREFIX:surfer" launch.sh /opt/SURFER/SURFER
+	$SELFDIR/run.sh "surfer" launch.sh /opt/SURFER/SURFER
 #	$SELFDIR/run.sh "$PREFIX:appchoo" bash
         # "rxvt-unicode -fn xft:terminus:pixelsize=12 -e bash"
       else
@@ -163,7 +163,7 @@ do
 
     213)
       if [ ! -z "$DISPLAY" ]; then
-        echo "Starting GUI shell... Please run cmus/vlc/mplaye/xine yourself... " && $SELFDIR/run.sh "$PREFIX:play" launch.sh
+        echo "Starting GUI shell... Please run cmus/vlc/mplaye/xine yourself... " && $SELFDIR/run.sh "play" launch.sh
         # "rxvt-unicode -fn xft:terminus:pixelsize=12 -e bash"
       else
         echo "Please start X11 beforehand!"
@@ -172,7 +172,7 @@ do
 
     211)
       if [ ! -z "$DISPLAY" ]; then
-        echo "Starting skype... " && $SELFDIR/run.sh "$PREFIX:skype" skype.sh
+        echo "Starting skype... " && $SELFDIR/run.sh "skype" skype.sh
       else
         echo "Please start X11 beforehand!"
       fi
@@ -180,7 +180,8 @@ do
 
     210)
       if [ ! -z "$DISPLAY" ]; then
-        echo "Starting Q3... " && $SELFDIR/run.sh "$PREFIX:q3" /usr/games/openarena
+        echo "Starting Q3... "
+ 	$SELFDIR/run.sh "q3" /usr/games/openarena
       else
         echo "Please start X11 beforehand!"
       fi
@@ -188,7 +189,8 @@ do
 
     209)
       if [ ! -z "$DISPLAY" ]; then
-        echo "Starting iceweasel/firefox?... " && $SELFDIR/run.sh "$PREFIX:iceweasel" firefox
+        echo "Starting iceweasel/firefox?... "
+	$SELFDIR/run.sh "iceweasel" firefox
       else
         echo "Please start X11 beforehand!"
       fi
@@ -197,7 +199,7 @@ do
     206)
       if [ ! -z "$DISPLAY" ]; then
         echo "starting X11-SHELL for testing... " 
-   	$SELFDIR/run.sh "$PREFIX:xeyes" xterm || $SELFDIR/run.sh "$PREFIX:xeyes" bash
+   	$SELFDIR/run.sh "xeyes" xterm || $SELFDIR/run.sh "xeyes" bash
         # "rxvt-unicode -fn xft:terminus:pixelsize=12 -e bash"
       else
         echo "Please start X11 beforehand!"
@@ -206,7 +208,8 @@ do
 
    204)
       if [ ! -z "$DISPLAY" ]; then
-        echo "Starting gui shell (with X11-apps)... " && $SELFDIR/run.sh "$PREFIX:gui" launch.sh
+        echo "Starting gui shell (with X11-apps)... "
+	$SELFDIR/run.sh "gui" launch.sh
         # "rxvt-unicode -fn xft:terminus:pixelsize=12 -e bash"
       else
         echo "Please start X11 beforehand!"
@@ -214,18 +217,19 @@ do
     ;;
 
     201)
-      echo "Starting AppA1... " && $SELFDIR/A.sh "AAAAAAAAAAAAAA!"
+      	echo "Starting AppA1... "
+	$SELFDIR/A.sh "AAAAAAAAAAAAAA!"
     ;;
 
     202)
       echo "Generating /tmp/OGL.tgz with the use of malex984/dockapp:dummy... "
-      $SELFDIR/generate_ogl.sh malex984/dockapp:dummy /tmp/OGL.tgz
+      $SELFDIR/generate_ogl.sh "malex984/dockapp:dummy" /tmp/OGL.tgz
       
     ;;
 
     203)
       echo "Starting Alsa sound test on plughw:0,0/1... " 
-      $SELFDIR/run.sh "$PREFIX:alsa" soundtest.sh
+      $SELFDIR/run.sh "alsa" soundtest.sh
     ;;
 
     205)

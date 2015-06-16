@@ -1,6 +1,5 @@
 #! /bin/bash
 
-
 # USER_UID=$(id -u)
 APP="$1"
 shift
@@ -9,8 +8,11 @@ ARGS="$@"
 U=malex984
 I=dockapp
 
+
+## full image name?
 ID=$(docker images | awk '{ print "[" $1 ":" $2 "]" }' | sort | uniq | grep "\[$APP\]" )
 
+# yes?
 if [ ! -z "$ID" ]; then  
   IMG="$APP"
   APP=$(echo "$IMG" | sed 's@^.*:@@g')  
@@ -18,12 +20,26 @@ if [ ! -z "$ID" ]; then
     APP=$(echo "$IMG" | sed -e 's@:.*$@@g' -e 's@/@_@g')  
   fi
 else
+# short local image name?
   ID=$(docker images | awk '{ print "[" $1 "]" }' | sort | uniq | grep "\[$APP\]" )
   
+  # yes?
   if [ ! -z "$ID" ]; then  
     IMG="$APP:latest"
   else
-    IMG="$U/$I:$APP"
+    # no?
+    
+    TAG=$(echo "$APP" | sed 's@^.*/.*:@@g')
+    
+    if [ "x$APP" = "x$TAG" ]; then 
+      # missing prefix for a missing standard image
+      IMG="$U/$I:$TAG"
+    else
+      # is it a full name for a missing image?
+      IMG="$APP"
+      APP="$TAG"
+    fi  
+    unset TAG
   fi  
 fi
 
@@ -31,6 +47,7 @@ APP="c_$APP"
 
   echo
   echo "Starting '$IMG' ('$ARGS') under the name '$APP'"
+
 
 XSOCK=/tmp/.X11-unix/
 [ -z "$X" ] && X="DISPLAY=unix$DISPLAY"

@@ -23,7 +23,19 @@ else
   if [ ! -z "$ID" ]; then  
     IMG="$APP:latest"
   else
-    IMG="$U/$I:$APP"
+ 
+    TAG=$(echo "$APP" | sed 's@^.*/.*:@@g')
+    
+    if [ "x$APP" = "x$TAG" ]; then 
+      # missing prefix for a missing standard image
+      IMG="$U/$I:$TAG"
+    else
+      # is it a full name for a missing image?
+      IMG="$APP"
+      APP="$TAG"
+    fi  
+    unset TAG
+  
   fi  
 fi
 
