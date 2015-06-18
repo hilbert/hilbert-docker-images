@@ -50,7 +50,7 @@ APP="c_$APP"
 
 
 XSOCK=/tmp/.X11-unix/
-[ -z "$X" ] && X="DISPLAY=unix$DISPLAY"
+[ -z "$X" ] && X="DISPLAY -e XAUTHORITY"
 
 # -v /tmp/:/tmp/ \
 #        -v /etc/machine-id:/etc/machine-id:ro \

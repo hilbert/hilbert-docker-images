@@ -36,26 +36,29 @@ echo
 
 
 XSOCK=/tmp/.X11-unix/
-X="NODISPLAY=1"
+if [ ! -z "$XAUTHORITY" ]; then 
+  export XAUTHORITY=/tmp/.docker.xauth
+fi
+
+X="XAUTHORITY"
 case "$OSTYPE" in
  linux*) # For Linux host with X11:
 
     if [[ -d "$XSOCK" ]] && [[  "$DISPLAY" =~ ^:[0-9]+ ]]; then 
      echo "Forwarding X11 locally via xauth..."
-     XAUTH=/tmp/.docker.xauth
 
-     if [ ! -f $XAUTH ]; then
-        touch $XAUTH
-        xauth nlist :0 | sed -e "s/^..../ffff/" | xauth -f $XAUTH nmerge -
+     if [ ! -f $XAUTHORITY ]; then
+        touch $XAUTHORITY
+        xauth nlist :0 | sed -e "s/^..../ffff/" | xauth -f $XAUTHORITY nmerge -
      fi
      echo "We now enable anyone to connect to this X11..."
      xhost +
-     X="DISPLAY -e XAUTHORITY=$XAUTH"
+     X="DISPLAY -e XAUTHORITY"
      XXX=""
    else
 # Detect a Virtual Box VM!?
      echo "Please start one of X11 servers before using any GUI apps... "
-     X="NODISPLAY=1"
+#     X="NODISPLAY=1"
 ## TODO: start X11 server here??
    fi
  ;;

@@ -46,7 +46,7 @@ ARGS="$@"
 
 # XSOCK=/tmp/.X11-unix/
 
-[ -z "$X" ] && X="DISPLAY"
+[ -z "$X" ] && X="DISPLAY -e XAUTHORITY"
 X="$X -v /etc/localtime:/etc/localtime:ro -v /dev:/dev:rw -v /tmp/:/tmp/:rw -v /run/udev:/run/udev "
 
 # -v /tmp:/tmp:rw \
