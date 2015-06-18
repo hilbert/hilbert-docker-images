@@ -60,14 +60,17 @@ Vagrant.configure(2) do |config|
      
 #     vb.customize ["modifyvm", :id, "--disk_size", "4000"]
 #     vb.customize ["storagectl", :id, "--name", "SATA Controller", "--remove"]
-     
+
      # Performance enhancements from http://blog.jdpfu.com/2012/09/14/solution-for-slow-ubuntu-in-virtualbox
      # & https://github.com/ingenerator/ingen-base-box/blob/master/Vagrantfile
      vb.customize ["modifyvm", :id, "--chipset", "ich9"]         # Chipset ICH9
+      
      vb.customize ["modifyvm", :id, "--ioapic", "on"]            # IO APIC On
      vb.customize ["modifyvm", :id, "--accelerate3d", "on"]      # 3D acceleration on
      vb.customize ["modifyvm", :id, "--vram", "64"]              # Video Memory
- 
+
+     vb.customize ["modifyvm", :id, "--audio", "coreaudio", "--audiocontroller", "ac97"] # Enable audio?
+
      vb.customize ["modifyvm", :id, "--cpuexecutioncap", "50"]
      # due to https://github.com/jpetazzo/pipework
      vb.customize ['modifyvm', :id, '--nicpromisc1', 'allow-all']
