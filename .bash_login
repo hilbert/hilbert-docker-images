@@ -6,10 +6,12 @@ else
       : echo "SSH shell..."
     ;;
     *) 
-      if [ $(tty | sed -e "s/^.*\(tty.*\)$/\1/") = "tty1" ]; then 
+      if [ $(tty | sed -e "s/^.*\(tty.*\)$/\1/") = "tty1" ]; then
+         reset 
          sudo savetextmode
          runme.sh 
-	 sudo textmode 
+	 sudo textmode
+	 reset
       fi
     ;;
   esac
