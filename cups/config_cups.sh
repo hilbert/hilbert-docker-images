@@ -12,9 +12,8 @@ if [ -z "$I" ]; then
       if [ ! -z "$HIP" ]; then 
          I="$HIP:631/version=1.1" 
       else
-         ping -c 1 dockerhost || ( echo "Sorry - cannot determine the printer server!"; exit 1 )
-         I=$(ping -c 3 dockerhost | head -n 4 | tail -n 1 | sed -e 's@^.*(@@g'  -e 's@).*$@@g')
-         I="$I:631/version=1.1"
+         echo "Sorry - cannot determine the printer server!"
+	 exit 1 
       fi
       export CUPS_SERVER="$I"
 
