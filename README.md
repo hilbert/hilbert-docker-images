@@ -99,6 +99,11 @@ Reason: get_pty: not enough ptys
 It seems that somebody clears permissions on `/dev/pts/ptmx` in the
 course of the docker mounting `/dev` or using it by containers... 
 
+Since this problem happens rarely it may be related to unexpected "docker rm -vf" for a running container with allocated pty.
+Also the following may be related: 
+* https://github.com/docker/docker/issues/4605
+* https://github.com/docker/docker/pull/4656
+
 Quick Fix is `sudo chmod a+rw /dev/pts/ptmx`
 
 
