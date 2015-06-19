@@ -16,8 +16,15 @@ U=malex984
 I=dockapp
 #
 PREFIX="$U/$I"
+
+if [ -z "$HIP" ]; then 
+  HIP=$(ip route show 0.0.0.0/0 | grep -Eo 'via \S+' | awk '{ print $2 }')
+  # HIP=$(netstat -rn | grep "^0.0.0.0 " | cut -d " " -f10)
+  export HIP
+fi
+
 echo
-echo "Current Host: `uname -a`"
+echo "Current System: `uname -a` (HOST IP: $HIP)"
 echo "Current User: `id`"
 #USER_UID=$(id -u)
 #set
@@ -141,7 +148,8 @@ do
     ;;
 
     212)
-      echo "Starting cups... " && $SELFDIR/sv.sh "cups" start_cups.sh
+      echo "Starting cups... " && $SELFDIR/run.sh "cups" bash -c 'config_cups.sh && bash'
+#start_cups.sh
     ;;
 
     215)

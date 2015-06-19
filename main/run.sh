@@ -63,7 +63,8 @@ XSOCK=/tmp/.X11-unix/
 # -v /var/lib:/var/lib:rw \
 X="$X \
  -v /etc/localtime:/etc/localtime:ro \
- -v /dev:/dev:rw -v /tmp/:/tmp/:rw -v /run/udev:/run/udev
+ -v /dev:/dev:rw -v /tmp/:/tmp/:rw -v /run/udev:/run/udev \
+ --add-host=dockerhost:$HIP -e HIP
 "
 
 # -v /etc/passwd:/etc/passwd:ro \
@@ -81,7 +82,7 @@ X="$X \
 # --device /dev/nvidia0:/dev/nvidia0 --device /dev/nvidiactl:/dev/nvidiactl --device /dev/nvidia-uvm:/dev/nvidia-uvm \
 
 # options for running terminal apps via docker run:
-RUNTERM="-it -a stdin -a stdout -a stderr --privileged --net=host --ipc=host --pid=host"
+RUNTERM="-it -a stdin -a stdout -a stderr --privileged --net=host --ipc=host --pid=host -P"
 OPTS="--skip-startup-files --no-kill-all-on-exit --quiet --skip-runit"
 
 #      --lxc-conf='lxc.cgroup.devices.allow=c 195:* rwm' \

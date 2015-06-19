@@ -20,7 +20,8 @@ IM="$U/$I:main"
 
 docker pull $IM
 
-HIP=`ip route show 0.0.0.0/0 | grep -Eo 'via \S+' | awk '{ print \$2 }'`
+# HIP=$(ip route show 0.0.0.0/0 | grep -Eo 'via \S+' | awk '{ print $2 }')
+HIP=$(netstat -rn | grep "^0.0.0.0 " | cut -d " " -f10)
 
 echo
 echo "Current Host ($HIP): `uname -a`"
@@ -116,7 +117,7 @@ myrunner () {
  if [ -z $ID ]; then 
    # run --rm 
    ID=$(docker create -ti --privileged --net host --ipc=host --pid=host \
-        --add-host=dockerhost:$HIP \
+        --add-host=dockerhost:$HIP -P -e HIP \
 	-v /etc/localtime:/etc/localtime:ro \
         -v /dev:/dev:rw -v /tmp/:/tmp/:rw -v /run/udev:/run/udev -v /var/run/docker.sock:/var/run/docker.sock \
         -e $X \

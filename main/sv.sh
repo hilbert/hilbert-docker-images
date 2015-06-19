@@ -47,7 +47,7 @@ ARGS="$@"
 # XSOCK=/tmp/.X11-unix/
 
 [ -z "$X" ] && X="DISPLAY -e XAUTHORITY"
-X="$X -v /etc/localtime:/etc/localtime:ro -v /dev:/dev:rw -v /tmp/:/tmp/:rw -v /run/udev:/run/udev "
+X="$X -v /etc/localtime:/etc/localtime:ro -v /dev:/dev:rw -v /tmp/:/tmp/:rw -v /run/udev:/run/udev --add-host=dockerhost:$HIP -e HIP"
 
 # -v /tmp:/tmp:rw \
 # -v /run:/run:rw \
@@ -122,7 +122,7 @@ mydeamon () {
 #        --lxc-conf='lxc.cgroup.devices.allow=c 116:* rwm' \
 #        --lxc-conf='lxc.cgroup.devices.allow=c  81:* rwm' \
 
-  R="--ipc=host --net=host --pid=host --privileged"
+  R="--ipc=host --net=host --pid=host --privileged -P"
 
 # -v /dev/shm:/dev/shm -v /dev/dri:/dev/dri 
 
