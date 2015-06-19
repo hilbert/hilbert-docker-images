@@ -47,7 +47,7 @@ ARGS="$@"
 # XSOCK=/tmp/.X11-unix/
 
 [ -z "$X" ] && X="DISPLAY -e XAUTHORITY"
-X="$X -v /etc/localtime:/etc/localtime:ro -v /dev:/dev:rw -v /tmp/:/tmp/:rw -v /run/udev:/run/udev --add-host=dockerhost:$HIP -e HIP"
+X="$X -v /etc/localtime:/etc/localtime:ro -v /dev:/dev:rw -v /tmp/:/tmp/:rw -v /run/udev:/run/udev -P -e HIP"
 
 # -v /tmp:/tmp:rw \
 # -v /run:/run:rw \

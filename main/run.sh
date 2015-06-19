@@ -64,7 +64,7 @@ XSOCK=/tmp/.X11-unix/
 X="$X \
  -v /etc/localtime:/etc/localtime:ro \
  -v /dev:/dev:rw -v /tmp/:/tmp/:rw -v /run/udev:/run/udev \
- --add-host=dockerhost:$HIP -e HIP
+ -P -e HIP
 "
 
 # -v /etc/passwd:/etc/passwd:ro \

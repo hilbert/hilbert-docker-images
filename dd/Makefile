@@ -6,7 +6,7 @@ CMD=docker ps -a
 
 # --ipc=host --privileged --net=host --pid=host 
 
-RUNTERM=-it -a stdin -a stdout -a stderr \
+RUNTERM=-it -a stdin -a stdout -a stderr -P \
         -v /etc/localtime:/etc/localtime:ro -v /tmp/:/tmp/:rw \
         -v /var/run/docker.sock:/var/run/docker.sock
 

@@ -9,10 +9,9 @@ clean:
 CMD=customize.sh
 ARGS=up
 
-##HIP=`ip route show 0.0.0.0/0 | grep -Eo 'via \S+' | awk '{ print \$1 }'`
-#        --add-host=dockerhost:$(HIP) 
+##HIP=`ip route show 0.0.0.0/0 | grep -Eo 'via \S+' | awk '{ print \$1 }'` # -e HIP?
 
-RUNTERM=-it -a stdin -a stdout -a stderr --ipc=host --privileged --net=host --pid=host \
+RUNTERM=-it -a stdin -a stdout -a stderr -P --ipc=host --privileged --net=host --pid=host \
         -v /etc/localtime:/etc/localtime:ro -v /tmp/:/tmp/:rw \
         -v /var/run/docker.sock:/var/run/docker.sock
 
