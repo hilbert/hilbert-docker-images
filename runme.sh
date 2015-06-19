@@ -116,7 +116,7 @@ myrunner () {
 #       -e DOCKER_HOST=unix:///var/run/docker.sock -e NO_PROXY=/var/run/docker.sock 
  if [ -z $ID ]; then 
    # run --rm 
-   ID=$(docker create -ti --privileged --net host --ipc=host --pid=host \
+   ID=$(docker create -ti --privileged --net=host --ipc=host --pid=host \
         --add-host=dockerhost:$HIP -P -e HIP \
 	-v /etc/localtime:/etc/localtime:ro \
         -v /dev:/dev:rw -v /tmp/:/tmp/:rw -v /run/udev:/run/udev -v /var/run/docker.sock:/var/run/docker.sock \
