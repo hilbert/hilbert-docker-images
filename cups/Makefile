@@ -12,10 +12,11 @@ include ../Makefile.inc
 
 HIP=$(shell netstat -rn | grep "^0.0.0.0 " | cut -d " " -f10)
 
-RUNTERM=-it -a stdin -a stdout -a stderr --add-host=dockerhost:${HIP} -e HIP
+RUNTERM=-it -a stdin -a stdout -a stderr --add-host=dockerhost:${HIP} -e HIP -e CUPS_SERVER
+
 OPTS=--skip-startup-files --no-kill-all-on-exit --quiet --skip-runit
 
-CMD=bash -c 'config_cups.sh && sleep 3'
+CMD=bash -c 'config_cups.sh && lpq && sleep 3'
 check: $(TS)
 	docker run -e CUPS_USER_ADMIN=test0 -e CUPS_USER_PASSWORD=test0 -p 6631:631/tcp --rm ${RUNTERM} -v /tmp/:/tmp/:rw $(IMG) ${OPTS} -- ${CMD}
 
