@@ -8,9 +8,9 @@ else
     *) 
       if [ $(tty | sed -e "s/^.*\(tty.*\)$/\1/") = "tty1" ]; then
          reset 
-         sudo savetextmode
+#         sudo savetextmode
          runme.sh 
-	 sudo textmode
+#	 sudo textmode
 	 reset
       fi
     ;;
