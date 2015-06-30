@@ -78,6 +78,12 @@ esac
 
 echo "Will use the following X11 settings: "
 echo "'$X'"
+
+# pass CUPS_SERVER if previously set
+if [ ! -z "$CUPS_SERVER" ]; then
+  X="$X -e CUPS_SERVER"
+fi 
+
 export X
 
 

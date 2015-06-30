@@ -9,6 +9,7 @@ else
       if [ $(tty | sed -e "s/^.*\(tty.*\)$/\1/") = "tty1" ]; then
          reset 
 #         sudo savetextmode
+         export CUPS_SERVER=192.168.9.1:631
          runme.sh 
 #	 sudo textmode
 	 reset

@@ -52,6 +52,11 @@ APP="c_$APP"
 XSOCK=/tmp/.X11-unix/
 [ -z "$X" ] && X="DISPLAY -e XAUTHORITY"
 
+# pass CUPS_SERVER if previously set
+if [ ! -z "$CUPS_SERVER" ]; then
+  X="$X -e CUPS_SERVER"
+fi 
+
 # -v /tmp/:/tmp/ \
 #        -v /etc/machine-id:/etc/machine-id:ro \
 #  -v /dev/dri:/dev/dri \

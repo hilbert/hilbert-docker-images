@@ -47,6 +47,12 @@ ARGS="$@"
 # XSOCK=/tmp/.X11-unix/
 
 [ -z "$X" ] && X="DISPLAY -e XAUTHORITY"
+
+# pass CUPS_SERVER if previously set
+if [ ! -z "$CUPS_SERVER" ]; then
+  X="$X -e CUPS_SERVER"
+fi
+
 X="$X -v /etc/localtime:/etc/localtime:ro -v /dev:/dev:rw -v /tmp/:/tmp/:rw -v /run/udev:/run/udev -P -e HIP"
 
 # -v /tmp:/tmp:rw \
