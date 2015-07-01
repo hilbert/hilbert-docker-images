@@ -32,14 +32,15 @@ fi
 echo "Server: '$I', CUPS_SERVER: '$CUPS_SERVER'"
 echo
 
+mkdir -p /etc/cups/
+
 echo "ServerName $I" > /etc/cups/client.conf
 
-lpstat -l -t -v -s -p 
+lpstat -l -t -v -s -p
 
-P=$(lpstat -p 2>&1 | grep '^printer ' | head -n 1 | sed -e 's@^printer @@g' -e 's@ .*@@g')
+export P=$(lpstat -p 2>&1 | grep '^printer ' | head -n 1 | sed -e 's@^printer @@g' -e 's@ .*@@g')
 
 echo "Default printer: '$P'"
-
 
 lpoptions -d "$P"
 

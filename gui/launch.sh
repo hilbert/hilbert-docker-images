@@ -5,7 +5,9 @@ SELFDIR=`cd "$SELFDIR" && pwd`
 
 cd "$SELFDIR"
 
+config_cups.sh
 time setup_ogl.sh
+
 
 if [ -e "/etc/X11/Xsession.d/98vboxadd-xclient" ]; then 
     echo "Trying to run '/etc/X11/Xsession.d/98vboxadd-xclient'..."

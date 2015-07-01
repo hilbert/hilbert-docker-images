@@ -12,7 +12,7 @@ RUN DEBIAN_FRONTEND=noninteractive apt-get -y -q update && \
 
 # cups-bsd for lp* tools!
 
-# Disbale some cups backend that are unusable within a container
+# Disable some cups backend that are unusable within a container
 RUN mv /usr/lib/cups/backend/parallel /usr/lib/cups/backend-available/ &&\
     mv /usr/lib/cups/backend/serial /usr/lib/cups/backend-available/ &&\
     mv /usr/lib/cups/backend/usb /usr/lib/cups/backend-available/
@@ -33,10 +33,8 @@ ENV CUPS_USER_PASSWORD cups
 
 # RUN useradd $CUPS_USER_ADMIN --system -G root,lpadmin --no-create-home --password $(mkpasswd $CUPS_USER_PASSWORD)
 
-COPY start_cups.sh config_cups.sh /usr/local/bin/
-
+COPY start_cups.sh /usr/local/bin/
 RUN chmod +x /usr/local/bin/start_cups.sh 
-RUN chmod +x /usr/local/bin/config_cups.sh
 
 EXPOSE 631
 

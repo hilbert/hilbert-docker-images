@@ -29,3 +29,5 @@ RUN DEBIAN_FRONTEND=noninteractive apt-get -y -q update && \
 # CMD ["/sbin/my_init"]
 
 COPY setup_ogl.sh  /usr/local/bin/
+COPY config_cups.sh /usr/local/bin/
+#RUN chmod +x /usr/local/bin/config_cups.sh
