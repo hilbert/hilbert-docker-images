@@ -113,16 +113,10 @@ Vagrant.configure(2) do |config|
 #    d.run "ubuntu", cmd: "bash -l", args: "-v '/vagrant:/var/www'"
   end
   
-
-#    DEBIAN_FRONTEND=noninteractive apt-get install -qqy --force-yes xserver-xorg xserver-xorg-video-all libx11-6 libxcomposite1 libxdamage1 libxext6 libxfixes3 libxmu6 libxt6 libxv1 xcompmgr compton xauth x11-xserver-utils xterm xinit x11-apps
-#    DEBIAN_FRONTEND=noninteractive apt-get install -qqy --force-yes libglapi-mesa libgl1-mesa-dri libgl1-mesa-glx libglu1-mesa libgles1-mesa libgles2-mesa libegl1-mesa-drivers mesa-vdpau-drivers freeglut3 mesa-utils libglu1
-
 # svgalib-bin pciutils 
   config.vm.provision "shell", inline: <<-SHELL
-    gpasswd -a vagrant video
-    gpasswd -a vagrant audio
-    DEBIAN_FRONTEND=noninteractive apt-get update  -qq
-    DEBIAN_FRONTEND=noninteractive apt-get install -qqy --force-yes p7zip-full curl wget sudo xauth x11-xserver-utils
+    gpasswd -a vagrant video && gpasswd -a vagrant audio
+    DEBIAN_FRONTEND=noninteractive apt-get update -qq && DEBIAN_FRONTEND=noninteractive apt-get install -qqy --force-yes  --no-install-recommends p7zip-full curl wget sudo xauth x11-xserver-utils cups-bsd socat
     wget -q -nc -c -O "/usr/local/bin/vb_ga.sh" "https://raw.githubusercontent.com/malex984/dockapp/poc0/vb_ga.sh"
     wget -q -nc -c -O "/usr/local/bin/runme.sh" "https://raw.githubusercontent.com/malex984/dockapp/poc0/runme.sh"
     chmod +x /usr/local/bin/runme.sh
@@ -136,10 +130,6 @@ Vagrant.configure(2) do |config|
     perl -pi -e 's%exec /sbin/getty -8 38400 tty1%exec /bin/login -f vagrant < /dev/tty1 > /dev/tty1 2>&1 %' /etc/init/tty1.conf
     reboot
   SHELL
-#    su - vagrant -c 'cp /vagrant/.xinitrc ~/'
-#    perl -pi -e 's@^ *allowed_users=.*$@allowed_users=anybody@' /etc/X11/Xwrapper.config
-
-
 
 #  config.vm.synced_folder ".", "/vagrant"
 

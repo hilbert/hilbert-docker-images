@@ -9,7 +9,12 @@ else
       if [ $(tty | sed -e "s/^.*\(tty.*\)$/\1/") = "tty1" ]; then
          reset 
 #         sudo savetextmode
-         export CUPS_SERVER=192.168.9.1:631
+         # we assume  'config.vm.network "private_network", ip: "192.168.9.9"'
+	 # and shared CUPS server running on the host
+#         export CUPS_SERVER=192.168.9.1:631
+         export HIP=192.168.9.9
+#         export CUPS_SERVER="$HIP:631"
+	 sudo socat TCP-LISTEN:631,fork TCP:192.168.9.1:631 &
          runme.sh 
 #	 sudo textmode
 	 reset
