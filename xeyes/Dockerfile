@@ -2,11 +2,10 @@ FROM malex984/dockapp:alsa
 
 MAINTAINER Oleksandr Motsak <malex984@googlemail.com>
 
-RUN DEBIAN_FRONTEND=noninteractive apt-get -y update
-
-RUN DEBIAN_FRONTEND=noninteractive apt-get -q -y install xauth 
-RUN DEBIAN_FRONTEND=noninteractive apt-get -q -y install x11-apps
-RUN DEBIAN_FRONTEND=noninteractive apt-get -q -y install xterm
+RUN DEBIAN_FRONTEND=noninteractive apt-get -y -q update && \
+    DEBIAN_FRONTEND=noninteractive apt-get -q -y install --no-install-recommends \
+                    xauth x11-apps xterm && \
+    DEBIAN_FRONTEND=noninteractive apt-get clean && rm -rf /var/lib/apt/lists/* /tmp/* /var/tmp/*
 
 # ENV XLIB_SKIP_ARGB_VISUALS 1
 
@@ -14,8 +13,5 @@ RUN DEBIAN_FRONTEND=noninteractive apt-get -q -y install xterm
 # ENV QT_X11_NO_MITSHM 1
 
 # CMD /usr/bin/xeyes
-
-# Clean up APT when done.
-# RUN apt-get clean && rm -rf /var/lib/apt/lists/* /tmp/* /var/tmp/*
 
 
