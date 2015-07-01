@@ -69,7 +69,7 @@ fi
 X="$X \
  -v /etc/localtime:/etc/localtime:ro \
  -v /dev:/dev:rw -v /tmp/:/tmp/:rw -v /run/udev:/run/udev \
- -P -e HIP
+ -p 631:631 -e HIP
 "
 
 # -v /etc/passwd:/etc/passwd:ro \

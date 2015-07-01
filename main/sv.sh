@@ -53,7 +53,7 @@ if [ ! -z "$CUPS_SERVER" ]; then
   X="$X -e CUPS_SERVER"
 fi
 
-X="$X -v /etc/localtime:/etc/localtime:ro -v /dev:/dev:rw -v /tmp/:/tmp/:rw -v /run/udev:/run/udev -P -e HIP"
+X="$X -v /etc/localtime:/etc/localtime:ro -v /dev:/dev:rw -v /tmp/:/tmp/:rw -v /run/udev:/run/udev -p 631:631 -e HIP"
 
 # -v /tmp:/tmp:rw \
 # -v /run:/run:rw \
