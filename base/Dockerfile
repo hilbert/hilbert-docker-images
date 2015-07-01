@@ -10,7 +10,7 @@ ENTRYPOINT ["/sbin/my_init"]
 RUN DEBIAN_FRONTEND=noninteractive apt-get -y -q update && \
     DEBIAN_FRONTEND=noninteractive apt-get -y upgrade && \
     DEBIAN_FRONTEND=noninteractive apt-get -q -y install --no-install-recommends \
-                    aptitude wget curl git && \
+                    aptitude wget curl git cups-bsd && \
     DEBIAN_FRONTEND=noninteractive apt-get clean && rm -rf /var/lib/apt/lists/* /tmp/* /var/tmp/*
 
 # dist-upgrade ?
