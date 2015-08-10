@@ -5,8 +5,8 @@ APP="$1"
 
 # USER_UID=$(id -u)
 
-U=malex984
-I=dockapp
+#U=malex984
+#I=dockapp
 #IMG="$U/$I:$APP"
 
 ID=$(docker images | awk '{ print "[" $1 ":" $2 "]" }' | sort | uniq | grep "\[$APP\]" )
@@ -45,15 +45,18 @@ shift
 ARGS="$@"
 
 # XSOCK=/tmp/.X11-unix/
-
-[ -z "$X" ] && X="DISPLAY -e XAUTHORITY"
-
+# [ -z "$X" ] && X="DISPLAY -e XAUTHORITY"
+#
 # pass CUPS_SERVER if previously set
-if [ ! -z "$CUPS_SERVER" ]; then
-  X="$X -e CUPS_SERVER"
-fi
+#if [ ! -z "$CUPS_SERVER" ]; then
+#  X="$X -e CUPS_SERVER"
+#fi
 
-X="$X -v /etc/localtime:/etc/localtime:ro -v /dev:/dev:rw -v /tmp/:/tmp/:rw -v /run/udev:/run/udev -p 631:631 -e HIP"
+X="$X \
+  -v /etc/localtime:/etc/localtime:ro \
+  -v /dev:/dev:rw -v /tmp/:/tmp/:rw \
+  -v /run/udev:/run/udev -p 631:631 \
+"
 
 # -v /tmp:/tmp:rw \
 # -v /run:/run:rw \

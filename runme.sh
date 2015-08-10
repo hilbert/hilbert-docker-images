@@ -1,9 +1,9 @@
 #! /bin/bash
 set -e
 
-XXX="207" # prestart X11
+XXX="" # 207 # prestart X11
 
-OGL=(202 0)
+OGL=(216 202 0)
 ### TODO: update OGL.tgz whenever we update :dummy
 if [ -e /tmp/OGL.tgz ]; then 
   OGL=()
@@ -165,7 +165,7 @@ if [ ! -z "$O" ]; then
   unset O
   echo "Run customizations (${OGL[@]})..."
   docker pull "$U/$I:dummy"
-  myrunner "$IM" --no-kill-all-on-exit --skip-runit -- /usr/local/bin/main.sh $O
+  myrunner "$IM" --no-kill-all-on-exit --skip-runit -- /usr/local/bin/main.sh ${OGL[@]}
 
   if [ -e /tmp/OGL.tgz ]; then 
     cp /tmp/OGL.tgz $HOME/

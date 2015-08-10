@@ -76,15 +76,243 @@ case "$OSTYPE" in
  ;;
 esac
 
-echo "Will use the following X11 settings: "
-echo "'$X'"
-
+#echo "Will use the following X11 settings: "
+#echo "'$X'"
+#
 # pass CUPS_SERVER if previously set
-if [ ! -z "$CUPS_SERVER" ]; then
-  X="$X -e CUPS_SERVER"
-fi 
+#if [ ! -z "$CUPS_SERVER" ]; then
+#  X="$X -e CUPS_SERVER"
+#fi 
+#
+#export X
 
-export X
+
+
+
+options=();choices=();selections=();
+
+# Assignment Command Statement Builder
+mysetIfNotSet () 
+{
+  echo -n 'eval export '
+  echo -n "$1"
+  echo -n '="${'
+  echo -n "$1"
+  echo -n ':-'
+  echo -n "$2"
+  echo -n '}"'
+}
+
+myoverwrite ()
+{
+  echo -n 'eval export '
+  echo -n "$1"
+  echo -n '="'
+  echo -n "$2"
+  echo -n '"'
+}
+
+mygetWithDefault () 
+{
+  echo -n 'eval v='
+  echo -n '"${'
+  echo -n "$1"
+  echo -n ':-'
+  echo -n "$2"
+  echo -n '}"'
+}
+
+addoption() 
+{
+  local opt="$1"
+  shift
+  local def="$1"
+  shift
+
+  $(mysetIfNotSet "$opt" "$def")
+  
+  local v="$def"
+  $(mygetWithDefault "$opt" "$def")
+  
+#  local m=""
+  
+  local sel="$@"
+#  if [ ! -z "$sel" ]; then 
+#    local array=(${sel//:/ });
+#    v="${array[def]}"
+#    m=" from (${sel})"
+#  fi
+
+#  echo "Adding option '$opt': default value: [$v]$m"
+
+  options+=("$opt");
+  selections+=("$sel");
+  choices+=("$v");
+}
+
+
+showoff()
+{
+    local sel
+    local opt
+    local def
+    local v
+    
+    for i in ${!options[@]}; do 
+        opt="${options[i]}"
+        def="${choices[i]:-}"
+        sel="${selections[i]:-}"
+
+	$(mygetWithDefault "$opt" "$def")
+	
+        if [ ! -z "$sel" ]; then 
+           printf "%3d) %20s: %20s from %20s\n" $((i+1)) "${opt}" "'${v}'" "(${sel})"
+        else
+           printf "%3d) %20s: %20s\n"           $((i+1)) "${opt}" "'${v}'"
+        fi
+    done
+}
+
+
+msg=""
+
+menu() {
+    echo
+    echo "Avaliable options: "
+    showoff
+    [[ "$msg" ]] && echo "$msg"; :
+}
+
+# This function won't handle multi-digit counts.
+countdown() 
+{
+  local i 
+  printf '%s' ".$1"
+  sleep 1
+  for ((i=$1-1; i>=0; i--)); do
+    printf '\b.%d' "$i"
+    sleep 1
+  done
+}
+
+myinput() 
+{
+  echo
+  local OLD_IFS="${IFS}"
+  local num="$1"
+  local option="${options[num]}"
+  local default="${choices[num]}"
+  local sel="${selections[num]:-}"
+  local array=()
+  
+  local v="${default}"
+  $(mygetWithDefault "$option" "$default")
+  
+  printf 'Changing option %20s, def.val: [%s]\n' "'$option'" "$v"
+
+#  printf '5 seconds to hit any key to cancel changing the option '
+#  countdown 5 & pid=$!
+#  IFS= 
+#  if read -s -n 1 -t 5; then
+#  printf '\nboom\n'
+  ### read!!!
+#  else
+#    kill "$pid"; 
+#    IFS="${OLD_IFS}"
+
+  if [ ! -z "$sel" ]; then
+      array=(${sel//:/ });
+  
+
+      PS3="Please select one of the numbers > "
+      
+      select ch in ${array[@]} ;
+      do
+        echo "Choice $((REPLY)): '$ch'"
+	
+	[ -z "$ch" ] && break
+        echo "Thanks for choosing '$ch'" && default=$((REPLY-1)) && break 
+      done
+
+      default="${array[default]}"
+  else
+      printf 'Please input a new value for option "%s" or hit ENTER for default [%s]: ' "${option}" "${v:-}"
+      read n
+      if [[ $n = "" ]]; then
+        default="$v" 
+      else
+        default="$n" 
+      fi
+#      echo "[$default]"
+  fi
+  
+  echo "Are you sure about setting '$option' to be '$default'? Please hit any key within 5 sec. to cancel the change!"
+  countdown 5 & pid=$!
+  IFS= 
+  if read -s -n 1 -t 5; then
+    kill "$pid"; 
+    IFS="${OLD_IFS}"
+    printf '\nOk... canceling the change...\n'
+  else
+#    kill "$pid"; 
+    IFS="${OLD_IFS}"
+    choices[num]="$default"
+    $(myoverwrite "$option" "$default")
+  fi 
+
+}
+
+
+
+main()
+{
+  TMOUT="$1"
+  shift
+  prompt="Change an option (ENTER when done (or just wait for $TMOUT sec.)): "
+
+  while menu && read -rp "$prompt" num && [[ "$num" ]]; do
+    TMOUT=0
+
+    [[ "$num" != *[![:digit:]]* ]] &&
+    (( num > 0 && num <= ${#options[@]} )) ||
+    { msg="Invalid option: $num"; continue; }
+    ((num--)); 
+    myinput "$num"
+##    [[ "${choices[num]}" ]] && choices[num]="" || choices[num]="+"
+    msg="${options[num]} was changed..."
+    prompt="Change an option (ENTER when done): "
+  done
+  TMOUT=0
+}
+
+addoption "U" ""
+addoption "I" ""
+addoption "PREFIX" ""
+addoption "HIP" ""
+addoption "XAUTHORITY" ""
+addoption "XSOCK" ""
+addoption "CUPS_SERVER" ""
+addoption "DISPLAY" ""
+addoption "MOUSE_CURSOR" "on" "on:off"
+addoption "CUSTOMIZATION" "vb" "nv:vb"
+addoption "LANGUAGE" "en" "en:de"
+
+mygetenv() 
+{
+    showoff
+    X="X"
+    for i in ${!options[@]}; do 
+        opt="${options[i]}"
+        X+=" -e ${opt} "
+    done
+    export X
+}
+
+# echo "X: '$X'"
+
+
+
+
 
 
 echo "Current docker images: "
@@ -107,13 +335,15 @@ echo "This is the main glue loop running on ${HOSTNAME}:"
 
 while :
 do
- echo "Current X: '$X', DISPLAY: '$DISPLAY', XID: '$XID'"
+ mygetenv
+ echo "Current X: '$X', XID: '$XID'"
+ 
  echo "Current commands '${ARGS[@]}' to be processed first..."
 
  if [ ! ${#ARGS[@]} -gt 0 ]; then
    $SELFDIR/menu.sh \
      "Your choice please?" 200 \
-     "A_Test_Application_A LIBGL_CUSTOMIZATION Alsa_Test GUI_Shell Bash_in_MainGlueApp X11_Shell X11Server Xephyr Iceweasel Q3 Skype Cups_Server Media_Players Surfer Test QUIT"
+     "A_Test_Application_A LIBGL_CUSTOMIZATION Alsa_Test GUI_Shell Bash_in_MainGlueApp X11_Shell X11Server Xephyr Iceweasel Q3 Skype Cups_Server Media_Players Surfer Test MENU QUIT"
    ARGS=("$?")
  fi
 
@@ -123,39 +353,8 @@ do
  echo "Processing command '$APP'..."
 
  case "$APP" in
-    207)
-      if [ ! -z "$DISPLAY" ]; then
-        echo "There seems to be X11 running already..."
-      else
-        echo "Starting X11: Xorg... "
-        XID=$($SELFDIR/sv.sh 'dummy' startXephyr.sh)
-        sleep 2
-	docker logs $XID 2>&1 | grep DISPLAY
-        export DISPLAY=$(docker logs $XID 2>&1 | grep DISPLAY_NUM | tail -n 1 | sed s@DISPLAY_NUM@@g)
-        unset X
-#        export X="DISPLAY=unix$DISPLAY"
-        ### XAUTH?
-     fi
-    ;;
-
-    208)
-      if [ -z "$DISPLAY" ]; then
-        echo "Please start X11 beforehand!"
-      else
-        echo "Starting X11: Xephyr using $DISPLAY... "
-        XID=$($SELFDIR/sv.sh 'dummy' startXephyr.sh)
-        sleep 2
-	docker logs $XID 2>&1 | grep DISPLAY
-        export DISPLAY=$(docker logs $XID 2>&1 | grep DISPLAY_NUM | tail -n 1 | sed s@DISPLAY_NUM@@g)
-        unset X
-#        export X="DISPLAY=unix$DISPLAY"
-        ### XAUTH? 
-      fi
-    ;;
-
-    212)
-      echo "Starting cups... " && $SELFDIR/run.sh "cups" bash -c 'config_cups.sh && bash'
-#start_cups.sh
+    216) # Menu!
+      main 40
     ;;
 
     215)
@@ -166,7 +365,7 @@ do
         echo "Please start X11 beforehand!"
       fi
     ;;
-
+    
     214)
       if [ ! -z "$DISPLAY" ]; then
         echo "Starting GUI shell for surfer... Please build surfer yourself... " 
@@ -185,6 +384,11 @@ do
       else
         echo "Please start X11 beforehand!"
       fi
+    ;;
+
+    212)
+      echo "Starting cups... " && $SELFDIR/run.sh "cups" bash -c 'config_cups.sh && bash'
+#start_cups.sh
     ;;
 
     211)
@@ -213,20 +417,40 @@ do
       fi
     ;;
 
+    208)
+      if [ -z "$DISPLAY" ]; then
+        echo "Please start X11 beforehand!"
+      else
+        echo "Starting X11: Xephyr using $DISPLAY... "
+        XID=$($SELFDIR/sv.sh 'dummy' startXephyr.sh)
+        sleep 2
+	docker logs $XID 2>&1 | grep DISPLAY
+        export DISPLAY=$(docker logs $XID 2>&1 | grep DISPLAY_NUM | tail -n 1 | sed s@DISPLAY_NUM@@g)
+        unset X
+#        export X="DISPLAY=unix$DISPLAY"
+        ### XAUTH? 
+      fi
+    ;;
+
+    207)
+      if [ ! -z "$DISPLAY" ]; then
+        echo "There seems to be X11 running already..."
+      else
+        echo "Starting X11: Xorg... "
+        XID=$($SELFDIR/sv.sh 'dummy' startXephyr.sh)
+        sleep 2
+	docker logs $XID 2>&1 | grep DISPLAY
+        export DISPLAY=$(docker logs $XID 2>&1 | grep DISPLAY_NUM | tail -n 1 | sed s@DISPLAY_NUM@@g)
+        unset X
+#        export X="DISPLAY=unix$DISPLAY"
+        ### XAUTH?
+     fi
+    ;;
+
     206)
       if [ ! -z "$DISPLAY" ]; then
         echo "starting X11-SHELL for testing... " 
    	$SELFDIR/run.sh "xeyes" xterm || $SELFDIR/run.sh "xeyes" bash
-        # "rxvt-unicode -fn xft:terminus:pixelsize=12 -e bash"
-      else
-        echo "Please start X11 beforehand!"
-      fi
-    ;;
-
-   204)
-      if [ ! -z "$DISPLAY" ]; then
-        echo "Starting gui shell (with X11-apps)... "
-	$SELFDIR/run.sh "gui" launch.sh
         # "rxvt-unicode -fn xft:terminus:pixelsize=12 -e bash"
       else
         echo "Please start X11 beforehand!"
@@ -247,6 +471,16 @@ do
     203)
       echo "Starting Alsa sound test on plughw:0,0/1... " 
       $SELFDIR/run.sh "alsa" soundtest.sh
+    ;;
+
+   204)
+      if [ ! -z "$DISPLAY" ]; then
+        echo "Starting gui shell (with X11-apps)... "
+	$SELFDIR/run.sh "gui" launch.sh
+        # "rxvt-unicode -fn xft:terminus:pixelsize=12 -e bash"
+      else
+        echo "Please start X11 beforehand!"
+      fi
     ;;
 
     205)

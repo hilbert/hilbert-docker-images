@@ -7,9 +7,16 @@ cd "$SELFDIR"
 
 ARGS="$@"
 
-if [ -z "$ARGS" ]; then 
-  ARGS="nv vb"
+if [ -z "$ARGS" ]; then
+  if [ ! -z "$CUSTOMIZATION" ]; then
+    ARGS="$CUSTOMIZATION"
+  fi
 fi
+
+if [ -z "$ARGS" ]; then 
+  ARGS="vb nv"
+fi    
+
 
 
 #ls -la  /usr/lib/xorg/modules/drivers/ /usr/lib/x86_64-linux-gnu/dri/
@@ -23,6 +30,8 @@ do
   echo
   echo
 done
+
+### TODO: set environment vars globally (profile?) 
 
 exit 0
 

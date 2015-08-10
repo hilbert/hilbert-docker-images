@@ -5,8 +5,8 @@ APP="$1"
 shift
 ARGS="$@"
 
-U=malex984
-I=dockapp
+#U=malex984
+#I=dockapp
 
 
 ## full image name?
@@ -49,13 +49,13 @@ APP="c_$APP"
   echo "Starting '$IMG' ('$ARGS') under the name '$APP'"
 
 
-XSOCK=/tmp/.X11-unix/
-[ -z "$X" ] && X="DISPLAY -e XAUTHORITY"
+#XSOCK=/tmp/.X11-unix/
+#[ -z "$X" ] && X="DISPLAY -e XAUTHORITY"
 
 # pass CUPS_SERVER if previously set
-if [ ! -z "$CUPS_SERVER" ]; then
-  X="$X -e CUPS_SERVER"
-fi 
+#if [ ! -z "$CUPS_SERVER" ]; then
+#  X="$X -e CUPS_SERVER"
+#fi 
 
 # -v /tmp/:/tmp/ \
 #        -v /etc/machine-id:/etc/machine-id:ro \
@@ -69,7 +69,7 @@ fi
 X="$X \
  -v /etc/localtime:/etc/localtime:ro \
  -v /dev:/dev:rw -v /tmp/:/tmp/:rw -v /run/udev:/run/udev \
- -p 631:631 -e HIP
+ -p 631:631
 "
 
 # -v /etc/passwd:/etc/passwd:ro \
