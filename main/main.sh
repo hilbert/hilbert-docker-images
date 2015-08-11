@@ -33,7 +33,7 @@ echo "Current User: `id`"
 echo
 
 XSOCK=/tmp/.X11-unix/
-X="XAUTHORITY"
+#X="XAUTHORITY"
 
 if [ ! -z "$XAUTHORITY" ]; then 
   export XAUTHORITY=/tmp/.docker.xauth
@@ -53,7 +53,7 @@ case "$OSTYPE" in
      xhost +
      xcompmgr &
      compton &
-     X="DISPLAY -e XAUTHORITY"
+     # X="DISPLAY -e XAUTHORITY"
    else
 # Detect a Virtual Box VM!?
      echo "Please start one of X11 servers before using any GUI apps... "
@@ -67,7 +67,7 @@ case "$OSTYPE" in
   echo
 
   export DISPLAY="192.168.59.3:0"
-  export X="DISPLAY"
+#  export X="DISPLAY"
   ## $(boot2docker ip) ## ???
   echo "Please make sure to start xsocat.sh from your local X11 server since xeys's X-client will use '-e $X'..."
   echo "X11 should 'Allow connections from network clients & Your firewall should not block incomming connections to X11'"
@@ -110,9 +110,11 @@ if [ -r $SELFDIR/settings ]; then
 fi
 
 ### infinite loop... 
+# mygetenv
+main 30
+
 while :
 do
- mygetenv
  
  echo "Current X: [$X]"
  echo "_____ XID: [$XID]"
@@ -127,6 +129,8 @@ do
 
  APP="${ARGS[0]}" # get 1st  array element
  ARGS=("${ARGS[@]:1}") # remove it from array
+
+ mygetenv
 
  echo "Processing command '$APP'..."
 
@@ -196,40 +200,54 @@ do
     ;;
 
     208)
-      if [ -z "$DISPLAY" ]; then
-        echo "Please start X11 beforehand!"
+      if [ ! -z "$XID" ]; then
+        echo "There seems to be our X11 container running already..."
       else
         echo "Starting X11: Xephyr using $DISPLAY... "
         XID=$($SELFDIR/sv.sh 'dummy' startXephyr.sh)
-        sleep 3
-	docker logs $XID 2>&1 | grep DISPLAY
-        export DISPLAY=$(docker logs $XID 2>&1 | grep DISPLAY_NUM | tail -n 1 | sed s@DISPLAY_NUM@@g)
-	if [ -z "$DISPLAY" ]; then
-	  if [ -f /tmp/x.id ]; then  
+        echo "XID: $XID"
+	
+        while :
+        do
+          sleep 3
+	  docker logs $XID 2>&1 | grep DISPLAY
+          export DISPLAY=$(docker logs $XID 2>&1 | grep DISPLAY_NUM | tail -n 1 | sed s@DISPLAY_NUM@@g)
+	  if [ -z "$DISPLAY" ]; then
+	  if [ -r /tmp/x.id ]; then  
   	    export DISPLAY=$(cat /tmp/x.id)
           fi	    
-	fi
-        ### XAUTH? 
+	  fi
+        ### XAUTH?
+	  if [ ! -z "$DISPLAY" ]; then
+	    break;
+	  fi  
+	done 
       fi
     ;;
 
     207)
-      if [ ! -z "$DISPLAY" ]; then
-        echo "There seems to be X11 running already..."
+      if [ ! -z "$XID" ]; then
+        echo "There seems to be our X11 container running already..."
       else
         echo "Starting X11: Xorg... "
         XID=$($SELFDIR/sv.sh 'dummy' startXephyr.sh)
-        sleep 3
-	docker logs $XID 2>&1 | grep DISPLAY
-        export DISPLAY=$(docker logs $XID 2>&1 | grep DISPLAY_NUM | tail -n 1 | sed s@DISPLAY_NUM@@g)
-#        unset X
-#        export X="DISPLAY=unix$DISPLAY"
-	if [ -z "$DISPLAY" ]; then
-	  if [ -f /tmp/x.id ]; then  
+        echo "XID: $XID"
+
+        while :
+        do
+          sleep 3
+	  docker logs $XID 2>&1 | grep DISPLAY
+          export DISPLAY=$(docker logs $XID 2>&1 | grep DISPLAY_NUM | tail -n 1 | sed s@DISPLAY_NUM@@g)
+	  if [ -z "$DISPLAY" ]; then
+	  if [ -r /tmp/x.id ]; then
   	    export DISPLAY=$(cat /tmp/x.id)
           fi	    
-	fi
+	  fi
         ### XAUTH?
+	  if [ ! -z "$DISPLAY" ]; then
+	    break;
+	  fi  
+	done 
      fi
     ;;
 

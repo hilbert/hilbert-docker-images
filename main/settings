@@ -178,19 +178,20 @@ main()
 {
   TMOUT="$1"
   shift
-  prompt="Select an option to change (hit ENTER when done or just wait for $TMOUT sec.): "
+  
+  prompt="Select an option to change (hit ENTER when done): "
+
+  (( TMOUT > 0 )) && { prompt="Select an option to change (hit ENTER when done or just wait for $TMOUT sec.): "; }
 
   while menu && read -rp "$prompt" num && [[ "$num" ]]; do
     TMOUT=0
-
-    [[ "$num" != *[![:digit:]]* ]] &&
-    (( num > 0 && num <= ${#options[@]} )) ||
-    { msg="Invalid option: $num"; continue; }
-    ((num--)); 
-    myinput "$num"
-##    [[ "${choices[num]}" ]] && choices[num]="" || choices[num]="+"
-    msg="${options[num]} was changed..."
     prompt="Select an option to change (hit ENTER when done): "
+
+    [[ "$num" != *[![:digit:]]* ]] && (( num > 0 && num <= ${#options[@]} )) || { msg="Invalid option: $num"; continue; }
+    
+    ((num--)); myinput "$num"
+    
+    msg="Setting '${options[num]}' may have been changed..."
   done
   TMOUT=0
 }
