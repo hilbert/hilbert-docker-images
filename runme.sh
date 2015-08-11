@@ -1,6 +1,9 @@
 #! /bin/bash
 set -e
 
+SELFDIR=`dirname "$0"`
+SELFDIR=`cd "$SELFDIR" && pwd`
+
 XXX="" # 207 # prestart X11
 
 OGL=(216 202 0)
@@ -41,7 +44,7 @@ if [ ! -z "$XAUTHORITY" ]; then
   export XAUTHORITY=/tmp/.docker.xauth
 fi
 
-X="XAUTHORITY"
+#X="XAUTHORITY"
 case "$OSTYPE" in
  linux*) # For Linux host with X11:
 
@@ -54,7 +57,7 @@ case "$OSTYPE" in
      fi
      echo "We now enable anyone to connect to this X11..."
      xhost +
-     X="DISPLAY -e XAUTHORITY"
+     # X="DISPLAY -e XAUTHORITY"
      XXX=""
    else
 # Detect a Virtual Box VM!?
@@ -68,7 +71,7 @@ case "$OSTYPE" in
   echo "TO BE TESTED!!!! Will probaby not work via Boot2Docker for now... Sorry! :("
   echo
 
-  X="DISPLAY=192.168.59.3:0"
+  export DISPLAY="192.168.59.3:0"
   ## $(boot2docker ip) ## ???
   echo "Please make sure to start xsocat.sh from your local X11 server since xeys's X-client will use '-e $X'..."
   echo "X11 should 'Allow connections from network clients & Your firewall should not block incomming connections to X11'"
@@ -78,15 +81,14 @@ case "$OSTYPE" in
  ;;
 esac
 
-echo "Will use the following X11 settings: "
-echo "'$X'"
+#echo "Will use the following X11 settings: "
+#echo "'$X'"
 
 # pass CUPS_SERVER if previously set
-if [ ! -z "$CUPS_SERVER" ]; then 
-  X="$X -e CUPS_SERVER"
-fi
-
-export X
+#if [ ! -z "$CUPS_SERVER" ]; then 
+#  X="$X -e CUPS_SERVER"
+#fi
+#export X
 
 #    # Check if there is a container image with that name
 #    if ! docker inspect --format '{{ .Author }}' "$1" >&/dev/null
@@ -122,7 +124,7 @@ myrunner () {
  if [ -z $ID ]; then 
    # run --rm 
    ID=$(docker create -ti --privileged --net=host --ipc=host --pid=host \
-        -p 631:631 -e HIP \
+        -p 631:631 \
 	-v /etc/localtime:/etc/localtime:ro \
         -v /dev:/dev:rw -v /tmp/:/tmp/:rw -v /run/udev:/run/udev -v /var/run/docker.sock:/var/run/docker.sock \
         -e $X \
@@ -157,6 +159,15 @@ docker ps -a
 echo "Running the main glue script... "
 echo
 
+if [ -r $SELFDIR/main/settings ]; then 
+  source $SELFDIR/main/settings
+elif [ -r $SELFDIR/settings ]; then 
+  source $SELFDIR/settings
+fi
+
+main 30
+mygetenv
+
 #-u $(whoami) -w "$HOME" \
 #$(env | grep -v -E '^DISPLAY=' | cut -d= -f1 | awk '{print "-e", $1}') \
 
@@ -167,7 +178,7 @@ if [ ! -z "$O" ]; then
   docker pull "$U/$I:dummy"
   myrunner "$IM" --no-kill-all-on-exit --skip-runit -- /usr/local/bin/main.sh ${OGL[@]}
 
-  if [ -e /tmp/OGL.tgz ]; then 
+  if [ -r /tmp/OGL.tgz ]; then 
     cp /tmp/OGL.tgz $HOME/
     OGL=()
   else

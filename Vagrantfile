@@ -119,6 +119,7 @@ Vagrant.configure(2) do |config|
     DEBIAN_FRONTEND=noninteractive apt-get update -qq && DEBIAN_FRONTEND=noninteractive apt-get install -qqy --force-yes  --no-install-recommends p7zip-full curl wget sudo xauth x11-xserver-utils cups-bsd socat
     wget -q -nc -c -O "/usr/local/bin/vb_ga.sh" "https://raw.githubusercontent.com/malex984/dockapp/poc0/vb_ga.sh"
     wget -q -nc -c -O "/usr/local/bin/runme.sh" "https://raw.githubusercontent.com/malex984/dockapp/poc0/runme.sh"
+    wget -q -nc -c -O "/usr/local/bin/settings" "https://raw.githubusercontent.com/malex984/dockapp/poc0/main/settings"
     chmod +x /usr/local/bin/runme.sh
     sh /usr/local/bin/vb_ga.sh
     dpkg --list | awk '{ print $2 }' | grep 'linux-image-3.*-generic' | grep -v `uname -r` | xargs apt-get -y purge

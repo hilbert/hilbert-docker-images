@@ -9,7 +9,7 @@ RUN DEBIAN_FRONTEND=noninteractive apt-get -y -q update && \
     rm -rf /var/lib/apt/lists/* /tmp/* /var/tmp/*
 
 
-COPY main.sh menu.sh run.sh sv.sh A.sh generate_ogl.sh /usr/local/bin/
+COPY main.sh menu.sh run.sh sv.sh A.sh generate_ogl.sh settings /usr/local/bin/
 
 # VOLUME ...
 # CMD /usr/local/bin/main.sh

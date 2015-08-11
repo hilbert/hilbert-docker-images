@@ -44,12 +44,10 @@ do
 	    PID=$!
 	fi
 
-	
-	
-	# while Xephyr is still running
+        # while Xephyr is still running
 	while ps -o pid | grep -q "^[[:space:]]*"$PID"[[:space:]]*$"
 	do
-		sleep 0.1
+		sleep 1
 		# test if it aquired the X11 lock file
 		if grep -q "^[[:space:]]*"$PID"[[:space:]]*$" `find /tmp/ | grep "^/tmp/\.X"$DISPLAY_NUM"-lock$"`
 		then

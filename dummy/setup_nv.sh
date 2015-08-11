@@ -38,8 +38,7 @@ ls -la /usr/lib/xorg/modules/drivers/ /usr/lib/x86_64-linux-gnu/dri/
 #            /usr/lib/x86_64-linux-gnu/dri/vboxvideo_dri.so
 
 test -e /usr/lib/xorg/modules/drivers/nvidia_drv.so || \
-    ln -s /usr/X11R6/lib/modules/drivers/nvidia_drv.so
-            /usr/lib/xorg/modules/drivers/nvidia_drv.so
+    ln -s /usr/X11R6/lib/modules/drivers/nvidia_drv.so /usr/lib/xorg/modules/drivers/nvidia_drv.so
 
 # NVIDIA_VERSION="$VER"
 
