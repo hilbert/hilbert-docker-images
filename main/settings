@@ -205,7 +205,7 @@ addoption "CUPS_SERVER" ""
 addoption "DISPLAY" ""
 addoption "MOUSE_CURSOR" "on" "on:off"
 addoption "CUSTOMIZATION" "" "nv:vb"
-addoption "LANGUAGE" "en" "en:de"
+addoption "LANGUAGE" "en" "en:de:ru"
 
 mygetenv() 
 {

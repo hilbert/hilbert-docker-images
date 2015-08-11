@@ -5,14 +5,27 @@ SELFDIR=`cd "$SELFDIR" && pwd`
 
 cd "$SELFDIR"
 
-config_cups.sh
+# config_cups.sh
 time setup_ogl.sh
 
+if [ ! -z "$CUPS_SERVER" ]; then
+  config_cups.sh
+fi
 
 if [ -e "/etc/X11/Xsession.d/98vboxadd-xclient" ]; then 
     echo "Trying to run '/etc/X11/Xsession.d/98vboxadd-xclient'..."
     sudo sh /etc/X11/Xsession.d/98vboxadd-xclient 2>&1
 fi
+
+LANG=en_US.UTF-8
+
+[[ "$LANGUAGE" = "de" ]] && LANG="de_DE.UTF-8"
+[[ "$LANGUAGE" = "ru" ]] && LANG="ru_RU.UTF-8"
+### further languages...
+
+LC_ALL="$LANG"
+
+
 
 CMD=$1
 
@@ -36,6 +49,8 @@ compton &
 
 # requires: qclosebutton (qt4-default)
 # xdotool
+
+[[ "$MOUSE_CURSOR" = "off" ]] && echo "Hiding the mouse..."
 
 qclosebutton "$SELFDIR/x_64x64.png" xfullscreen $CMD $ARGS 2>&1
 

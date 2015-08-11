@@ -32,3 +32,7 @@ RUN DEBIAN_FRONTEND=noninteractive apt-get -q -y update && \
 COPY setup_ogl.sh  /usr/local/bin/
 COPY config_cups.sh /usr/local/bin/
 #RUN chmod +x /usr/local/bin/config_cups.sh
+
+RUN locale-gen de_DE.UTF-8
+RUN locale-gen ru_RU.UTF-8
+

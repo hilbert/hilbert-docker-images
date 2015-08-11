@@ -34,13 +34,13 @@ do
 	if [ ! -z "$DISPLAY" ]; then
 	    CMD=Xephyr
             echo "Trying to run [$CMD :$DISPLAY_NUM $ARGS]..."
-    	    $CMD :$DISPLAY_NUM $ARGS 2>&1 &
+    	    $CMD :$DISPLAY_NUM $ARGS 2>&1 && exit 0 # &
 	    PID=$!
 	else
 	    echo "ORIGINAL DISPLAY:$DISPLAY"
 	    CMD=startx
             echo "Trying to run [$CMD -- :$DISPLAY_NUM $ARGS]..."
-    	    $CMD -- :$DISPLAY_NUM $ARGS 2>&1 &
+    	    $CMD -- :$DISPLAY_NUM $ARGS 2>&1 && exit 0 # &
 	    PID=$!
 	fi
 

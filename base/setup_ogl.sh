@@ -32,8 +32,6 @@ if [ -e "$GL" ]; then
 #  fi
 fi
 
-# config_cups.sh
-
 touch "$T"
 exit 0
 
