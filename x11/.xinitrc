@@ -5,9 +5,9 @@
 #export LANGUAGE="en_US.UTF-8"
 #export LC_CTYPE="en_US.UTF-8"
 
-export LANG=en_US
-[[ "$LANGUAGE" = "de" ]] && export LANG="de_DE"
-[[ "$LANGUAGE" = "ru" ]] && export LANG="ru_RU"
+export LANG="en_US.UTF-8"
+[[ "$LANGUAGE" = "de" ]] && export LANG="de_DE.UTF-8"
+[[ "$LANGUAGE" = "ru" ]] && export LANG="ru_RU.UTF-8"
 ### further languages...
 
 export LC_CTYPE="$LANG"

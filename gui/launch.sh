@@ -17,9 +17,9 @@ if [ -e "/etc/X11/Xsession.d/98vboxadd-xclient" ]; then
     sudo sh /etc/X11/Xsession.d/98vboxadd-xclient 2>&1
 fi
 
-export LANG=en_US
-[[ "$LANGUAGE" = "de" ]] && export LANG="de_DE"
-[[ "$LANGUAGE" = "ru" ]] && export LANG="ru_RU"
+export LANG="en_US.UTF-8"
+[[ "$LANGUAGE" = "de" ]] && export LANG="de_DE.UTF-8"
+[[ "$LANGUAGE" = "ru" ]] && export LANG="ru_RU.UTF-8"
 ### further languages...
 
 export LC_CTYPE="$LANG"

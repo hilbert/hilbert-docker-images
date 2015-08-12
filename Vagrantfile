@@ -116,7 +116,7 @@ Vagrant.configure(2) do |config|
 # svgalib-bin pciutils 
   config.vm.provision "shell", inline: <<-SHELL
     gpasswd -a vagrant video && gpasswd -a vagrant audio
-    locale-gen en_US && locale-gen de_DE && locale-gen ru_RU
+    locale-gen en_US.utf8 && locale-gen de_DE.utf8 && locale-gen ru_RU.utf8
     DEBIAN_FRONTEND=noninteractive apt-get update -qq && DEBIAN_FRONTEND=noninteractive apt-get install -qqy --force-yes  --no-install-recommends p7zip-full curl wget sudo xauth x11-xserver-utils cups-bsd socat
     wget -q -nc -c -O "/usr/local/bin/vb_ga.sh" "https://raw.githubusercontent.com/malex984/dockapp/poc0/vb_ga.sh"
     wget -q -nc -c -O "/usr/local/bin/runme.sh" "https://raw.githubusercontent.com/malex984/dockapp/poc0/runme.sh"
