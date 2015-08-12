@@ -151,7 +151,8 @@ do
     214)
       if [ ! -z "$DISPLAY" ]; then
         echo "Starting GUI shell for surfer... Please build surfer yourself... " 
-	$SELFDIR/run.sh "surfer" launch.sh /opt/SURFER/SURFER
+	$SELFDIR/run.sh "surfer" launch.sh 
+	# /opt/SURFER/SURFER
 #	$SELFDIR/run.sh "$PREFIX:appchoo" bash
         # "rxvt-unicode -fn xft:terminus:pixelsize=12 -e bash"
       else

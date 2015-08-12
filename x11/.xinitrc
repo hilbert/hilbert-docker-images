@@ -1,9 +1,17 @@
 #! /usr/bin/env bash
 
-export LANG="en_US.UTF-8"
-export LC_ALL="en_US.UTF-8"
-export LANGUAGE="en_US.UTF-8"
-export LC_CTYPE="en_US.UTF-8"
+#export LANG="en_US.UTF-8"
+#export LC_ALL="en_US.UTF-8"
+#export LANGUAGE="en_US.UTF-8"
+#export LC_CTYPE="en_US.UTF-8"
+
+export LANG=en_US
+[[ "$LANGUAGE" = "de" ]] && export LANG="de_DE"
+[[ "$LANGUAGE" = "ru" ]] && export LANG="ru_RU"
+### further languages...
+
+export LC_CTYPE="$LANG"
+export LC_ALL="$LANG"
 
 
 xhost +

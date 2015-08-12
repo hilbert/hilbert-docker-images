@@ -9,7 +9,7 @@ cd "$SELFDIR"
 time setup_ogl.sh
 
 if [ ! -z "$CUPS_SERVER" ]; then
-  config_cups.sh
+ config_cups.sh
 fi
 
 if [ -e "/etc/X11/Xsession.d/98vboxadd-xclient" ]; then 
@@ -17,15 +17,13 @@ if [ -e "/etc/X11/Xsession.d/98vboxadd-xclient" ]; then
     sudo sh /etc/X11/Xsession.d/98vboxadd-xclient 2>&1
 fi
 
-LANG=en_US.UTF-8
-
-[[ "$LANGUAGE" = "de" ]] && LANG="de_DE.UTF-8"
-[[ "$LANGUAGE" = "ru" ]] && LANG="ru_RU.UTF-8"
+export LANG=en_US
+[[ "$LANGUAGE" = "de" ]] && export LANG="de_DE"
+[[ "$LANGUAGE" = "ru" ]] && export LANG="ru_RU"
 ### further languages...
 
-LC_ALL="$LANG"
-
-
+export LC_CTYPE="$LANG"
+export LC_ALL="$LANG"
 
 CMD=$1
 
