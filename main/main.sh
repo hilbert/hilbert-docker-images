@@ -118,7 +118,11 @@ do
  
  echo "Current X: [$X]"
  echo "_____ XID: [$XID]"
+ 
+ ### TODO: CHECK FOR X11 OR MAKE SURE XID & DISPLAY ARE VALID!
 
+ ### TODO: add a choice to go to text mode!!!!
+ 
  if [ ! ${#ARGS[@]} -gt 0 ]; then
    $SELFDIR/menu.sh \
      "Your choice please?" 200 \
@@ -303,8 +307,9 @@ do
       echo "Quiting... please make sure to kill any services yourself... "
       
       if [ ! -z "$XID" ]; then
-        echo "Killing X11: $XID"
-        docker rm -vf $XID
+        echo "Don't forget to kill X11 docker container: $XID"
+        echo "DISPLAY: $DISPLAY"
+####        docker rm -vf $XID #### TODO: GRACEFULL X11 SHUTDOWN???
       fi
       echo "Leftover containers: "
       docker ps -a
