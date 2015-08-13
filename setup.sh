@@ -8,8 +8,9 @@ cd "$SELFDIR"
 ARGS="$@"
 
 if [ -z "$ARGS" ]; then # cups play surfer iceweasel skype q3 xbmc up
-    ARGS=" base dd main appa appchoo alsa xeyes gui test x11 dummy "
+    ARGS=" base dd main appa appchoo alsa xeyes gui test x11 dummy cups skype iceweasel play q3 xbmc surfer "
 # for dependency graph please check out depsgen.sh!
+# 
 fi
 
 U=malex984
@@ -24,10 +25,16 @@ docker ps -a
 for d in $ARGS ;
 do
   echo
+  echo
+  echo
+  echo
+  echo
   echo "Building $d -> $U/$I:$d...."
   cd $d
   
   cat "./Dockerfile"
+  echo
+  echo
   echo
   docker ps -sa | grep "$d"
   # docker stop "$d"

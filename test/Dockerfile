@@ -10,11 +10,13 @@ ENV LIBGL_DEBUG=verbose
 
 
 RUN DEBIAN_FRONTEND=noninteractive apt-get -y -q update && \
-    DEBIAN_FRONTEND=noninteractive apt-get -q -y install --no-install-recommends \
+    DEBIAN_FRONTEND=noninteractive apt-get -q -y install \
+          --no-install-recommends \
           libgles1-mesa libgles2-mesa libegl1-mesa-drivers  mesa-vdpau-drivers \
 	  freeglut3 nux-tools mesa-utils pciutils \
 	  glmark2 libxv1 g3dviewer && \
-    DEBIAN_FRONTEND=noninteractive apt-get clean && rm -rf /var/lib/apt/lists/* /tmp/* /var/tmp/*
+    DEBIAN_FRONTEND=noninteractive apt-get clean && \
+    rm -rf /var/lib/apt/lists/* /tmp/* /var/tmp/*
 
 
 # build-essential

@@ -5,9 +5,11 @@ MAINTAINER Oleksandr Motsak <malex984@googlemail.com>
 # Update & Install & Clean up APT
 # Not: please if possible add all the packages to the following single install command!
 RUN DEBIAN_FRONTEND=noninteractive apt-get -y -q update && \
-    DEBIAN_FRONTEND=noninteractive apt-get -q -y install --no-install-recommends \
-                    alsa alsa-tools alsa-utils && \
-    DEBIAN_FRONTEND=noninteractive apt-get clean && rm -rf /var/lib/apt/lists/* /tmp/* /var/tmp/*
+    DEBIAN_FRONTEND=noninteractive apt-get -q -y install \
+        --no-install-recommends \
+	alsa alsa-tools alsa-utils && \
+    DEBIAN_FRONTEND=noninteractive apt-get clean && \
+    rm -rf /var/lib/apt/lists/* /tmp/* /var/tmp/*
 
 # RUN usermod -a -G pulse-access ur
 # RUN usermod -a -G pulse ur

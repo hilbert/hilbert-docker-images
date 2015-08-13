@@ -8,17 +8,16 @@ MAINTAINER Oleksandr Motsak <malex984@googlemail.com>
 # set the following if any QT GUI look like an empty rectangular window
 # ENV QT_X11_NO_MITSHM 1
 
-RUN DEBIAN_FRONTEND=noninteractive apt-get -y update
-# RUN DEBIAN_FRONTEND=noninteractive apt-get -q -y install build-essential
+RUN DEBIAN_FRONTEND=noninteractive apt-get -y update && \
+    DEBIAN_FRONTEND=noninteractive apt-get -q -y install \
+             libsdl-image1.2 libsdl-ttf2.0 libsdl-gfx1.2 && \
+    DEBIAN_FRONTEND=noninteractive apt-get clean && \
+    rm -rf /var/lib/apt/lists/* /tmp/* /var/tmp/*
 
-# imagemagic
-
-RUN DEBIAN_FRONTEND=noninteractive apt-get -q -y install libsdl-image1.2 libsdl-ttf2.0 libsdl-gfx1.2
-# -dev
-
-# https://github.com/porst17/appchoo.git
 #RUN git clone https://github.com/malex984/appchoo.git /usr/src/appchoo/
+#### building requires installing more packages: build-essential & *-dev (& imagemagic?)
 #RUN cd /usr/src/appchoo && make && cp appchoo /usr/local/bin/ && make clean
 
+### Oh, well. Blobs for now
 COPY appchoo menu.sh txt2jpg.sh FreeMonoBold.ttf /usr/local/bin/
 

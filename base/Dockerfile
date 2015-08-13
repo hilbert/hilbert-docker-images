@@ -5,14 +5,16 @@ MAINTAINER Oleksandr Motsak <malex984@googlemail.com>
 # Use baseimage-docker's init system.
 ENTRYPOINT ["/sbin/my_init"]
 
-#     DEBIAN_FRONTEND=noninteractive apt-get -y upgrade && \ ???
+# ??? # DEBIAN_FRONTEND=noninteractive apt-get -y upgrade && \
 
 # Update & Install & Clean up APT
 # Not: please if possible add all the packages to the following single install command!
 RUN DEBIAN_FRONTEND=noninteractive apt-get -q -y update && \
-    DEBIAN_FRONTEND=noninteractive apt-get -q -y install --no-install-recommends \
+    DEBIAN_FRONTEND=noninteractive apt-get -q -y install \
+                    --no-install-recommends \
                     aptitude wget curl git cups-bsd && \
-    DEBIAN_FRONTEND=noninteractive apt-get clean && rm -rf /var/lib/apt/lists/* /tmp/* /var/tmp/*
+    DEBIAN_FRONTEND=noninteractive apt-get clean && \
+    rm -rf /var/lib/apt/lists/* /tmp/* /var/tmp/*
 
 # dist-upgrade ?
 

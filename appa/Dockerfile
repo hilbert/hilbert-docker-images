@@ -9,4 +9,5 @@ COPY A.sh /usr/local/bin/
 # CMD /sbin/setuser ur /home/ur/bin/A.sh
 
 # Clean up APT when done.
-RUN apt-get clean && rm -rf /var/lib/apt/lists/* /tmp/* /var/tmp/*
+RUN apt-get clean && \
+    rm -rf /var/lib/apt/lists/* /tmp/* /var/tmp/*

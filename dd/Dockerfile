@@ -2,11 +2,13 @@ FROM malex984/dockapp:base
 
 MAINTAINER Oleksandr Motsak <malex984@googlemail.com>
 
-# DEBIAN_FRONTEND=noninteractive apt-get -q -y install--no-install-recommends lxc-docker && \
 RUN DEBIAN_FRONTEND=noninteractive apt-get -y -q update && \
     curl -sSL https://get.docker.io/ubuntu/ | sudo sh && \
     DEBIAN_FRONTEND=noninteractive apt-get clean && \
     rm -rf /var/lib/apt/lists/* /tmp/* /var/tmp/*
+
+# DEBIAN_FRONTEND=noninteractive apt-get -q -y install \
+# --no-install-recommends lxc-docker && \
 
 #ADD https://get.docker.com/builds/Linux/x86_64/docker-latest /usr/local/bin/docker
 #RUN chmod +x /usr/local/bin/docker
@@ -31,5 +33,3 @@ ENV NO_PROXY /var/run/docker.sock
 # VOLUME $HOME
 # WORKDIR $HOME
 
-# Clean up APT when done.
-# RUN apt-get clean && rm -rf /var/lib/apt/lists/* /tmp/* /var/tmp/*
