@@ -1,0 +1,23 @@
+pcm.!default {
+         type asym
+         playback.pcm {
+                 type plug
+                 slave.pcm "plughw:0,0"
+         }
+         capture.pcm {
+                 type plug
+                 slave.pcm "plughw:0,1"
+         } 
+}
+
+#pcm.duplex {
+#    type asym
+#    playback.pcm "dmix"
+#    capture.pcm "dsnoop"
+#}
+#pcm.!default {
+#    type plug
+#    slave.pcm "duplex"
+#}
+
+

@@ -1,12 +1,9 @@
-FROM malex984/dockapp:base
+FROM malex984/dockapp:xeyes
 
 MAINTAINER Oleksandr Motsak <malex984@googlemail.com>
 
-COPY A.sh /usr/local/bin/
-
-# ENV HOME /home/ur
-# RUN chown ur:ur $HOME/bin/A.sh
-# CMD /sbin/setuser ur /home/ur/bin/A.sh
+RUN DEBIAN_FRONTEND=noninteractive apt-get -y update
+RUN DEBIAN_FRONTEND=noninteractive apt-get -q -y install openarena
 
 # Clean up APT when done.
 RUN apt-get clean && rm -rf /var/lib/apt/lists/* /tmp/* /var/tmp/*

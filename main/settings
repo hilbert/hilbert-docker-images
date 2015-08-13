@@ -1,0 +1,225 @@
+options=();choices=();selections=();
+
+# Assignment Command Statement Builder
+mysetIfNotSet () 
+{
+  echo -n 'eval export '
+  echo -n "$1"
+  echo -n '="${'
+  echo -n "$1"
+  echo -n ':-'
+  echo -n "$2"
+  echo -n '}"'
+}
+
+myoverwrite ()
+{
+  echo -n 'eval export '
+  echo -n "$1"
+  echo -n '="'
+  echo -n "$2"
+  echo -n '"'
+}
+
+mygetWithDefault () 
+{
+  echo -n 'eval v='
+  echo -n '"${'
+  echo -n "$1"
+  echo -n ':-'
+  echo -n "$2"
+  echo -n '}"'
+}
+
+addoption() 
+{
+  local opt="$1"
+  shift
+  local def="$1"
+  shift
+
+  $(mysetIfNotSet "$opt" "$def")
+  
+  local v="$def"
+  $(mygetWithDefault "$opt" "$def")
+  
+#  local m=""
+  
+  local sel="$@"
+#  if [ ! -z "$sel" ]; then 
+#    local array=(${sel//:/ });
+#    v="${array[def]}"
+#    m=" from (${sel})"
+#  fi
+
+#  echo "Adding option '$opt': default value: [$v]$m"
+
+  options+=("$opt");
+  selections+=("$sel");
+  choices+=("$v");
+}
+
+
+showoff()
+{
+    local sel
+    local opt
+    local def
+    local v
+    
+    for i in ${!options[@]}; do 
+        opt="${options[i]}"
+        def="${choices[i]:-}"
+        sel="${selections[i]:-}"
+
+	$(mygetWithDefault "$opt" "$def")
+	
+        if [ ! -z "$sel" ]; then 
+           printf "%3d) %20s: %20s from %20s\n" $((i+1)) "${opt}" "'${v}'" "(${sel})"
+        else
+           printf "%3d) %20s: %20s\n"           $((i+1)) "${opt}" "'${v}'"
+        fi
+    done
+}
+
+
+msg=""
+
+menu() {
+    echo
+    echo "Avaliable options: "
+    showoff
+    [[ "$msg" ]] && echo "$msg"; :
+}
+
+# This function won't handle multi-digit counts.
+countdown() 
+{
+  local i 
+  printf '%s' ".$1"
+  sleep 1
+  for ((i=$1-1; i>=0; i--)); do
+    printf '\b.%d' "$i"
+    sleep 1
+  done
+}
+
+myinput() 
+{
+  echo
+  local OLD_IFS="${IFS}"
+  local num="$1"
+  local option="${options[num]}"
+  local default="${choices[num]}"
+  local sel="${selections[num]:-}"
+  local array=()
+  
+  local v="${default}"
+  $(mygetWithDefault "$option" "$default")
+  
+  printf 'Changing option %20s, def.val: [%s]\n' "'$option'" "$v"
+
+#  printf '5 seconds to hit any key to cancel changing the option '
+#  countdown 5 & pid=$!
+#  IFS= 
+#  if read -s -n 1 -t 5; then
+#  printf '\nboom\n'
+  ### read!!!
+#  else
+#    kill "$pid"; 
+#    IFS="${OLD_IFS}"
+
+  if [ ! -z "$sel" ]; then
+      array=(${sel//:/ });
+  
+
+      PS3="Please select one of the numbers > "
+      
+      select ch in ${array[@]} ;
+      do
+        echo "Choice $((REPLY)): '$ch'"
+	
+	[ -z "$ch" ] && break
+        echo "Thanks for choosing '$ch'" && default=$((REPLY-1)) && break 
+      done
+
+      default="${array[default]}"
+  else
+      printf 'Please input a new value for option "%s" or hit ENTER for default [%s]: ' "${option}" "${v:-}"
+      read n
+      if [[ $n = "" ]]; then
+        default="$v" 
+      else
+        default="$n" 
+      fi
+#      echo "[$default]"
+  fi
+  
+  echo "Are you sure about setting '$option' to be '$default'?"
+  echo "Please hit any key within 5 sec. to cancel the change!"
+#  countdown 5 & pid=$!
+#  IFS= 
+  if read -s -n 1 -t 5; then
+#    kill "$pid"; 
+#    IFS="${OLD_IFS}"
+    printf '\nOk... canceling the change...\n'
+  else
+#    kill "$pid"; 
+#    IFS="${OLD_IFS}"
+    choices[num]="$default"
+    $(myoverwrite "$option" "$default")
+  fi 
+
+}
+
+
+
+main()
+{
+  TMOUT="$1"
+  shift
+  
+  prompt="Select an option to change (hit ENTER when done): "
+
+  (( TMOUT > 0 )) && { prompt="Select an option to change (hit ENTER when done or just wait for $TMOUT sec.): "; }
+
+  while menu && read -rp "$prompt" num && [[ "$num" ]]; do
+    TMOUT=0
+    prompt="Select an option to change (hit ENTER when done): "
+
+    [[ "$num" != *[![:digit:]]* ]] && (( num > 0 && num <= ${#options[@]} )) || { msg="Invalid option: $num"; continue; }
+    
+    ((num--)); myinput "$num"
+    
+    msg="Setting '${options[num]}' may have been changed..."
+  done
+  TMOUT=0
+}
+
+addoption "U" ""
+addoption "I" ""
+addoption "PREFIX" ""
+addoption "HIP" ""
+addoption "XAUTHORITY" ""
+addoption "XSOCK" ""
+addoption "CUPS_SERVER" ""
+addoption "DISPLAY" ""
+addoption "MOUSE_CURSOR" "on" "on:off"
+addoption "CUSTOMIZATION" "" "nv:vb"
+addoption "LANGUAGE" "en" "en:de:ru"
+
+mygetenv() 
+{
+    echo "Current Settings: "
+    showoff
+    X="X"
+    for i in ${!options[@]}; do 
+        opt="${options[i]}"
+        X+=" -e ${opt} "
+    done
+    export X
+}
+
+# echo "X: '$X'"
+
+
