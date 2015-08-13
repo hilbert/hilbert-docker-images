@@ -11,7 +11,10 @@ showExportButton=false
 # Disable or reorder languages by setting the 'languages' property to something
 # like 'es,de,en,no,pt,ru,sr,*' (without the ').
 # '*' is a placeholder which adds all remaining languages currently available.
-languages=*
+
+###Q: is there any way to get system environment variable for this???
+### NOTE: it seems that correct language will be detected due to system environment BUT german will be used instead if languages=* below!!! 
+#languages=*
 
 # The click mode is useful for fine tuning button events for touchscreens:
 #     0: use "mouse click" event (default)
@@ -27,7 +30,8 @@ printExportDir=printing
 # files and print it. The 'printExportDir' is added to the command as a command
 # line argument.
 # If you use a script may need to add the script interpreter (e.g. 'bash print.sh').
-printCmd=bash printing/print.sh
+printCmd=lpr 
+#bash printing/print.sh
 
 # This message is shown while the high resolution images are rendered and while
 # the printing command is executed.
