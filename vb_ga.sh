@@ -20,11 +20,22 @@ fi
 
 ### http://stackoverflow.com/a/4024263
 # find the later version of VB GA
+
 VER=$(echo "$VER\n$LAST" | sort -V | tail -n1)
+
+
+## Check if a program exists from a bash script: http://stackoverflow.com/a/677212
+if hash VBoxControl 2>/dev/null; then
+  HOST=`sudo VBoxControl --nologo guestproperty get '/VirtualBox/HostInfo/VBoxVer' 2>/dev/null | sed -e 's@Value: @@ig'`
+  VER=$(echo "$VER\n$HOST" | sort -V | tail -n1)
+fi
 
 if [ -e "/sys/module/vboxvideo/version" ]; then 
   [ $(cat /sys/module/vboxvideo/version) = "$VER" ] && exit 0
 fi
+
+
+# sudo VBoxControl --nologo guestproperty get '/VirtualBox/HostInfo/VBoxVer' | sed -e 's@Value: @@ig'
 
 
 TMP=/tmp/
