@@ -118,9 +118,9 @@ Vagrant.configure(2) do |config|
     gpasswd -a vagrant video && gpasswd -a vagrant audio
     locale-gen en_US.utf8 && locale-gen de_DE.utf8 && locale-gen ru_RU.utf8
     DEBIAN_FRONTEND=noninteractive apt-get update -qq && DEBIAN_FRONTEND=noninteractive apt-get install -qqy --force-yes  --no-install-recommends p7zip-full curl wget sudo xauth x11-xserver-utils cups-bsd socat
-    wget -q -nc -c -O "/usr/local/bin/vb_ga.sh" "https://raw.githubusercontent.com/malex984/dockapp/poc0/vb_ga.sh"
-    wget -q -nc -c -O "/usr/local/bin/runme.sh" "https://raw.githubusercontent.com/malex984/dockapp/poc0/runme.sh"
-    wget -q -nc -c -O "/usr/local/bin/settings" "https://raw.githubusercontent.com/malex984/dockapp/poc0/main/settings"
+    wget -q -nc -c -O "/usr/local/bin/vb_ga.sh" "https://raw.githubusercontent.com/malex984/dockapp/master/vb_ga.sh"
+    wget -q -nc -c -O "/usr/local/bin/runme.sh" "https://raw.githubusercontent.com/malex984/dockapp/master/runme.sh"
+    wget -q -nc -c -O "/usr/local/bin/settings" "https://raw.githubusercontent.com/malex984/dockapp/master/main/settings"
     chmod +x /usr/local/bin/runme.sh
     sh /usr/local/bin/vb_ga.sh
     dpkg --list | awk '{ print $2 }' | grep 'linux-image-3.*-generic' | grep -v `uname -r` | xargs apt-get -y purge
@@ -128,7 +128,7 @@ Vagrant.configure(2) do |config|
     apt-get -y purge ppp pppconfig pppoeconf popularity-contest
     apt-get -y autoremove
     apt-get -y clean && rm -rf /var/lib/apt/lists/* /tmp/* /var/tmp/* /tmp/chef*deb
-    su - vagrant -c 'cd && wget -q -nc -c -O ".bash_login" "https://raw.githubusercontent.com/malex984/dockapp/poc0/.bash_login"'
+    su - vagrant -c 'cd && wget -q -nc -c -O ".bash_login" "https://raw.githubusercontent.com/malex984/dockapp/master/.bash_login"'
     perl -pi -e 's%exec /sbin/getty -8 38400 tty1%exec /bin/login -f vagrant < /dev/tty1 > /dev/tty1 2>&1 %' /etc/init/tty1.conf
     reboot
   SHELL
