@@ -12,7 +12,7 @@ RUN DEBIAN_FRONTEND=noninteractive apt-get -y update && \
 		     libgles1-mesa libgles2-mesa libegl1-mesa-drivers \
 		     mesa-vdpau-drivers freeglut3 mesa-utils libglu1 libglapi-mesa \
 		     xterm xinit x11-apps libglapi-mesa libglu1 \
-                     libgtk2.0-0 libgconf-2-4  libasound2 libxtst6 libxss1 libnss3 xvfb \
+                     xvfb \
     && \
     DEBIAN_FRONTEND=noninteractive apt-get clean && \
     rm -rf /var/lib/apt/lists/* /tmp/* /var/tmp/*
