@@ -16,6 +16,7 @@ else
          export HIP=192.168.9.9
 #         export CUPS_SERVER="$HIP:631"
 	 sudo socat TCP-LISTEN:631,fork TCP:192.168.9.1:631 &
+#	 sudo socat TCP-LISTEN:5900,fork TCP:192.168.9.1:5900 &
          runme.sh 
 #	 sudo textmode
 	 reset

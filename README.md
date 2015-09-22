@@ -16,7 +16,7 @@ share images as much as possible).
   * `:dummy` contains `customize.sh` which performs customization to the running :dummy container, 
     these customization changes can than be detected with `docker diff` and 
     archived together (e.g. `/tmp/OGL.tgz`) for later use by `:base/setup_ogl.sh`.
-  * `:up/customize.sh`: Customize each libGL-needing image (e.g. `:x11` and `:test` by default for now):
+  * (*obsolete*) `:up/customize.sh`: Customize each libGL-needing image (e.g. `:x11` and `:test` by default for now):
     Running `:up/customize.sh` such a host will enable one to detect known hardware or kernel modules (e.g. VirtualBox Guest Additions or NVidia driver)
     in order to localize/customize some starting images  
     under corresponding tag name (e.g. `:test.nv.340.76` or `:x11.vb.4.3.26`),
@@ -62,6 +62,7 @@ Some applications may need further deamons to run in background. Here is a list 
 
 * `:x11` is an Xorg/Xephyr service
 * `:cups` is supposed to run CUPS server (:6631) - seems to start but has to be thoughly tested.
+* `:x11vnc` is an `x11vnc` service
 
 ## The dependencies between images are as follows: 
 ![Dependencies between docker images](deps.png)

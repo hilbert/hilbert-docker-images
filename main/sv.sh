@@ -55,7 +55,8 @@ ARGS="$@"
 X="$X \
   -v /etc/localtime:/etc/localtime:ro \
   -v /dev:/dev:rw -v /tmp/:/tmp/:rw \
-  -v /run/udev:/run/udev -p 631:631 \
+  -v /run/udev:/run/udev \
+  -p 631:631 -p 5900:5900 \
 "
 
 # -v /tmp:/tmp:rw \
