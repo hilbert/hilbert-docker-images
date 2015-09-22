@@ -141,7 +141,8 @@ do
  case "$APP" in
     217) # Kiosk
       if [ ! -z "$DISPLAY" ]; then
-        echo "Starting Kiosk-Mode WebBrowser ... " && $SELFDIR/run.sh 'kiosk' launch.sh  /usr/lib/node_modules/kiosk/run.sh
+        echo "Starting Kiosk-Mode WebBrowser ... " && $SELFDIR/run.sh 'kiosk' launch.sh 
+	#  /usr/lib/node_modules/kiosk/run.sh
 	# "rxvt-unicode -fn xft:terminus:pixelsize=12 -e bash" ## xterm?
       else
         echo "Please start X11 beforehand!"
