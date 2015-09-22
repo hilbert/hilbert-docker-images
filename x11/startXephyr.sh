@@ -40,6 +40,7 @@ do
 	    echo "ORIGINAL DISPLAY:$DISPLAY"
 	    CMD=startx
             echo "Trying to run [$CMD -- :$DISPLAY_NUM $ARGS]..."
+# Xvfb :1 -extension GLX -screen 0 1024x780x24 &
     	    $CMD -- :$DISPLAY_NUM $ARGS 2>&1 && exit 0 # &
 	    PID=$!
 	fi

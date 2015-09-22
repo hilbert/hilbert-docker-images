@@ -9,8 +9,7 @@
 
 #x11vnc -usepw -forever -display "${DISPLAY}"
 
-x11vnc -nopw -forever  -localhost
-
+x11vnc -nopw -forever -listen -localhost  -xkb
 # remote end:
 # ssh -t -L 5900:localhost:5900 
 # vncviewer -encodings "copyrect tight zrle hextile" localhost:0
