@@ -126,7 +126,7 @@ do
  if [ ! ${#ARGS[@]} -gt 0 ]; then
    $SELFDIR/menu.sh \
      "Your choice please?" 200 \
-     "A_Test_Application_A LIBGL_CUSTOMIZATION Alsa_Test GUI_Shell Bash_in_MainGlueApp X11_Shell X11Server Xephyr Iceweasel Q3 Skype Cups_Server Media_Players Surfer Test CHANGE_SETTINGS QUIT"
+     "A_Test_Application_A LIBGL_CUSTOMIZATION Alsa_Test GUI_Shell Bash_in_MainGlueApp X11_Shell X11Server Xephyr Iceweasel Q3 Skype Cups_Server Media_Players Surfer Test CHANGE_SETTINGS Kiosk QUIT"
    ARGS=("$?")
  fi
  echo "Current command(s) to be processed first: ${ARGS[@]}"
@@ -139,6 +139,16 @@ do
  echo "Processing command '$APP'..."
 
  case "$APP" in
+    217) # Kiosk
+      if [ ! -z "$DISPLAY" ]; then
+        echo "Starting Kiosk-Mode WebBrowser ... " && $SELFDIR/run.sh 'kiosk' launch.sh  /usr/lib/node_modules/kiosk/run.sh
+	# "rxvt-unicode -fn xft:terminus:pixelsize=12 -e bash" ## xterm?
+      else
+        echo "Please start X11 beforehand!"
+      fi
+      
+    ;;
+
     216) # Settings Menu!
       main 40
     ;;
