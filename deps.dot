@@ -8,14 +8,15 @@ digraph deps{ graph [label="an arrow means that its source is based on the arrow
 ":dummy" -> ":x11" ;
 ":gui" -> ":xeyes" ;
 ":iceweasel" -> ":gui" ;
+":kiosk" -> ":play" ;
 ":main" -> ":dd" ;
 ":play" -> ":gui" ;
 ":q3" -> ":xeyes" ;
 ":skype" -> ":base" ;
 ":surfer" -> ":gui" ;
 ":test" -> ":gui" ;
-":up" -> ":dd" ;
-":x11" -> ":base" ;
+":x11" -> ":xeyes" ;
+":x11vnc" -> ":xeyes" ;
 ":xbmc" -> ":xeyes" ;
 ":xeyes" -> ":alsa" ;
 }
