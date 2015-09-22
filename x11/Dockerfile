@@ -1,4 +1,4 @@
-FROM malex984/dockapp:base
+FROM malex984/dockapp:xeyes
 
 MAINTAINER Oleksandr Motsak <malex984@googlemail.com>
 
@@ -24,6 +24,7 @@ RUN DEBIAN_FRONTEND=noninteractive apt-get -y update && \
 # xorg-video-abi-19 
 # unagi
 ## compiz  
+## x11vnc 
 #  libx11 libxmu libxi
 
 
