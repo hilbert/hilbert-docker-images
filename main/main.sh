@@ -126,7 +126,7 @@ do
  if [ ! ${#ARGS[@]} -gt 0 ]; then
    $SELFDIR/menu.sh \
      "Your choice please?" 200 \
-     "A_Test_Application_A LIBGL_CUSTOMIZATION Alsa_Test GUI_Shell Bash_in_MainGlueApp X11_Shell X11Server Xephyr Iceweasel Q3 Skype Cups_Server Media_Players Surfer Test CHANGE_SETTINGS Kiosk x11vnc QUIT"
+     "A_Test_Application_A LIBGL_CUSTOMIZATION Alsa_Test GUI_Shell Bash_in_MainGlueApp X11_Shell X11Server Xephyr Iceweasel Q3 Skype Cups_Server Media_Players Surfer Test CHANGE_SETTINGS Kiosk X11vnc Xvfb QUIT"
    ARGS=("$?")
  fi
  echo "Current command(s) to be processed first: ${ARGS[@]}"
@@ -139,6 +139,36 @@ do
  echo "Processing command '$APP'..."
 
  case "$APP" in
+
+    219)
+      if [ ! -z "$XID" ]; then
+        echo "There seems to be our X11 container running already..."
+      else
+        unset DISPLAY
+        echo "Starting virtual X11: Xvfb... "
+	export X="$X -e XCMD=Xvfb "
+        XID=$($SELFDIR/sv.sh 'dummy' startXephyr.sh -screen 0 800x600x16)
+        echo "XID: $XID"
+
+        while :
+        do
+          sleep 3
+	  docker logs $XID 2>&1 | grep DISPLAY
+          export DISPLAY=$(docker logs $XID 2>&1 | grep DISPLAY_NUM | tail -n 1 | sed s@DISPLAY_NUM@@g)
+	  if [ -z "$DISPLAY" ]; then
+	  if [ -r /tmp/x.id ]; then
+  	    export DISPLAY=$(cat /tmp/x.id)
+          fi	    
+	  fi
+        ### XAUTH?
+	  if [ ! -z "$DISPLAY" ]; then
+	    break;
+	  fi  
+	done 
+     fi
+    ;;
+
+
     218) # x11vnc
       if [ ! -z "$DISPLAY" ]; then
         echo "Starting x11vnc service ... " 
@@ -229,6 +259,7 @@ do
         echo "There seems to be our X11 container running already..."
       else
         echo "Starting X11: Xephyr using $DISPLAY... "
+	export X="$X -e XCMD=Xephyr "
         XID=$($SELFDIR/sv.sh 'dummy' startXephyr.sh)
         echo "XID: $XID"
 	
@@ -254,7 +285,9 @@ do
       if [ ! -z "$XID" ]; then
         echo "There seems to be our X11 container running already..."
       else
+        unset DISPLAY
         echo "Starting X11: Xorg... "
+#	export X="$X -e XCMD=Xephyr "
         XID=$($SELFDIR/sv.sh 'dummy' startXephyr.sh)
         echo "XID: $XID"
 

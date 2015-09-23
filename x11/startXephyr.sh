@@ -3,12 +3,22 @@
 #F="$1"
 #shift
 
-#CMD="$1"
+#XCMD="$1"
 #shift
 
 time setup_ogl.sh 2>&1
 
 ARGS="$@"
+
+
+if [ ! -z "$DISPLAY" ]; then
+   echo "ORIGINAL DISPLAY:$DISPLAY"
+   XCMD="${XCMD:-Xephyr}"
+else
+   XCMD=${XCMD:-startx --}
+fi
+	
+echo "Will be trying to run [$XCMD :N $ARGS]..."
 
 
 DISPLAY_NUM=0
@@ -31,19 +41,11 @@ do
 	echo "DISPLAY_NUM:$DISPLAY_NUM"
 	# > "$F"
 
-	if [ ! -z "$DISPLAY" ]; then
-	    CMD=Xephyr
-            echo "Trying to run [$CMD :$DISPLAY_NUM $ARGS]..."
-    	    $CMD :$DISPLAY_NUM $ARGS 2>&1 && exit 0 # &
-	    PID=$!
-	else
-	    echo "ORIGINAL DISPLAY:$DISPLAY"
-	    CMD=startx
-            echo "Trying to run [$CMD -- :$DISPLAY_NUM $ARGS]..."
-# Xvfb :1 -extension GLX -screen 0 1024x780x24 &
-    	    $CMD -- :$DISPLAY_NUM $ARGS 2>&1 && exit 0 # &
-	    PID=$!
-	fi
+	# Xvfb :1 -extension GLX -screen 0 1024x780x24 &
+        echo "Trying to run [$XCMD :$DISPLAY_NUM $ARGS]..."
+        $XCMD :$DISPLAY_NUM $ARGS 2>&1 && exit 0 # &
+
+        PID=$!
 
         # while Xephyr is still running
 	while ps -o pid | grep -q "^[[:space:]]*"$PID"[[:space:]]*$"
