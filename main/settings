@@ -207,6 +207,7 @@ addoption "DISPLAY" ""
 addoption "MOUSE_CURSOR" "on" "on:off"
 addoption "CUSTOMIZATION" "" "nv:vb"
 addoption "LANGUAGE" "en" "en:de:ru"
+addoption "MENU_TRY" "text" "gui:text"
 
 mygetenv() 
 {

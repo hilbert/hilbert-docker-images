@@ -15,21 +15,21 @@ shift
 
 ARGS="$@"
 
-PS3="$PR > "
-# "Please choose an appplication. 1 -> AAA (A.sh), 2 -> BBB (B.sh), 3 -> XEYES, 4 -> quit>"
-
 # A=( $L )
 # N=${#A[@]}
 # echo $N 
 
+[ "${MENU_TRY}" = "text" ] && unset DISPLAY
 
+if [ -z "${DISPLAY}" ]; then 
 
-if [ -z "$DISPLAY" ]; then 
+  PS3="$PR > "
+  # "Please choose an appplication. 1 -> AAA (A.sh), 2 -> BBB (B.sh), 3 -> XEYES, 4 -> quit>"
 
   select choice in $ARGS ;
   do
   #  echo "Choice $((REPLY)): '$choice'" 
-    [ ! -z "$choice" ] && echo "Thanks for choosing '$choice'" && exit $(($B + REPLY)) 
+    [ -n "$choice" ] && echo "Thanks for choosing '$choice'" && exit $(($B + REPLY)) 
   done
 
 else

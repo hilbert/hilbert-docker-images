@@ -10,6 +10,7 @@ digraph deps{ graph [label="an arrow means that its source is based on the arrow
 ":iceweasel" -> ":gui" ;
 ":kiosk" -> ":play" ;
 ":main" -> ":dd" ;
+":omd" -> ":base" ;
 ":play" -> ":gui" ;
 ":q3" -> ":xeyes" ;
 ":skype" -> ":base" ;

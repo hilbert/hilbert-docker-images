@@ -123,12 +123,15 @@ do
 
  ### TODO: add a choice to go to text mode!!!!
  
- if [ ! ${#ARGS[@]} -gt 0 ]; then
+ echo "Current ARGS: ${ARGS[@]}"
+ 
+ if [ ${#ARGS[@]} -eq 0 ]; then
    $SELFDIR/menu.sh \
      "Your choice please?" 200 \
      "A_Test_Application_A LIBGL_CUSTOMIZATION Alsa_Test GUI_Shell Bash_in_MainGlueApp X11_Shell X11Server Xephyr Iceweasel Q3 Skype Cups_Server Media_Players Surfer Test CHANGE_SETTINGS Kiosk X11vnc Xvfb QUIT"
    ARGS=("$?")
  fi
+ 
  echo "Current command(s) to be processed first: ${ARGS[@]}"
 
  APP="${ARGS[0]}" # get 1st  array element
