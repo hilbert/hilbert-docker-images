@@ -9,7 +9,10 @@
 
 #x11vnc -usepw -forever -display "${DISPLAY}"
 
-x11vnc -display "${DISPLAY}" -auth "${XAUTHORITY}" -nopw -forever -listen -localhost  -xkb -noxdamage -noxrecord -noxfixes -rfbport 5900 -o /tmp/x11vnc.log
+# -localhost 
+x11vnc -display "${DISPLAY}" -auth "${XAUTHORITY}" -nopw -forever -rfbport 5900
+# -xkb -ncache 10 -listen -noxdamage -noxrecord -noxfixes -noscr -nowf -fixscreen
+# -o /tmp/x11vnc.log
 
 # remote end:
 # ssh -t -L 5900:localhost:5900 
