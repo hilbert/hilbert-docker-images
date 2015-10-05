@@ -1,12 +1,8 @@
 #!/bin/bash
 
-if [ -z "${VNC_PASSWD}" ]; then 
-  VNC_PASSWD=`mkpasswd -l 5 -d 2`
-fi
-
-echo
-echo "VNC_PASSWD: ${VNC_PASSWD}"
-echo
+#if [ -z "${VNC_PASSWD}" ]; then 
+#  VNC_PASSWD=`mkpasswd -l 5 -d 0`
+#fi
 
 
 H="$HOME" 
@@ -19,6 +15,10 @@ F="$H/.x11vnc/passwd"
 
 echo "Passwd file: $F"
 x11vnc -storepasswd "${VNC_PASSWD}" "${F}"
+
+echo
+echo "VNC_PASSWD: [${VNC_PASSWD}]"
+echo
 
 #x11vnc -usepw -forever -display "${DISPLAY}"
 
