@@ -4,12 +4,3 @@
 [submodule "alsa/apulse"]
 	path = alsa/apulse
 	url = https://github.com/i-rinat/apulse.git
-[submodule "kiosk/jsqrcode"]
-	path = kiosk/jsqrcode
-	url = https://github.com/LazarSoft/jsqrcode.git
-[submodule "kiosk/Films-Slider"]
-	path = kiosk/Films-Slider
-	url = https://github.com/IMAGINARY/Films-Slider.git
-[submodule "kiosk/Gallery-Slider"]
-	path = kiosk/Gallery-Slider
-	url = https://github.com/IMAGINARY/Gallery-Slider.git
