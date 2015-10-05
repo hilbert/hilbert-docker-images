@@ -22,7 +22,8 @@ fi
 
 if [ -e "$GL" ]; then  
   echo "Customizing using $GL..."
-  sudo tar xzvf "$GL" --skip-old-files -C / 
+  # --skip-old-files
+  sudo tar xzvf "$GL" --overwrite  -C / 
   echo "Running ldconfig..."
   sudo ldconfig 
   
