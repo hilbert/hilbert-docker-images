@@ -21,7 +21,7 @@ if [ -z $ID ]; then
   #exit $?
 
   #   --name menu \
-  ID=$(docker create $RUNTERM --net=none ${X} -v /tmp/:/tmp/:rw "$IMG" $OPTS -- "menu.sh" "$@")
+  ID=$(docker create $RUNTERM --net=none -e ${X} -v /tmp/:/tmp/:rw "$IMG" $OPTS -- "menu.sh" "$@")
   #docker ps -a
 fi
 
