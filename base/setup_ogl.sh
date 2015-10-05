@@ -21,8 +21,9 @@ if [ -z "$GL" ]; then
 fi
 
 if [ -e "$GL" ]; then  
-  echo "Customizing using $GL..."
+  echo "Customizing using '$GL':"
   # --skip-old-files
+  ls -la "$GL"
   sudo tar xzvf "$GL" --overwrite  -C / 
   echo "Running ldconfig..."
   sudo ldconfig 
@@ -31,6 +32,8 @@ if [ -e "$GL" ]; then
 #    echo "Trying to run '/etc/X11/Xsession.d/98vboxadd-xclient'..."
 #    sudo sh /etc/X11/Xsession.d/98vboxadd-xclient || true
 #  fi
+else
+  echo "Sorry: no OGL file ['$GL'] found :("
 fi
 
 touch "$T"
