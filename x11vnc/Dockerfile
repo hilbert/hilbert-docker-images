@@ -19,4 +19,5 @@ COPY x11vnc.sh /usr/local/bin/
 
 # x11vnc -usepw -forever
 
-EXPOSE 5900
+EXPOSE 5900-5910
+
