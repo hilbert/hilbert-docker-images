@@ -51,8 +51,8 @@ case "$OSTYPE" in
      fi
      echo "We now enable anyone to connect to this X11..."
      xhost +
-     xcompmgr &
-     compton &
+#     xcompmgr &
+#     compton &
      # X="DISPLAY -e XAUTHORITY"
    else
 # Detect a Virtual Box VM!?
@@ -115,6 +115,7 @@ main 30
 
 while :
 do
+ mygetenv
  
  echo "Current X: [$X]"
  echo "_____ XID: [$XID]"
@@ -136,8 +137,6 @@ do
 
  APP="${ARGS[0]}" # get 1st  array element
  ARGS=("${ARGS[@]:1}") # remove it from array
-
- mygetenv
 
  echo "Processing command '$APP'..."
 
@@ -184,7 +183,8 @@ do
     
     217) # Kiosk
       if [ ! -z "$DISPLAY" ]; then
-        echo "Starting Kiosk-Mode WebBrowser ... " && $SELFDIR/run.sh 'kiosk' launch.sh /usr/src/kiosk/run.sh
+        echo "Starting Kiosk-Mode WebBrowser ... " && $SELFDIR/run.sh 'kiosk' launch.sh 
+	# /usr/src/kiosk/run.sh
 	#  /usr/lib/node_modules/kiosk/run.sh
 	# "rxvt-unicode -fn xft:terminus:pixelsize=12 -e bash" ## xterm?
       else
