@@ -149,7 +149,7 @@ do
         unset DISPLAY
         echo "Starting virtual X11: Xvfb... "
 	export X="$X -e XCMD=Xvfb "
-        XID=$($SELFDIR/sv.sh 'dummy' startXephyr.sh -screen 0 800x600x16)
+        XID=$($SELFDIR/sv.sh 'dummy' startXephyr.sh -screen 0 1024x768x16)
         echo "XID: $XID"
 
         while :
