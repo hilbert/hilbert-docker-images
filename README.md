@@ -108,6 +108,13 @@ Also the following may be related:
 Quick Fix is `sudo chmod a+rw /dev/pts/ptmx`
 
 
+### "operation not supported" error when trying to RUN something during docker image building
+
+According to http://stackoverflow.com/a/29546560 : if your machine had
+a kernel update but you didn't restart yet then docker freaks out like
+that.
+
+
 ## Docker shortcuts:
 ### Cleanup dangling images
 ```
