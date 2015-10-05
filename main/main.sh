@@ -184,7 +184,7 @@ do
     
     217) # Kiosk
       if [ ! -z "$DISPLAY" ]; then
-        echo "Starting Kiosk-Mode WebBrowser ... " && $SELFDIR/run.sh 'kiosk' launch.sh 
+        echo "Starting Kiosk-Mode WebBrowser ... " && $SELFDIR/run.sh 'kiosk' launch.sh /usr/src/kiosk/run.sh
 	#  /usr/lib/node_modules/kiosk/run.sh
 	# "rxvt-unicode -fn xft:terminus:pixelsize=12 -e bash" ## xterm?
       else
