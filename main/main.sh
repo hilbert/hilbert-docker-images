@@ -129,7 +129,7 @@ do
  if [ ${#ARGS[@]} -eq 0 ]; then
    $SELFDIR/menu.sh \
      "Your choice please?" 200 \
-     "A_Test_Application_A LIBGL_CUSTOMIZATION Alsa_Test GUI_Shell Bash_in_MainGlueApp X11_Shell X11Server Xephyr Iceweasel Q3 Skype Cups_Server Media_Players Surfer Test CHANGE_SETTINGS Kiosk X11vnc Xvfb QUIT"
+     "A_Test_Application_A LIBGL_CUSTOMIZATION Alsa_Test GUI_Shell Bash_in_MainGlueApp X11_Shell X11Server Xephyr Iceweasel Q3 Skype Cups_Server Media_Players Surfer Test CHANGE_SETTINGS Kiosk X11vnc Xvfb x11comp QUIT"
    ARGS=("$?")
  fi
  
@@ -141,6 +141,19 @@ do
  echo "Processing command '$APP'..."
 
  case "$APP" in
+ 
+    220) # x11comp
+      if [ ! -z "$DISPLAY" ]; then
+        echo "Starting x11comp service ... "
+        XCOMP=$($SELFDIR/sv.sh 'x11comp' x11comp.sh)
+        echo "X11COMP ID: $XCOMP"
+	sleep 3
+	docker logs $XCOMP 2>&1
+      else
+        echo "Please start X11 beforehand!"
+      fi
+    ;;
+
 
     219)
       if [ ! -z "$XID" ]; then
@@ -175,7 +188,9 @@ do
       if [ ! -z "$DISPLAY" ]; then
         echo "Starting x11vnc service ... " 
         XVNC=$($SELFDIR/sv.sh 'x11vnc' x11vnc.sh)
-        echo "XVNC: $XVNC"
+        echo "XVNC ID: $XVNC, LOG:"
+	sleep 3
+	docker logs $XVNC 2>&1
       else
         echo "Please start X11 beforehand!"
       fi
