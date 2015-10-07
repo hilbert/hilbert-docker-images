@@ -16,10 +16,10 @@ export LC_ALL="$LANG"
 
 xhost +
 
-xcompmgr -fF -I-.002 -O-.003 -D1 &
+# xcompmgr -fF -I-.002 -O-.003 -D1 &
 # xcompmgr &
 # TODO: choose a comp. manager...
-compton &
+# compton &
 ### TODO: VB GA detection!?
 
 
@@ -58,9 +58,12 @@ fi
 
 # [ -x "/etc/X11/Xsession.d/98vboxadd-xclient" ] && sudo sh /etc/X11/Xsession.d/98vboxadd-xclient
 
+# TODO: FIXME: run the following one or per each OGL X11-related app-container?
 if [ -e "/etc/X11/Xsession.d/98vboxadd-xclient" ]; then 
 	echo "Trying to run '/etc/X11/Xsession.d/98vboxadd-xclient'..."
 	sh /etc/X11/Xsession.d/98vboxadd-xclient 2>&1 &
 fi
 
+
+## TODO: run anything else but with a way to stop the execution: currently exiting openbox will close X11
 exec openbox

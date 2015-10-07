@@ -31,9 +31,9 @@ exec 6>&-
 # xhost +si:localuser:username
 
 			xhost +
-			xcompmgr -fF -I-.002 -O-.003 -D1 &
+#			xcompmgr -fF -I-.002 -O-.003 -D1 &
 			# TODO: choose a comp. manager...
-			compton &
+#			compton &
 			### TODO: VB GA detection!?
 			[ -e "/etc/X11/Xsession.d/98vboxadd-xclient" ] && sudo sh /etc/X11/Xsession.d/98vboxadd-xclient
 

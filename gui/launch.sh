@@ -40,15 +40,17 @@ else
 fi
 
 # xhost +
-xcompmgr -fF -I-.002 -O-.003 -D1 &
+#xcompmgr -fF -I-.002 -O-.003 -D1 &
 # xcompmgr &
 # TODO: choose a comp. manager...
-compton &
+#compton &
 
 # requires: qclosebutton (qt4-default)
 # xdotool
 
-[[ "$MOUSE_CURSOR" = "off" ]] && echo "Hiding the mouse..."
+## http://stackoverflow.com/a/696855
+[[ "${MOUSE_CURSOR}" = "off" ]] && (echo "Hiding the mouse..."; unclutter -idle 0; )
+
 
 qclosebutton "$SELFDIR/x_64x64.png" xfullscreen $CMD $ARGS 2>&1
 

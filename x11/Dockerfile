@@ -2,20 +2,21 @@ FROM malex984/dockapp:xeyes
 
 MAINTAINER Oleksandr Motsak <malex984@googlemail.com>
 
-RUN DEBIAN_FRONTEND=noninteractive apt-get -y update && \
-    DEBIAN_FRONTEND=noninteractive apt-get -q -y install \
+RUN update.sh && \
+    install.sh \
                      xserver-xorg xserver-xorg-video-all \
                      libx11-6 libxcomposite1 libxdamage1 libxext6 libxfixes3 \
 		     libxmu6 libxt6 libxv1 \
-		     xserver-xephyr xauth x11-xserver-utils xcompmgr compton openbox \
+		     xserver-xephyr xauth x11-xserver-utils \
 		     libgl1-mesa-dri libgl1-mesa-glx libglu1-mesa \
 		     libgles1-mesa libgles2-mesa libegl1-mesa-drivers \
 		     mesa-vdpau-drivers freeglut3 mesa-utils libglu1 libglapi-mesa \
 		     xterm xinit x11-apps libglapi-mesa libglu1 \
-                     xvfb \
+                     xvfb openbox \
     && \
-    DEBIAN_FRONTEND=noninteractive apt-get clean && \
-    rm -rf /var/lib/apt/lists/* /tmp/* /var/tmp/*
+    clean.sh
+
+## xcompmgr compton openbox 
 
     # libgl1 libgles2 ??
 
