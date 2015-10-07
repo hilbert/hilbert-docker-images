@@ -23,6 +23,7 @@ docker pull phusion/baseimage:0.9.16
 docker images -a
 docker ps -a
 
+df -h
 
 for d in $ARGS ;
 do
@@ -43,9 +44,11 @@ do
   # docker rm -f "$d"
   echo "Building '$d'..."
 
+  df -h
   make -C $PWD || docker build --pull=false --force-rm=true --rm=true -t "$U/$I:$d" "." || exit 1
   docker rmi $(docker images -q -f dangling=true)
   ls -al /dev/pts/ptmx
+  df -h
 #  chmod a+rwx /dev/pts/ptmx
   echo "Pushing..."
 #  docker push "$U/$I:$d"
@@ -58,4 +61,5 @@ docker images -a
 docker ps -a
 
 ls -al /dev/pts/ptmx
+df -h
 # sudo chmod a+rwx /dev/pts/ptmx
