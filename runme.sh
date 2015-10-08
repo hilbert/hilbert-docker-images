@@ -38,6 +38,9 @@ echo "e.g. via 'sudo addgroup `whoami` docker'... "
 #env
 echo
 
+ls -al /dev/ptmx
+ls -al /dev/pts/ptmx
+df -h
 
 XSOCK=/tmp/.X11-unix/
 if [ ! -z "$XAUTHORITY" ]; then 
@@ -232,6 +235,10 @@ echo
 echo "Leftover containers: "
 docker ps -a
 echo
+
+ls -al /dev/ptmx
+ls -al /dev/pts/ptmx
+df -h
 
 exit $RET
 

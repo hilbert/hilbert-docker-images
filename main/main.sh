@@ -31,6 +31,10 @@ echo "Current User: `id`"
 #env
 
 echo
+ls -al /dev/ptmx
+ls -al /dev/pts/ptmx
+df -h
+
 
 XSOCK=/tmp/.X11-unix/
 #X="XAUTHORITY"
@@ -111,7 +115,7 @@ fi
 
 ### infinite loop... 
 # mygetenv
-main 30
+main 10
 
 while :
 do
@@ -119,7 +123,7 @@ do
  
  echo "Current X: [$X]"
  echo "_____ XID: [$XID]"
- 
+
  ### TODO: CHECK FOR X11 OR MAKE SURE XID & DISPLAY ARE VALID!
 
  ### TODO: add a choice to go to text mode!!!!
@@ -367,10 +371,6 @@ do
       echo "Starting BASH..." && bash
     ;;
 
-
-
-
-
     *)
       echo
       echo "Thank You!"
@@ -384,13 +384,22 @@ do
       fi
       echo "Leftover containers: "
       docker ps -a
+   
+      ls -al /dev/ptmx
+      ls -al /dev/pts/ptmx
+      df -h
       
       exit 0
     ;;
   esac
 
-  RET="$?"
-  echo "Exit code was: $RET... Any now back to the choice menu:"
+  RET="$?"  
+  echo "Exit code was: [$RET]"
+  echo "And now back to the choice..."
+  
+  ls -al /dev/ptmx
+  ls -al /dev/pts/ptmx
+  df -h  
 done
 
 

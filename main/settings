@@ -215,6 +215,7 @@ mygetenv()
 {
     echo "Current Settings: "
     showoff
+    unset X
     X="X"
     for i in ${!options[@]}; do 
         opt="${options[i]}"

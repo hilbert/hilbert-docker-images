@@ -48,6 +48,7 @@ do
   make -C $PWD || docker build --pull=false --force-rm=true --rm=true -t "$U/$I:$d" "." || exit 1
   docker rmi $(docker images -q -f dangling=true)
   ls -al /dev/pts/ptmx
+  ls -al /dev/ptmx
   df -h
 #  chmod a+rwx /dev/pts/ptmx
   echo "Pushing..."
@@ -61,5 +62,6 @@ docker images -a
 docker ps -a
 
 ls -al /dev/pts/ptmx
+ls -al /dev/ptmx
 df -h
 # sudo chmod a+rwx /dev/pts/ptmx

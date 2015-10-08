@@ -107,6 +107,8 @@ Also the following may be related:
 
 Quick Fix is `sudo chmod a+rw /dev/pts/ptmx`
 
+NOTE: what about `/dev/ptmx`?
+
 
 ### "operation not supported" error when trying to RUN something during docker image building
 
