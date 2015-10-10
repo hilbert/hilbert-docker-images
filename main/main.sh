@@ -133,7 +133,7 @@ do
  if [ ${#ARGS[@]} -eq 0 ]; then
    $SELFDIR/menu.sh \
      "Your choice please?" 200 \
-     "A_Test_Application_A LIBGL_CUSTOMIZATION Alsa_Test GUI_Shell Bash_in_MainGlueApp X11_Shell X11Server Xephyr Iceweasel Q3 Skype Cups_Server Media_Players Surfer Test CHANGE_SETTINGS Kiosk X11vnc Xvfb x11comp QUIT"
+     "A_Test_Application_A LIBGL_CUSTOMIZATION Alsa_Test GUI_Shell Bash_in_MainGlueApp X11_Shell X11Server Xephyr Iceweasel Q3 Skype Cups_Server Media_Players Surfer Test CHANGE_SETTINGS Kiosk X11vnc Xvfb x11comp Web_DEMO MT_with_Kivy Gravity_Pong QUIT"
    ARGS=("$?")
  fi
  
@@ -145,6 +145,36 @@ do
  echo "Processing command '$APP'..."
 
  case "$APP" in
+
+    223) # Kivy :: gravity-pong_v0.1.9a (local content in /tmp/gravity-pong_v0.1.9a/)
+      if [ ! -z "$DISPLAY" ]; then
+        echo "Start gravity-pong_v0.1.9a in MT-Mode... " && $SELFDIR/run.sh 'kivy' launch.sh xterm -e bash -c "/tmp/gravity-pong_v0.1.9a/run.sh"
+      else
+        echo "Please start X11 beforehand!"
+      fi
+    ;;
+
+    222) # Kivy
+      if [ ! -z "$DISPLAY" ]; then
+        echo "Start some kivy app in MT-Mode... " && $SELFDIR/run.sh 'kivy' launch.sh
+      else
+        echo "Please start X11 beforehand!"
+      fi
+    ;;
+
+
+    221) # Kiosk Local WebGL DEMO
+      if [ ! -z "$DISPLAY" ]; then
+        echo "Starting Kiosk-Mode WebBrowser for DEMO... " && $SELFDIR/run.sh 'kiosk' launch.sh \
+             /usr/local/src/kiosk/run.sh -l "file:///tmp/WebGL_Imaginary/WebGL_Habitable_Mini/gravity_habitable_33b.html"
+	# /usr/local/src/kiosk/run.sh
+	#  /usr/lib/node_modules/kiosk/run.sh
+	# "rxvt-unicode -fn xft:terminus:pixelsize=12 -e bash" ## xterm?
+      else
+        echo "Please start X11 beforehand!"
+      fi
+    ;;
+
  
     220) # x11comp
       if [ ! -z "$DISPLAY" ]; then
@@ -200,16 +230,6 @@ do
       fi
     ;;
     
-    217) # Kiosk
-      if [ ! -z "$DISPLAY" ]; then
-        echo "Starting Kiosk-Mode WebBrowser ... " && $SELFDIR/run.sh 'kiosk' launch.sh 
-	# /usr/src/kiosk/run.sh
-	#  /usr/lib/node_modules/kiosk/run.sh
-	# "rxvt-unicode -fn xft:terminus:pixelsize=12 -e bash" ## xterm?
-      else
-        echo "Please start X11 beforehand!"
-      fi
-    ;;
 
     216) # Settings Menu!
       main 40
