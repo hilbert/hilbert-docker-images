@@ -129,7 +129,13 @@ myrunner () {
    ID=$(docker create -ti --privileged --net=host --ipc=host --pid=host \
         -p 631:631 -p 5900:5900 \
 	-v /etc/localtime:/etc/localtime:ro \
-        -v /dev:/dev:rw -v /tmp/:/tmp/:rw -v /run/udev:/run/udev -v /var/run/docker.sock:/var/run/docker.sock \
+        -v /dev:/dev:rw \
+	-v /tmp/:/tmp/:rw \
+	-v /run/udev:/run/udev \
+	-v /var/run/docker.sock:/var/run/docker.sock \
+	-v /sys/fs/cgroup:/sys/fs/cgroup:ro \
+        -v /run/systemd:/run/systemd \
+        -v /var/run/dbus/system_bus_socket:/var/run/dbus/system_bus_socket \
         -e $X \
 	"$@" )
  fi

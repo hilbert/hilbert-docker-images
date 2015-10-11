@@ -8,8 +8,8 @@ cd "$SELFDIR"
 ARGS="$@"
 
 if [ -z "$ARGS" ]; then # cups play surfer iceweasel skype q3 xbmc up
-    ARGS=" base appchoo dd main alsa xeyes x11 dummy x11vnc x11comp gui test play kiosk kivy skype surfer omd iceweasel cups q3 xbmc "
-    
+    ARGS=" base appchoo dd main alsa xeyes x11 dummy x11vnc x11comp gui test play kiosk kivy skype surfer q3 iceweasel xbmc "
+    # omd 
 ###  base dd main appa appchoo alsa xeyes gui test x11 dummy cups skype iceweasel play q3 xbmc surfer "
 # for dependency graph please check out depsgen.sh!
 # 

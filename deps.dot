@@ -8,7 +8,8 @@ digraph deps{ graph [label="an arrow means that its source is based on the arrow
 ":dummy" -> ":x11" ;
 ":gui" -> ":xeyes" ;
 ":iceweasel" -> ":gui" ;
-":kiosk" -> ":play" ;
+":kiosk" -> ":test" ;
+":kivy" -> ":test" ;
 ":main" -> ":dd" ;
 ":omd" -> ":base" ;
 ":play" -> ":gui" ;

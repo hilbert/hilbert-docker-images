@@ -37,7 +37,7 @@ docker run $R --name $C $I $O -- bash -c 'customize.sh' 1>&2
 docker diff $C
 
 ## Select necessary added/changed customizing files:
-A=`docker diff $C |grep -E '^A /(usr|etc|sbin)/' |grep -vE ' (/usr/src|/usr/lib/python[23]|/usr/share/doc|/usr/share/man|/etc/container_environment)' |sed 's@^[CA] @@g'|xargs`
+A=`docker diff $C |grep -E '^A /(usr|etc|sbin|var/lib|root|home)/' |grep -vE ' (/usr/src|/usr/lib/python[23]|/usr/share/doc|/usr/share/man|/etc/container_environment)' |sed 's@^[CA] @@g'|xargs`
 
 docker commit $C $D
 

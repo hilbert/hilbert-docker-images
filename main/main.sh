@@ -175,6 +175,17 @@ do
       fi
     ;;
 
+    217) # Kiosk Local Index
+      if [ ! -z "$DISPLAY" ]; then
+        echo "Starting Kiosk-Mode WebBrowser for DEMO... " && $SELFDIR/run.sh 'kiosk' launch.sh \
+             /usr/local/src/kiosk/run.sh
+	# /usr/local/src/kiosk/run.sh
+	#  /usr/lib/node_modules/kiosk/run.sh
+	# "rxvt-unicode -fn xft:terminus:pixelsize=12 -e bash" ## xterm?
+      else
+        echo "Please start X11 beforehand!"
+      fi
+    ;;
  
     220) # x11comp
       if [ ! -z "$DISPLAY" ]; then
@@ -374,7 +385,7 @@ do
 
     203)
       echo "Starting Alsa sound test on plughw:0,0/1... " 
-      $SELFDIR/run.sh "alsa" soundtest.sh
+      $SELFDIR/run.sh "alsa" bash -c "setup_ogl.sh;soundtest.sh"
     ;;
 
    204)
