@@ -2,7 +2,7 @@ mkfile_path := $(abspath $(lastword $(MAKEFILE_LIST)))
 COPYFILES   := 
 include ../Makefile.inc
 
-CMD=/usr/games/openarena
+CMD=bash -c "setup_ogl.sh;/usr/games/openarena +set cg_drawFPS 1 +set cg_drawStatus 1 +timedemo 1 +set demodone 'quit' +set demoloop1 'demo demo088-test1; set nextdemo vstr demodone' +vstr demoloop1"
 
 RUNTERM=-it -a stdin -a stdout -a stderr --ipc=host --privileged --net=host --pid=host
 OPTS=--skip-startup-files --no-kill-all-on-exit --quiet --skip-runit
