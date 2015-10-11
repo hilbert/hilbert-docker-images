@@ -14,7 +14,7 @@ if [ -z "$ARGS" ]; then
 fi
 
 if [ -z "$ARGS" ]; then 
-  ARGS="vb nv"
+  ARGS="alsa nv vb"
 fi    
 
 

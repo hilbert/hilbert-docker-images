@@ -52,6 +52,27 @@ fi
 [[ "${MOUSE_CURSOR}" = "off" ]] && (echo "Hiding the mouse..."; unclutter -idle 0; )
 
 
+
+if [ ! -z "${ALSA_CARD}" ]; then 
+
+## if [ ! -f $HOME/.asoundrc ]; then 
+
+CARD="${ALSA_CARD}"
+
+HOME=${HOME:-/root}
+cat <<EOF > $HOME/.asoundrc
+pcm.!default {
+    type hw
+    card $CARD
+}
+ctl.!default {
+    type hw
+    card $CARD
+}
+EOF
+## fi
+fi
+
 qclosebutton "$SELFDIR/x_64x64.png" xfullscreen $CMD $ARGS 2>&1
 
 exit $?
