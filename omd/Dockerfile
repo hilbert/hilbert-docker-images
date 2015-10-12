@@ -38,7 +38,6 @@ RUN a2enconf docker-servername
 ## RUN sed -i 's/^SYSLOGNG_OPTS.*/SYSLOGNG_OPTS="--no-caps --default-modules=affile,afprog,afsocket,afuser,basicfuncs,csvparser,dbparser,syslogformat"/' /etc/default/syslog-ng
 
 
-
 #####################################################################################
 # Setup the initial OMD site 'default'
 #
@@ -54,9 +53,6 @@ RUN a2enconf docker-servername
 # Set up a default site
 RUN omd create default || true
 
-# Add the new user to crontab, to avoid error merging crontabs
-RUN adduser default crontab 
-
 # We don't want TMPFS as it requires higher privileges
 RUN omd config default set TMPFS off
 ### RUN sed "s/CONFIG_TMPFS='on'/CONFIG_TMPFS='off'/" -i /omd/sites/default/etc/omd/site.conf 
@@ -64,16 +60,18 @@ RUN omd config default set TMPFS off
 # Accept connections on any IP address, since we get a random one
 RUN omd config default set APACHE_TCP_ADDR 0.0.0.0
 
+# Add the new user to crontab, to avoid error merging crontabs
+RUN adduser default crontab 
+
 #####################################################################################
 # Initial configuration of the site and image
 
 # Add localhost as node monitored
-ADD hosts.mk /omd/sites/default/etc/check_mk/conf.d/wato/hosts.mk
+#?# ADD hosts.mk /omd/sites/default/etc/check_mk/conf.d/wato/hosts.mk
 
 # First OMD service discovery and compile
-RUN /etc/init.d/xinetd start && su - default -c "cmk -II"
-RUN su - default -c "cmk -R"
-
+# RUN /etc/init.d/xinetd start && su - default -c "cmk -II"
+# RUN su - default -c "cmk -R"
 ####su - default -c 'cmd -u -II && cmk -R'
 
 # Fix some permission issues (not sure why it happens)
