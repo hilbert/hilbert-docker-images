@@ -11,6 +11,7 @@ RUN DEBIAN_FRONTEND=noninteractive apt-key adv --keyserver keyserver.ubuntu.com 
        gstreamer1.0-plugins-ugly gstreamer1.0-tools gstreamer1.0-vaapi gstreamer1.0-alsa \
        mtdev-tools libmtdev-dev libmtdev1 \
        python-kivy python-numpy \
+       dbus-x11 dbus libdbus-glib-1-2 libdbusmenu-glib4  \
     && \
     clean.sh
 
