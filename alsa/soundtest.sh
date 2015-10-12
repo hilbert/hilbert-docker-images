@@ -12,7 +12,7 @@ if [ -e "$GL" ]; then
   echo "Customizing using '$GL':"
   # --skip-old-files
   ls -la "$GL"
-  tar xzvf "$GL" --overwrite -C /tmp/ 'root/'
+  tar xzvf "$GL" --overwrite -C /tmp/ 'root/.asoundrc'
   mv /tmp/root/.asoundrc $HOME/
 fi
 
