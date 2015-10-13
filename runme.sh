@@ -214,7 +214,7 @@ if [ $# -gt 0 ]; then
 fi
 
 if [ ! -z "$XXX" ]; then
-  docker pull "$U/$I:x11"
+  docker pull "$U/$I:dummy"
   ARGS=("${ARGS[@]}" "$XXX") # ARGS+=($1)
 fi
 
