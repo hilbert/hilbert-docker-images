@@ -90,7 +90,7 @@ X="$X \
 # --device /dev/nvidia0:/dev/nvidia0 --device /dev/nvidiactl:/dev/nvidiactl --device /dev/nvidia-uvm:/dev/nvidia-uvm \
 
 # options for running terminal apps via docker run:
-RUNTERM="-it -a stdin -a stdout -a stderr --privileged --net=host --ipc=host --pid=host -P"
+RUNTERM="-a stdout -a stderr --privileged --net=host --ipc=host --pid=host -P"
 OPTS="--skip-startup-files --no-kill-all-on-exit --quiet --skip-runit"
 
 #      --lxc-conf='lxc.cgroup.devices.allow=c 195:* rwm' \
