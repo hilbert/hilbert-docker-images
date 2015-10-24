@@ -18,5 +18,5 @@ check: $(TS)
 	test -n "${DISPLAY}"
 	test -z "${DISPLAY}" || xhost +
 	docker ps -a
-	docker run --rm -e DISPLAY ${RUNTERM} $(IMG) ${OPTS} -- ${CMD} ${ARGS}
+	docker run --rm -e MENU_TRY="gui" -e DISPLAY ${RUNTERM} $(IMG) ${OPTS} -- ${CMD} ${ARGS}
 

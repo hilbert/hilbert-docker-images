@@ -128,7 +128,9 @@ do
  
  if [ ${#ARGS[@]} -eq 0 ]; then
    $SELFDIR/menu.sh \
-     "Your choice please?" 300 " Surfer GPU_Test Iceweasel Kiosk_index Kiosk_at_localhost Kivy Kivy_Deflectouch Skype Media_Players Q3 "
+     "Your choice please?" \
+     99 \
+     "Surfer GPU_Test Mozilla_Firefox Google_Chrome IMG_Kiosk Kivy Kivy_Deflectouch Skype Media_Players Q3"
    ARGS=("$?")
  fi
  
@@ -140,7 +142,7 @@ do
  echo "Processing command '$APP'..."
 
  case "$APP" in
-    300) # Surfer
+    100) # Surfer
       if [ ! -z "$DISPLAY" ]; then
         echo "Starting GUI shell for surfer... Please build surfer yourself... " 
 	$SELFDIR/run.sh "surfer" launch.sh /opt/SURFER/SURFER
@@ -152,7 +154,7 @@ do
       fi
     ;;
     
-    301) # GPU Test 
+    101) # GPU Test 
       if [ ! -z "$DISPLAY" ]; then
         echo "Starting GUI shell for test... Please build test yourself... " && $SELFDIR/run.sh 'test' launch.sh
 	# "rxvt-unicode -fn xft:terminus:pixelsize=12 -e bash" ## xterm?
@@ -161,19 +163,29 @@ do
       fi
     ;;
     
-    302) # FireFox
+    102) # FireFox
       if [ ! -z "$DISPLAY" ]; then
         echo "Starting iceweasel/firefox?... "
-	$SELFDIR/run.sh "iceweasel" firefox
+	$SELFDIR/run.sh "iceweasel" launch.sh browser.sh
       else
         echo "Please start X11 beforehand!"
       fi
     ;;
 
-    303) # Kiosk with its index.html
+    103) # Google Chrome
       if [ ! -z "$DISPLAY" ]; then
-        echo "Starting Kiosk-Mode WebBrowser for DEMO... " && $SELFDIR/run.sh 'kiosk' launch.sh \
-             /usr/local/src/kiosk/run.sh
+        echo "Starting Google Chrome.. " 
+	$SELFDIR/run.sh 'chrome' launch.sh browser.sh
+	# "rxvt-unicode -fn xft:terminus:pixelsize=12 -e bash" ## xterm?
+      else
+        echo "Please start X11 beforehand!"
+      fi
+    ;;
+    
+    104) # Kiosk using http://localhost:8080    
+      if [ ! -z "$DISPLAY" ]; then
+        echo "Starting Kiosk-Mode WebBrowser for DEMO... " 
+	$SELFDIR/run.sh 'kiosk' launch.sh browser.sh
 	# /usr/local/src/kiosk/run.sh
 	#  /usr/lib/node_modules/kiosk/run.sh
 	# "rxvt-unicode -fn xft:terminus:pixelsize=12 -e bash" ## xterm?
@@ -182,19 +194,7 @@ do
       fi
     ;;
     
-    304) # Kiosk using http://localhost:8080    
-      if [ ! -z "$DISPLAY" ]; then
-        echo "Starting Kiosk-Mode WebBrowser for DEMO... " && $SELFDIR/run.sh 'kiosk' launch.sh \
-             /usr/local/src/kiosk/run.sh -l "http://localhost:8080/"
-	# /usr/local/src/kiosk/run.sh
-	#  /usr/lib/node_modules/kiosk/run.sh
-	# "rxvt-unicode -fn xft:terminus:pixelsize=12 -e bash" ## xterm?
-      else
-        echo "Please start X11 beforehand!"
-      fi
-    ;;
-    
-    305) # Kivy
+    105) # Kivy
       if [ ! -z "$DISPLAY" ]; then
         echo "Start some kivy app in MT-Mode... " && $SELFDIR/run.sh 'kivy' launch.sh
       else
@@ -202,15 +202,16 @@ do
       fi
     ;;
 
-    306) # Kivy with Deflectouch
+    106) # Kivy with Deflectouch
       if [ ! -z "$DISPLAY" ]; then
-        echo "Start gravity-pong_v0.1.9a in MT-Mode... " && $SELFDIR/run.sh 'kivy' bash -c 'setup_ogl.sh && cd /usr/local/src/Deflectouch/ && python main.py'
+        echo "Start Kivy with Deflectouch in MT-Mode... " && $SELFDIR/run.sh "kivy" launch.sh /usr/local/src/Deflectouch/run.sh
+	## bash -c "'setup_ogl.sh;cd /usr/local/src/Deflectouch/;python main.py'"
       else
         echo "Please start X11 beforehand!"
       fi
     ;;
 
-    307) # Skype
+    107) # Skype
       if [ ! -z "$DISPLAY" ]; then
         echo "Starting skype... " && $SELFDIR/run.sh "skype" skype.sh
       else
@@ -218,7 +219,7 @@ do
       fi
     ;;
 
-    308) Media Players...
+    108) Media Players...
       if [ ! -z "$DISPLAY" ]; then
         echo "Starting GUI shell... Please run cmus/vlc/mplaye/xine yourself... " && $SELFDIR/run.sh "play" launch.sh
         # "rxvt-unicode -fn xft:terminus:pixelsize=12 -e bash"
@@ -227,8 +228,7 @@ do
       fi
     ;;
 
-
-    309) # Q3: openarena
+    109) # Q3: openarena
       if [ ! -z "$DISPLAY" ]; then
         echo "Starting Q3... "
  	$SELFDIR/run.sh "q3" bash -c "setup_ogl.sh;/usr/games/openarena"

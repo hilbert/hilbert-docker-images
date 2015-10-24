@@ -132,8 +132,8 @@ do
  
  if [ ${#ARGS[@]} -eq 0 ]; then
    $SELFDIR/menu.sh \
-     "Your choice please?" 200 \
-     "A_Test_Application_A LIBGL_CUSTOMIZATION Alsa_Test GUI_Shell Bash_in_MainGlueApp X11_Shell X11Server Xephyr Iceweasel Q3 Skype Cups_Server Media_Players Surfer Test CHANGE_SETTINGS Kiosk X11vnc Xvfb x11comp Web_DEMO MT_with_Kivy Gravity_Pong QUIT"
+     "Your choice please?" 199 \
+     "DEMO A_Test_Application_A LIBGL_CUSTOMIZATION Alsa_Test GUI_Shell Bash_in_MainGlueApp X11_Shell X11Server Xephyr Cups_Server CHANGE_SETTINGS X11vnc Xvfb x11comp"
    ARGS=("$?")
  fi
  
@@ -145,193 +145,53 @@ do
  echo "Processing command '$APP'..."
 
  case "$APP" in
-
-    223) # Kivy :: gravity-pong_v0.1.9a (local content in /tmp/gravity-pong_v0.1.9a/)
+################################################
+    200) # FF -> DEMO
       if [ ! -z "$DISPLAY" ]; then
-        echo "Start gravity-pong_v0.1.9a in MT-Mode... " && $SELFDIR/run.sh 'kivy' launch.sh xterm -e bash -c "/tmp/gravity-pong_v0.1.9a/run.sh"
+        echo "Starting DEMO!... "
+	$SELFDIR/run.sh "demo" demo.sh
       else
         echo "Please start X11 beforehand!"
       fi
     ;;
 
-    222) # Kivy
+    201)
+      	echo "Starting AppA1... "
+	$SELFDIR/A.sh "AAAAAAAAAAAAAA!"
+    ;;
+
+    202)
+      echo "Generating /tmp/OGL.tgz with the use of malex984/dockapp:dummy... "
+      $SELFDIR/generate_ogl.sh "malex984/dockapp:dummy" /tmp/OGL.tgz
+      
+    ;;
+
+    203)
+      echo "Starting Alsa sound test on [e.g. plughw:0,0/1]... " 
+      $SELFDIR/run.sh "alsa" bash -c "setup_ogl.sh;soundtest.sh"
+    ;;
+
+   204)
       if [ ! -z "$DISPLAY" ]; then
-        echo "Start some kivy app in MT-Mode... " && $SELFDIR/run.sh 'kivy' launch.sh
-      else
-        echo "Please start X11 beforehand!"
-      fi
-    ;;
-
-
-    221) # Kiosk Local WebGL DEMO
-      if [ ! -z "$DISPLAY" ]; then
-        echo "Starting Kiosk-Mode WebBrowser for DEMO... " && $SELFDIR/run.sh 'kiosk' launch.sh \
-             /usr/local/src/kiosk/run.sh -l "file:///tmp/WebGL_Imaginary/WebGL_Habitable_Mini/gravity_habitable_33b.html"
-	# /usr/local/src/kiosk/run.sh
-	#  /usr/lib/node_modules/kiosk/run.sh
-	# "rxvt-unicode -fn xft:terminus:pixelsize=12 -e bash" ## xterm?
-      else
-        echo "Please start X11 beforehand!"
-      fi
-    ;;
-
-    217) # Kiosk Local Index
-      if [ ! -z "$DISPLAY" ]; then
-        echo "Starting Kiosk-Mode WebBrowser for DEMO... " && $SELFDIR/run.sh 'kiosk' launch.sh \
-             /usr/local/src/kiosk/run.sh
-	# /usr/local/src/kiosk/run.sh
-	#  /usr/lib/node_modules/kiosk/run.sh
-	# "rxvt-unicode -fn xft:terminus:pixelsize=12 -e bash" ## xterm?
-      else
-        echo "Please start X11 beforehand!"
-      fi
-    ;;
- 
-    220) # x11comp
-      if [ ! -z "$DISPLAY" ]; then
-        echo "Starting x11comp service ... "
-        XCOMP=$($SELFDIR/sv.sh 'x11comp' x11comp.sh)
-        echo "X11COMP ID: $XCOMP"
-	sleep 3
-	docker logs $XCOMP 2>&1
-      else
-        echo "Please start X11 beforehand!"
-      fi
-    ;;
-
-
-    219)
-      if [ ! -z "$XID" ]; then
-        echo "There seems to be our X11 container running already..."
-      else
-        unset DISPLAY
-        echo "Starting virtual X11: Xvfb... "
-	export X="$X -e XCMD=Xvfb "
-        XID=$($SELFDIR/sv.sh 'dummy' startXephyr.sh -screen 0 1024x768x16)
-        echo "XID: $XID"
-
-        while :
-        do
-          sleep 3
-	  docker logs $XID 2>&1 | grep DISPLAY
-          export DISPLAY=$(docker logs $XID 2>&1 | grep DISPLAY_NUM | tail -n 1 | sed s@DISPLAY_NUM@@g)
-	  if [ -z "$DISPLAY" ]; then
-	  if [ -r /tmp/x.id ]; then
-  	    export DISPLAY=$(cat /tmp/x.id)
-          fi	    
-	  fi
-        ### XAUTH?
-	  if [ ! -z "$DISPLAY" ]; then
-	    break;
-	  fi  
-	done 
-     fi
-    ;;
-
-
-    218) # x11vnc
-      if [ ! -z "$DISPLAY" ]; then
-        echo "Starting x11vnc service ... " 
-        XVNC=$($SELFDIR/sv.sh 'x11vnc' x11vnc.sh)
-        echo "XVNC ID: $XVNC, LOG:"
-	sleep 3
-	docker logs $XVNC 2>&1
-      else
-        echo "Please start X11 beforehand!"
-      fi
-    ;;
-    
-
-    216) # Settings Menu!
-      main 40
-    ;;
-
-    215)
-      if [ ! -z "$DISPLAY" ]; then
-        echo "Starting GUI shell for test... Please build test yourself... " && $SELFDIR/run.sh 'test' launch.sh
-	# "rxvt-unicode -fn xft:terminus:pixelsize=12 -e bash" ## xterm?
-      else
-        echo "Please start X11 beforehand!"
-      fi
-    ;;
-    
-    214)
-      if [ ! -z "$DISPLAY" ]; then
-        echo "Starting GUI shell for surfer... Please build surfer yourself... " 
-	$SELFDIR/run.sh "surfer" launch.sh 
-	# /opt/SURFER/SURFER
-#	$SELFDIR/run.sh "$PREFIX:appchoo" bash
+        echo "Starting gui shell (with X11-apps)... "
+	$SELFDIR/run.sh "gui" launch.sh
         # "rxvt-unicode -fn xft:terminus:pixelsize=12 -e bash"
       else
         echo "Please start X11 beforehand!"
       fi
     ;;
 
-    213)
+    205)
+      echo "Starting BASH..." && bash
+    ;;
+    
+    206)
       if [ ! -z "$DISPLAY" ]; then
-        echo "Starting GUI shell... Please run cmus/vlc/mplaye/xine yourself... " && $SELFDIR/run.sh "play" launch.sh
+        echo "starting X11-SHELL for testing... " 
+   	$SELFDIR/run.sh "xeyes" xterm || $SELFDIR/run.sh "xeyes" bash
         # "rxvt-unicode -fn xft:terminus:pixelsize=12 -e bash"
       else
         echo "Please start X11 beforehand!"
-      fi
-    ;;
-
-    212)
-      echo "Starting cups... " && $SELFDIR/run.sh "cups" bash -c 'config_cups.sh && bash'
-#start_cups.sh
-    ;;
-
-    211)
-      if [ ! -z "$DISPLAY" ]; then
-        echo "Starting skype... " && $SELFDIR/run.sh "skype" skype.sh
-      else
-        echo "Please start X11 beforehand!"
-      fi
-    ;;
-
-    210)
-      if [ ! -z "$DISPLAY" ]; then
-        echo "Starting Q3... "
- 	$SELFDIR/run.sh "q3" bash -c "setup_ogl.sh;/usr/games/openarena"
-	#/usr/games/openarena
-      else
-        echo "Please start X11 beforehand!"
-      fi
-    ;;
-
-    209)
-      if [ ! -z "$DISPLAY" ]; then
-        echo "Starting iceweasel/firefox?... "
-	$SELFDIR/run.sh "iceweasel" firefox
-      else
-        echo "Please start X11 beforehand!"
-      fi
-    ;;
-
-    208)
-      if [ ! -z "$XID" ]; then
-        echo "There seems to be our X11 container running already..."
-      else
-        echo "Starting X11: Xephyr using $DISPLAY... "
-	export X="$X -e XCMD=Xephyr "
-        XID=$($SELFDIR/sv.sh 'dummy' startXephyr.sh)
-        echo "XID: $XID"
-	
-        while :
-        do
-          sleep 3
-	  docker logs $XID 2>&1 | grep DISPLAY
-          export DISPLAY=$(docker logs $XID 2>&1 | grep DISPLAY_NUM | tail -n 1 | sed s@DISPLAY_NUM@@g)
-	  if [ -z "$DISPLAY" ]; then
-	  if [ -r /tmp/x.id ]; then  
-  	    export DISPLAY=$(cat /tmp/x.id)
-          fi	    
-	  fi
-        ### XAUTH?
-	  if [ ! -z "$DISPLAY" ]; then
-	    break;
-	  fi  
-	done 
       fi
     ;;
 
@@ -363,45 +223,95 @@ do
      fi
     ;;
 
-    206)
+    208)
+      if [ ! -z "$XID" ]; then
+        echo "There seems to be our X11 container running already..."
+      else
+        echo "Starting X11: Xephyr using $DISPLAY... "
+	export X="$X -e XCMD=Xephyr "
+        XID=$($SELFDIR/sv.sh 'dummy' startXephyr.sh)
+        echo "XID: $XID"
+	
+        while :
+        do
+          sleep 3
+	  docker logs $XID 2>&1 | grep DISPLAY
+          export DISPLAY=$(docker logs $XID 2>&1 | grep DISPLAY_NUM | tail -n 1 | sed s@DISPLAY_NUM@@g)
+	  if [ -z "$DISPLAY" ]; then
+	  if [ -r /tmp/x.id ]; then  
+  	    export DISPLAY=$(cat /tmp/x.id)
+          fi	    
+	  fi
+        ### XAUTH?
+	  if [ ! -z "$DISPLAY" ]; then
+	    break;
+	  fi  
+	done 
+      fi
+    ;;
+
+
+    209)
+      echo "Starting cups... " && $SELFDIR/run.sh "cups" bash -c 'config_cups.sh && bash'
+#start_cups.sh
+    ;;
+
+    210) # Settings Menu!
+      main 40
+    ;;
+
+    211) # x11vnc
       if [ ! -z "$DISPLAY" ]; then
-        echo "starting X11-SHELL for testing... " 
-   	$SELFDIR/run.sh "xeyes" xterm || $SELFDIR/run.sh "xeyes" bash
-        # "rxvt-unicode -fn xft:terminus:pixelsize=12 -e bash"
+        echo "Starting x11vnc service ... " 
+        XVNC=$($SELFDIR/sv.sh 'x11vnc' x11vnc.sh)
+        echo "XVNC ID: $XVNC, LOG:"
+	sleep 3
+	docker logs $XVNC 2>&1
       else
         echo "Please start X11 beforehand!"
       fi
     ;;
 
-    201)
-      	echo "Starting AppA1... "
-	$SELFDIR/A.sh "AAAAAAAAAAAAAA!"
+    212)
+      if [ ! -z "$XID" ]; then
+        echo "There seems to be our X11 container running already..."
+      else
+        unset DISPLAY
+        echo "Starting virtual X11: Xvfb... "
+	export X="$X -e XCMD=Xvfb "
+        XID=$($SELFDIR/sv.sh 'dummy' startXephyr.sh -screen 0 1024x768x16)
+        echo "XID: $XID"
+
+        while :
+        do
+          sleep 3
+	  docker logs $XID 2>&1 | grep DISPLAY
+          export DISPLAY=$(docker logs $XID 2>&1 | grep DISPLAY_NUM | tail -n 1 | sed s@DISPLAY_NUM@@g)
+	  if [ -z "$DISPLAY" ]; then
+	  if [ -r /tmp/x.id ]; then
+  	    export DISPLAY=$(cat /tmp/x.id)
+          fi	    
+	  fi
+        ### XAUTH?
+	  if [ ! -z "$DISPLAY" ]; then
+	    break;
+	  fi  
+	done 
+     fi
     ;;
 
-    202)
-      echo "Generating /tmp/OGL.tgz with the use of malex984/dockapp:dummy... "
-      $SELFDIR/generate_ogl.sh "malex984/dockapp:dummy" /tmp/OGL.tgz
-      
-    ;;
-
-    203)
-      echo "Starting Alsa sound test on plughw:0,0/1... " 
-      $SELFDIR/run.sh "alsa" bash -c "setup_ogl.sh;soundtest.sh"
-    ;;
-
-   204)
+    213) # x11comp
       if [ ! -z "$DISPLAY" ]; then
-        echo "Starting gui shell (with X11-apps)... "
-	$SELFDIR/run.sh "gui" launch.sh
-        # "rxvt-unicode -fn xft:terminus:pixelsize=12 -e bash"
+        echo "Starting x11comp service ... "
+        XCOMP=$($SELFDIR/sv.sh 'x11comp' x11comp.sh)
+        echo "X11COMP ID: $XCOMP"
+	sleep 3
+	docker logs $XCOMP 2>&1
       else
         echo "Please start X11 beforehand!"
       fi
     ;;
-
-    205)
-      echo "Starting BASH..." && bash
-    ;;
+###########################################
 
     *)
       echo

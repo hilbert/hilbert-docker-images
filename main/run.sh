@@ -71,6 +71,7 @@ X="$X \
  -v /etc/localtime:/etc/localtime:ro \
  -v /dev:/dev:rw -v /tmp/:/tmp/:rw -v /run/udev:/run/udev \
  -p 631:631 -p 5900:5900 \
+ -v /var/run/docker.sock:/var/run/docker.sock \
  -v /sys/fs/cgroup:/sys/fs/cgroup:ro \
  -v /run/systemd:/run/systemd \
  -v /var/run/dbus/system_bus_socket:/var/run/dbus/system_bus_socket \
