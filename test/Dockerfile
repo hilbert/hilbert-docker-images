@@ -9,15 +9,13 @@ ENV LIBGL_DEBUG=verbose
 # ENV QT_X11_NO_MITSHM 1
 
 
-RUN DEBIAN_FRONTEND=noninteractive apt-get -y -q update && \
-    DEBIAN_FRONTEND=noninteractive apt-get -q -y install \
+RUN update.sh && \
+    install.sh \
           --no-install-recommends \
-          libgles1-mesa libgles2-mesa libegl1-mesa-drivers  mesa-vdpau-drivers \
+          libgles1-mesa libgles2-mesa libegl1-mesa-drivers mesa-vdpau-drivers \
 	  freeglut3 nux-tools mesa-utils pciutils \
-	  glmark2 libxv1 g3dviewer && \
-    DEBIAN_FRONTEND=noninteractive apt-get clean && \
-    rm -rf /var/lib/apt/lists/* /tmp/* /var/tmp/*
-
+	  glmark2 libxv1 g3dviewer libcanberra-gtk3-module && \
+    clean.sh
 
 # build-essential
 #  xkeyboard-config xkbcomp

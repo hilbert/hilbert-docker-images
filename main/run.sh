@@ -2,6 +2,7 @@
 
 # USER_UID=$(id -u)
 APP="$1"
+
 shift
 ARGS="$@"
 
@@ -46,7 +47,7 @@ fi
 APP="c_$APP"
 
   echo
-  echo "Starting '$IMG' ('$ARGS') under the name '$APP'"
+  echo "Starting '$IMG' with [$ARGS] under the name '$APP'"
 
 
 #XSOCK=/tmp/.X11-unix/
