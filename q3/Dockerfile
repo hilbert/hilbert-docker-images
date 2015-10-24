@@ -2,8 +2,10 @@ FROM malex984/dockapp:xeyes
 
 MAINTAINER Oleksandr Motsak <malex984@googlemail.com>
 
-RUN DEBIAN_FRONTEND=noninteractive apt-get -y update && \
-    DEBIAN_FRONTEND=noninteractive apt-get -q -y install \
-                    openarena && \
-    DEBIAN_FRONTEND=noninteractive apt-get clean && \
-    rm -rf /var/lib/apt/lists/* /tmp/* /var/tmp/*
+RUN update.sh && install.sh openarena && clean.sh
+
+# RUN update.sh && install.sh x11-xserver-utils && clean.sh
+
+COPY q3.sh bench.sh /usr/local/bin/
+
+

@@ -231,8 +231,7 @@ do
     109) # Q3: openarena
       if [ ! -z "$DISPLAY" ]; then
         echo "Starting Q3... "
- 	$SELFDIR/run.sh "q3" bash -c "setup_ogl.sh;/usr/games/openarena"
-	#/usr/games/openarena
+ 	$SELFDIR/run.sh "q3" q3.sh
       else
         echo "Please start X11 beforehand!"
       fi
