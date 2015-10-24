@@ -18,5 +18,9 @@ check: $(TS)
 	test -n "${DISPLAY}"
 	test -z "${DISPLAY}" || xhost +
 	docker ps -a
+	ls -al /dev/pts/ptmx 
+	: chmod a+rw /dev/pts/ptmx
 	docker run --rm -e MENU_TRY="gui" -e DISPLAY ${RUNTERM} $(IMG) ${OPTS} -- ${CMD} ${ARGS}
+	ls -al /dev/pts/ptmx 
+	: chmod a+rw /dev/pts/ptmx
 
