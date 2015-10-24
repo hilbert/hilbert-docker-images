@@ -29,7 +29,7 @@ DF     :=${mkfile_dir}/Dockerfile
 ### Parsing parts of Dockerfile:
 BASE   :=$(shell $(GREP) -m 1 -iE '^ *FROM' ${DF} | $(SED) -e 's@^ *FROM  *@@g' -e 's@[:/ ]@_@g')
 BASETEG:=$(shell $(GREP) -m 1 -iE '^ *FROM' ${DF} | $(SED) -e 's@^ *FROM *@@g' -e 's@${REPO}:@@g' -e 's@[:/ ]@_@g')
-COPYFILES2 :=$(shell $(GREP) -iE '^ *COPY ' ${DF} | $(SED) -e 's@^ *COPY  *@@g' -e 's@ /.*@@g' | xargs)
+COPYFILES2 :=$(shell $(GREP) -iE '^ *COPY ' ${DF} | $(SED) -e 's@^ *COPY  *@@g' -e 's@ /.*@@g' | xargs -r)
 
 # Absolute path to necessary local files
 ACOPYFILES :=$(patsubst %,${mkfile_dir}/%,${COPYFILES})
@@ -39,7 +39,14 @@ TS := ${top_dir}/${U}_${I}_${APP}.timestamp
 SS := ${top_dir}/${BASE}.timestamp
 
 
-all: debug build
+all: show debug build show
+
+show:
+	$(ECHO)
+	$(DOCKER) images
+	$(DOCKER) ps -a
+	ls -al /dev/pts/ptmx 
+	: chmod a+rw /dev/pts/ptmx
 
 debug:
 	$(ECHO)
@@ -53,7 +60,14 @@ debug:
 	$(ECHO) "Deps              : ${ACOPYFILES}"
 	$(ECHO) "Auto Deps         : ${ACOPYFILES2}"
 
-build: ${TS}
+
+DOCKER_BUILD_OPTS=--pull=false --force-rm=true --rm=true
+# --no-cache=true
+
+# ${TS}
+build: ${DF} ${SS} ${ACOPYFILES} ${ACOPYFILES2}
+	cd ${mkfile_dir} && $(DOCKER) build ${DOCKER_BUILD_OPTS} -t ${IMG} ${mkfile_dir}
+	$(MAKE) -C ${mkfile_dir}/ ${TS}
 
 ${SS}:
 	cd ${top_dir}/${BASETEG}/ && $(MAKE) -C ${top_dir}/${BASETEG}/
@@ -62,15 +76,11 @@ ${top_dir}/phusion_baseimage_0.9.16.timestamp:
 	$(DOCKER) pull 'phusion/baseimage:0.9.16'
 	$(DOCKER) images | $(GREP) -E 'phusion[\/]baseimage *0[\.]9[\.]16 ' > $@
 
+${TS}:
+	$(DOCKER) images | $(GREP) -E "^${U}/${I}  *${APP}  *" > $@
+#	${TS}
 
-DOCKER_BUILD_OPTS=--pull=false --force-rm=true --rm=true
-# --no-cache=true
-
-${TS}: ${DF} ${SS} ${ACOPYFILES} ${ACOPYFILES2}
-	cd ${mkfile_dir} && $(DOCKER) build ${DOCKER_BUILD_OPTS} -t ${IMG} ${mkfile_dir}
-	$(DOCKER) images | $(GREP) "${U}/${I} " | $(GREP) ${APP} > $@
-
-rebuild: ${DF} ${SS} ${ACOPYFILES} ${ACOPYFILES2} ${mkfile_dir}/Makefile $(abspath $(lastword $(MAKEFILE_LIST))) 
+rebuild: ${DF} ${SS} ${ACOPYFILES} ${ACOPYFILES2} ${mkfile_dir}/Makefile $(abspath $(lastword $(MAKEFILE_LIST)))
 	$(RM) -f ${TS}
 	$(MAKE) -C ${mkfile_dir}/ ${TS}
 
@@ -82,12 +92,19 @@ push: ${TS}
 # ${SS}
 pull:
 	$(DOCKER) pull "${IMG}"
-	$(DOCKER) images | $(GREP) "${U}/${I} " | $(GREP) ${APP} > ${TS}
+	$(MAKE) -C ${mkfile_dir}/ ${TS}
+	
+fix:
+	$(MAKE) -C ${mkfile_dir}/ ${TS}
+
 
 cleanup:
 	(cd ${make_dir}; $(MAKE) -i -k -C ${make_dir} clean || true; cd - )
-	$(RM) -f ${TS}
 	$(DOCKER) rmi "${IMG}"
+	$(RM) -f ${TS}
+
+prune:
+	$(DOCKER) images -f "dangling=true" -q | xargs -r $(DOCKER) rmi
 	
 #force_look:
 #	true
