@@ -5,10 +5,11 @@ digraph deps{ graph [label="an arrow means that its source is based on the arrow
 ":base" -> "phusion/baseimage:0.9.16" ;
 ":cups" -> ":base" ;
 ":dd" -> ":base" ;
+":demo" -> ":main" ;
 ":dummy" -> ":x11" ;
 ":gui" -> ":xeyes" ;
-":iceweasel" -> ":gui" ;
-":kiosk" -> ":test" ;
+":iceweasel" -> ":webbase" ;
+":kiosk" -> ":webbase" ;
 ":kivy" -> ":test" ;
 ":main" -> ":dd" ;
 ":omd" -> ":base" ;
@@ -17,6 +18,7 @@ digraph deps{ graph [label="an arrow means that its source is based on the arrow
 ":skype" -> ":base" ;
 ":surfer" -> ":gui" ;
 ":test" -> ":gui" ;
+":webbase" -> ":test" ;
 ":x11" -> ":xeyes" ;
 ":x11comp" -> ":xeyes" ;
 ":x11vnc" -> ":xeyes" ;

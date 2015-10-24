@@ -10,11 +10,18 @@ IMG="$U/$I:appchoo"
 #CH="$@"
 
 ID=$(docker ps -a | grep "$IMG" | awk '{ print $1 }')
-echo $N
+# echo $N
 
-if [ -z $ID ]; then 
+if [ -z "$ID" ]; then 
   # options for running terminal apps via docker run:
-  RUNTERM="-it -a stdin -a stdout -a stderr"
+  RUNTERM="-a stdout -a stderr"
+
+  if [ -z "${DISPLAY}" ]; then 
+     RUNTERM=" -it -a stdin $RUNTERM"
+  elif [ "${MENU_TRY}" = "text" ]; then 
+     RUNTERM=" -it -a stdin $RUNTERM"
+  fi
+
   OPTS="--skip-startup-files --no-kill-all-on-exit --quiet --skip-runit"
 
   #docker run --rm $RUNTERM --net=none "$U/$I:menu" $OPTS -- "/usr/local/bin/menu.sh" "$@"
@@ -42,8 +49,10 @@ RET=$?
 
 # exit $RET
 
-docker stop -t 5 $ID > /dev/null 2>&1
-docker rm -f $ID > /dev/null 2>&1 
+docker stop -t 5 $ID
+# > /dev/null 2>&1
+docker rm -f $ID 
+# > /dev/null 2>&1 
 
 exit $RET
 # docker pause menu

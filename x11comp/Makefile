@@ -4,7 +4,8 @@ include ../Makefile.inc
 
 CMD=x11comp.sh xterm -e bash -c 'ps aux; sleep 9'
 
-RUNTERM=-it -a stdin -a stdout -a stderr --ipc=host --privileged --net=host --pid=host
+RUNTERM=-a stdout -a stderr --ipc=host --net=host --pid=host \
+        -v /etc/localtime:/etc/localtime:ro -v /tmp/:/tmp/:rw
 OPTS=--skip-startup-files --no-kill-all-on-exit --quiet --skip-runit
 
 check: $(TS)
