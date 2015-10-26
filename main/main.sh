@@ -53,8 +53,8 @@ case "$OSTYPE" in
         touch $XAUTHORITY
         xauth nlist :0 | sed -e "s/^..../ffff/" | xauth -f $XAUTHORITY nmerge -
      fi
-     echo "We now enable anyone to connect to this X11..."
-     xhost +
+#     echo "We now enable anyone to connect to this X11..."
+#     xhost +
 #     xcompmgr &
 #     compton &
      # X="DISPLAY -e XAUTHORITY"
@@ -132,8 +132,8 @@ do
  
  if [ ${#ARGS[@]} -eq 0 ]; then
    $SELFDIR/menu.sh \
-     "Your choice please?" 199 \
-     "DEMO A_Test_Application_A LIBGL_CUSTOMIZATION Alsa_Test GUI_Shell Bash_in_MainGlueApp X11_Shell X11Server Xephyr Cups_Server CHANGE_SETTINGS X11vnc Xvfb x11comp"
+     "Your choice please?" 198 \
+     "PTMX_FIX DEMO A_Test_Application_A LIBGL_CUSTOMIZATION Alsa_Test GUI_Shell Bash_in_MainGlueApp X11_Shell X11Server Xephyr Cups_Server CHANGE_SETTINGS X11vnc Xvfb x11comp"
    ARGS=("$?")
  fi
  
@@ -146,6 +146,17 @@ do
 
  case "$APP" in
 ################################################
+
+    199) # ptmx
+        echo "Starting ptmx workaround ... " 
+        PTMX=$($SELFDIR/sv.sh 'ptmx' ptmx.sh)
+        echo "PTMX ID: $PTMX, LOG:"
+	sleep 1
+	docker logs $PTMX 2>&1
+    ;;
+
+
+
     200) # FF -> DEMO
       if [ ! -z "$DISPLAY" ]; then
         echo "Starting DEMO!... "

@@ -21,7 +21,7 @@ U=malex984
 I=dockapp
 IM="$U/$I:main"
 
-docker pull $IM
+# docker pull $IM
 
 # HIP=$(ip route show 0.0.0.0/0 | grep -Eo 'via \S+' | awk '{ print $2 }')
 HIP=$(netstat -rn | grep "^0.0.0.0 " | cut -d " " -f10)
@@ -186,7 +186,7 @@ O="${OGL[@]}"
 if [ ! -z "$O" ]; then 
   unset O
   echo "Run customizations (${OGL[@]})..."
-  docker pull "$U/$I:dummy"
+  # docker pull "$U/$I:dummy"
   myrunner "$IM" --no-kill-all-on-exit --skip-runit -- /usr/local/bin/main.sh ${OGL[@]}
 
   if [ -r /tmp/OGL.tgz ]; then 
@@ -199,7 +199,7 @@ if [ ! -z "$O" ]; then
 fi  
 
 
-ARGS=() #ARGS="$@"
+ARGS=(199) #ARGS="$@"
 
 if [ $# -gt 0 ]; then
   while [ ! -z "$1" ]; do
@@ -214,7 +214,7 @@ if [ $# -gt 0 ]; then
 fi
 
 if [ ! -z "$XXX" ]; then
-  docker pull "$U/$I:dummy"
+  # docker pull "$U/$I:dummy"
   ARGS=("${ARGS[@]}" "$XXX") # ARGS+=($1)
 fi
 

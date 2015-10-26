@@ -39,7 +39,7 @@ TS := ${top_dir}/${U}_${I}_${APP}.timestamp
 SS := ${top_dir}/${BASE}.timestamp
 
 
-all: show debug build show
+all: show debug build prune show
 
 show:
 	$(ECHO)

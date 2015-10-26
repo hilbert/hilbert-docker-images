@@ -54,7 +54,7 @@ case "$OSTYPE" in
         xauth nlist :0 | sed -e "s/^..../ffff/" | xauth -f $XAUTHORITY nmerge -
      fi
      echo "We now enable anyone to connect to this X11..."
-     xhost +
+#     xhost +
 #     xcompmgr &
 #     compton &
      # X="DISPLAY -e XAUTHORITY"
