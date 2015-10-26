@@ -44,6 +44,8 @@ share images as much as possible).
 ## Currently we host the following images:
 
 * `:base` serves as the common root for all my images. Thus it is the only image that needs to update & upgrade packages.
+[![](https://badge.imagelayers.io/malex984/dockapp:base.svg)](https://imagelayers.io/?images=malex984/dockapp:base'Get your own badge on imagelayers.io')
+
 * `:dd` contains the docker cli and thus serves as a basis for `:main` which in turn pulls and launches further images.
 * `:menu` image is a crude shell menu asking the user to choose an option and returns the choice via the retunr code (201, 202, 203 etc... ).
 * `:appa` image run simple shell scripts saying AAA... or BBB... together with some host data.
@@ -61,8 +63,11 @@ share images as much as possible).
 Some applications may need further deamons to run in background. Here is a list of server images:
 
 * `:x11` is an Xorg/Xephyr service
+[![](https://badge.imagelayers.io/malex984/dockapp:x11.svg)](https://imagelayers.io/?images=malex984/dockapp:x11'Get your own badge on imagelayers.io')
 * `:cups` is supposed to run CUPS server (:6631) - seems to start but has to be thoughly tested.
 * `:x11vnc` is an `x11vnc` service
+* `:x11comp` is a service with composing window manager (xcompmgr or compton)
+* `:ptmx` is a service to try to workarouind the docker problem of permissions to /dev/pts/ptmx
 
 ## The dependencies between images are as follows: 
 ![Dependencies between docker images](deps.png)

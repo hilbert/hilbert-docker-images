@@ -64,8 +64,9 @@ debug:
 DOCKER_BUILD_OPTS=--pull=false --force-rm=true --rm=true
 # --no-cache=true
 
-# ${TS}
-build: ${DF} ${SS} ${ACOPYFILES} ${ACOPYFILES2}
+# ${TS} ${SS} 
+build: ${DF} ${ACOPYFILES} ${ACOPYFILES2}
+	$(RM) -f ${TS}
 	cd ${mkfile_dir} && $(DOCKER) build ${DOCKER_BUILD_OPTS} -t ${IMG} ${mkfile_dir}
 	$(MAKE) -C ${mkfile_dir}/ ${TS}
 
@@ -79,8 +80,8 @@ ${top_dir}/phusion_baseimage_0.9.16.timestamp:
 ${TS}:
 	$(DOCKER) images | $(GREP) -E "^${U}/${I}  *${APP}  *" > $@
 #	${TS}
-
-rebuild: ${DF} ${SS} ${ACOPYFILES} ${ACOPYFILES2} ${mkfile_dir}/Makefile $(abspath $(lastword $(MAKEFILE_LIST)))
+# ${SS} 
+rebuild: ${DF} ${ACOPYFILES} ${ACOPYFILES2} ${mkfile_dir}/Makefile $(abspath $(lastword $(MAKEFILE_LIST)))
 	$(RM) -f ${TS}
 	$(MAKE) -C ${mkfile_dir}/ ${TS}
 
