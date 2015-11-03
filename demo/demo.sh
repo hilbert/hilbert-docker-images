@@ -129,8 +129,8 @@ do
  if [ ${#ARGS[@]} -eq 0 ]; then
    $SELFDIR/menu.sh \
      "Your choice please?" \
-     98 \
-     "Chromium Surfer GPU_Test Mozilla_Firefox Google_Chrome Electron_Kiosk Kivy_Shell Kivy_Deflectouch Skype Media_Players Q3"
+     97 \
+     "Opera Chromium Surfer GPU_Test Mozilla_Firefox Google_Chrome Electron_Kiosk Kivy_Shell Kivy_Deflectouch Skype Media_Players Q3"
    ARGS=("$?")
  fi
  
@@ -142,9 +142,20 @@ do
  echo "Processing command '$APP'..."
 
  case "$APP" in
+    98) # Opera
+      if [ ! -z "$DISPLAY" ]; then
+        echo "Starting Opera.. "
+	X="$X -e GOOGLE_CHROME=opera" $SELFDIR/run.sh 'chrome' launch.sh browser.sh
+	# "rxvt-unicode -fn xft:terminus:pixelsize=12 -e bash" ## xterm?
+      else
+        echo "Please start X11 beforehand!"
+      fi
+    ;;
+    
+    
     99) # Chromium
       if [ ! -z "$DISPLAY" ]; then
-        echo "Starting Google Chrome.. "
+        echo "Starting Chromium.. "
 	X="$X -e GOOGLE_CHROME=chromium-browser" $SELFDIR/run.sh 'chrome' launch.sh browser.sh
 	# "rxvt-unicode -fn xft:terminus:pixelsize=12 -e bash" ## xterm?
       else
@@ -187,7 +198,7 @@ do
     103) # Google Chrome
       if [ ! -z "$DISPLAY" ]; then
         echo "Starting Google Chrome.. " 
-	$SELFDIR/run.sh 'chrome' launch.sh browser.sh
+	X="$X -e GOOGLE_CHROME=google-chrome" $SELFDIR/run.sh 'chrome' launch.sh browser.sh
 	# "rxvt-unicode -fn xft:terminus:pixelsize=12 -e bash" ## xterm?
       else
         echo "Please start X11 beforehand!"

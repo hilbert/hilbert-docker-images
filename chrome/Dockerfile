@@ -2,12 +2,14 @@ FROM malex984/dockapp:webbase
 
 MAINTAINER Oleksandr Motsak <malex984@googlemail.com>
 
-RUN wget -q -O - https://dl-ssl.google.com/linux/linux_signing_key.pub | apt-key add -
-RUN echo "deb http://dl.google.com/linux/chrome/deb/ stable main" >> /etc/apt/sources.list.d/google.list
+ENV OPERA opera-stable
 
-RUN update.sh && install.sh google-chrome-stable chromium-browser && clean.sh
+RUN wget -q -O - https://dl-ssl.google.com/linux/linux_signing_key.pub | apt-key add - && \
+    echo "deb http://dl.google.com/linux/chrome/deb/ stable main" >> /etc/apt/sources.list.d/google.list
 
-#ADD https://dl.google.com/linux/direct/google-chrome-stable_current_amd64.deb /tmp/google-chrome-stable_current_amd64.deb
-#RUN dpkg -i /tmp/google-chrome-stable_current_amd64.deb && install.sh -fy
+RUN wget -q -O - http://deb.opera.com/archive.key | apt-key add - && \
+    echo "deb http://deb.opera.com/${OPERA}/ stable non-free" >> /etc/apt/sources.list.d/opera.list
+
+RUN update.sh && install.sh chromium-codecs-ffmpeg-extra google-chrome-stable chromium-browser ${OPERA} && clean.sh
 
 COPY browser.sh chrome.sh /usr/local/bin/

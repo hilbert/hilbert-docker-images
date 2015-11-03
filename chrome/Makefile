@@ -3,13 +3,15 @@ COPYFILES   :=
 include ../Makefile.inc
 
 CMD=launch.sh browser.sh
+GOOGLE_CHROME=google-chrome
+# chromium-browser
+# opera
 
 ## ## --make-default-browser
 ## --enable-kiosk-mode --kiosk --disable-new-kiosk-ui
 ARGS=
 
-RUNTERM=-it -a stdin -a stdout -a stderr --ipc=host --privileged --net=host --pid=host 
-#-e GOOGLE_CHROME=chromium-browser
+RUNTERM=-it -a stdin -a stdout -a stderr --ipc=host --privileged --net=host --pid=host -e GOOGLE_CHROME=$(GOOGLE_CHROME)
 
 OPTS=--skip-startup-files --no-kill-all-on-exit --quiet --skip-runit
 
