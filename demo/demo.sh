@@ -129,8 +129,8 @@ do
  if [ ${#ARGS[@]} -eq 0 ]; then
    $SELFDIR/menu.sh \
      "Your choice please?" \
-     99 \
-     "Surfer GPU_Test Mozilla_Firefox Google_Chrome IMG_Kiosk Kivy Kivy_Deflectouch Skype Media_Players Q3"
+     98 \
+     "Chromium Surfer GPU_Test Mozilla_Firefox Google_Chrome Electron_Kiosk Kivy_Shell Kivy_Deflectouch Skype Media_Players Q3"
    ARGS=("$?")
  fi
  
@@ -142,6 +142,17 @@ do
  echo "Processing command '$APP'..."
 
  case "$APP" in
+    99) # Chromium
+      if [ ! -z "$DISPLAY" ]; then
+        echo "Starting Google Chrome.. "
+	X="$X -e GOOGLE_CHROME=chromium-browser" $SELFDIR/run.sh 'chrome' launch.sh browser.sh
+	# "rxvt-unicode -fn xft:terminus:pixelsize=12 -e bash" ## xterm?
+      else
+        echo "Please start X11 beforehand!"
+      fi
+    ;;
+    
+    
     100) # Surfer
       if [ ! -z "$DISPLAY" ]; then
         echo "Starting GUI shell for surfer... Please build surfer yourself... " 
@@ -156,7 +167,8 @@ do
     
     101) # GPU Test 
       if [ ! -z "$DISPLAY" ]; then
-        echo "Starting GUI shell for test... Please build test yourself... " && $SELFDIR/run.sh 'test' launch.sh
+        echo "Starting GUI shell for test... Please build test yourself... " 
+	$SELFDIR/run.sh 'test' launch.sh
 	# "rxvt-unicode -fn xft:terminus:pixelsize=12 -e bash" ## xterm?
       else
         echo "Please start X11 beforehand!"
@@ -182,7 +194,7 @@ do
       fi
     ;;
     
-    104) # Kiosk using http://localhost:8080    
+    104) # Kiosk (local index.html)
       if [ ! -z "$DISPLAY" ]; then
         echo "Starting Kiosk-Mode WebBrowser for DEMO... " 
 	$SELFDIR/run.sh 'kiosk' launch.sh browser.sh
@@ -196,15 +208,17 @@ do
     
     105) # Kivy
       if [ ! -z "$DISPLAY" ]; then
-        echo "Start some kivy app in MT-Mode... " && $SELFDIR/run.sh 'kivy' launch.sh
+        echo "Start some kivy app in MT-Mode... " 
+	$SELFDIR/run.sh 'kivy' launch.sh
       else
         echo "Please start X11 beforehand!"
       fi
     ;;
 
-    106) # Kivy with Deflectouch
+    106) # Kivy with Deflectouch # TODO: FIXME: fullscreen!?!
       if [ ! -z "$DISPLAY" ]; then
-        echo "Start Kivy with Deflectouch in MT-Mode... " && $SELFDIR/run.sh "kivy" launch.sh /usr/local/src/Deflectouch/run.sh
+        echo "Start Kivy with Deflectouch in MT-Mode... " 
+	$SELFDIR/run.sh "kivy" launch.sh /usr/local/src/Deflectouch/run.sh
 	## bash -c "'setup_ogl.sh;cd /usr/local/src/Deflectouch/;python main.py'"
       else
         echo "Please start X11 beforehand!"
@@ -213,7 +227,8 @@ do
 
     107) # Skype
       if [ ! -z "$DISPLAY" ]; then
-        echo "Starting skype... " && $SELFDIR/run.sh "skype" skype.sh
+        echo "Starting skype... " 
+	$SELFDIR/run.sh "skype" skype.sh
       else
         echo "Please start X11 beforehand!"
       fi
@@ -221,7 +236,8 @@ do
 
     108) Media Players...
       if [ ! -z "$DISPLAY" ]; then
-        echo "Starting GUI shell... Please run cmus/vlc/mplaye/xine yourself... " && $SELFDIR/run.sh "play" launch.sh
+        echo "Starting GUI shell... Please run cmus/vlc/mplaye/xine yourself... " 
+	$SELFDIR/run.sh "play" launch.sh
         # "rxvt-unicode -fn xft:terminus:pixelsize=12 -e bash"
       else
         echo "Please start X11 beforehand!"

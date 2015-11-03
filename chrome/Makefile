@@ -8,7 +8,9 @@ CMD=launch.sh browser.sh
 ## --enable-kiosk-mode --kiosk --disable-new-kiosk-ui
 ARGS=
 
-RUNTERM=-it -a stdin -a stdout -a stderr --ipc=host --privileged --net=host --pid=host
+RUNTERM=-it -a stdin -a stdout -a stderr --ipc=host --privileged --net=host --pid=host 
+#-e GOOGLE_CHROME=chromium-browser
+
 OPTS=--skip-startup-files --no-kill-all-on-exit --quiet --skip-runit
 
 check: $(TS)

@@ -75,9 +75,9 @@ Depending on `MENU_TRY` it can be either GUI or TEXT style.
 * [![](https://badge.imagelayers.io/malex984/dockapp:iceweasel.svg)](https://imagelayers.io/?images=malex984/dockapp:iceweasel'Get your own badge on imagelayers.io')
 `:iceweasel` Firefox & Iceweasel
 * [![](https://badge.imagelayers.io/malex984/dockapp:chrome.svg)](https://imagelayers.io/?images=malex984/dockapp:chrome'Get your own badge on imagelayers.io')
-`:chrome` Google Chrome
+`:chrome` Google Chrome & Chromium
 * [![](https://badge.imagelayers.io/malex984/dockapp:kiosk.svg)](https://imagelayers.io/?images=malex984/dockapp:kiosk'Get your own badge on imagelayers.io')
-`:kiosk` Kiosk-mode web-wrowser using Electron based on Chromium
+`:kiosk` Kiosk-mode web-wrowser using Electron (based on Chromium)
 
 ### Services:
 
