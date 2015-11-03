@@ -16,6 +16,8 @@ else
     OGL=()
   fi
 fi
+
+OGL=()
   
 U=malex984
 I=dockapp
