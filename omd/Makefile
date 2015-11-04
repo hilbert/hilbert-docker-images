@@ -2,10 +2,14 @@ mkfile_path := $(abspath $(lastword $(MAKEFILE_LIST)))
 COPYFILES   := 
 include ../Makefile.inc
 
-RUNTERM=-it -a stdin -a stdout -a stderr
-OPTS=--skip-startup-files --no-kill-all-on-exit --quiet --skip-runit
+# --privileged 
+RUNTERM=-it -a stdin -a stdout -a stderr  --ipc=host --net=host --pid=host \
+        -v /etc/localtime:/etc/localtime:ro -v /tmp/:/tmp/:rw -P
+
+OPTS=--quiet
+# --skip-startup-files --no-kill-all-on-exit --quiet --skip-runit
 
 CMD=bash -c 'omd status'
 check: $(TS)
-	docker run --rm -e DISPLAY ${RUNTERM} -v /tmp/:/tmp/:rw $(IMG) ${OPTS} -- ${CMD}
+	docker run --rm ${RUNTERM} $(IMG) ${OPTS} -- ${CMD}
 

@@ -4,13 +4,10 @@ MAINTAINER Oleksandr Motsak <malex984@googlemail.com>
 
 # Install OMD, see http://labs.consol.de/OMD/
 RUN gpg --keyserver keys.gnupg.net --recv-keys F8C1CA08A57B9ED7 && \
-    gpg --armor --export F8C1CA08A57B9ED7 | apt-key add -
-
-#echo 'deb http://labs.consol.de/repo/testing/ubuntu trusty main' >> /etc/apt/sources.list
-RUN echo 'deb http://labs.consol.de/repo/stable/ubuntu trusty main' >> /etc/apt/sources.list
-
-RUN update.sh && install.sh \
-    libpython2.7 omd net-tools netcat xinetd  \
+    gpg --armor --export F8C1CA08A57B9ED7 | apt-key add - && \
+    echo 'deb http://labs.consol.de/repo/stable/ubuntu trusty main' >> /etc/apt/sources.list && \
+    update.sh && install.sh \
+           libpython2.7 omd net-tools netcat xinetd  \
     && clean.sh
 
 
@@ -82,7 +79,9 @@ COPY 10_startup_base_services 20_startup_omd_master /etc/my_init.d/
 COPY omd_entrypoint.sh /usr/local/bin/
 
 # Set up runtime options
-EXPOSE 80 6556 5000
+EXPOSE 80
+EXPOSE 6556
+EXPOSE 5000
 
 ## ENTRYPOINT ["omd_entrypoint.sh"]
 
@@ -100,7 +99,8 @@ EXPOSE 80 6556 5000
 # omd create mysite && omd start foo
 # mount
 
-
+RUN omd config default set CORE "icinga"
+RUN omd config default show
 
 
 ############## https://github.com/SpringerSBM/basic-docker-omd
