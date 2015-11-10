@@ -4,8 +4,7 @@ include ../Makefile.inc
 
 CMD=skype.sh
 
-RUNTERM=-it -a stdin -a stdout -a stderr --ipc=host --privileged --net=host --pid=host \
-        -v /etc/localtime:/etc/localtime:ro -v /tmp/:/tmp/:rw
+RUNTERM=-it -a stdin -a stdout -a stderr --ipc=host --privileged --net=host --pid=host -v /etc/localtime:/etc/localtime:ro -v /tmp/:/tmp/:rw
 OPTS=--skip-startup-files --no-kill-all-on-exit --quiet --skip-runit
 
 check: $(TS)

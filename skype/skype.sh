@@ -2,8 +2,8 @@
 # umask 0
 
 # 1. step: important mixer settings - these are hardware dependent and (probably) not really necessary
-amixer sset Digital 100% unmute cap
-amixer sset Capture 99% unmute cap
+#amixer sset Digital 100% unmute cap
+#amixer sset Capture 99% unmute cap
 
 export LD_LIBRARY_PATH=/usr/lib/i386-linux-gnu/apulse/:/usr/lib/i386-linux-gnu/libv4l/:/usr/lib/i386-linux-gnu/
 export XLIB_SKIP_ARGB_VISUALS=1
