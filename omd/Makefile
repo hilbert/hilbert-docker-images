@@ -9,7 +9,7 @@ RUNTERM=-it -a stdin -a stdout -a stderr  --ipc=host --net=host --pid=host \
 OPTS=--quiet
 # --skip-startup-files --no-kill-all-on-exit --quiet --skip-runit
 
-CMD=bash -c 'omd status'
+CMD=bash -c 'omd status; sleep 1; omd start; sleep 10; omd status; sleep 1; omd stop'
 check: $(TS)
 	docker run --rm ${RUNTERM} $(IMG) ${OPTS} -- ${CMD}
 
