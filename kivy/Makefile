@@ -6,7 +6,11 @@ CMD=launch.sh
 ARGS=/usr/local/src/Deflectouch/run.sh
 ## bash -c 'setup_ogl.sh && cd /usr/local/src/Deflectouch/ && python main.py'
 
-RUNTERM=-it -a stdin -a stdout -a stderr --ipc=host --privileged --net=host --pid=host
+PA_SETTING= -v "/run/user/`id -u`/pulse:/run/pulse" -e PULSE_SERVER=/run/pulse/native \
+            -v ${HOME}/.config/pulse/cookie:/run/pulse_cookie -e PULSE_COOKIE=/run/pulse_cookie
+
+RUNTERM= -it -a stdin -a stdout -a stderr --ipc=host --privileged \
+         --net=host --pid=host -e DISPLAY -v /tmp/:/tmp/:rw ${PA_SETTING}
 OPTS=--skip-startup-files --no-kill-all-on-exit --quiet --skip-runit
 
 check: $(TS)
@@ -15,6 +19,6 @@ check: $(TS)
 	docker ps -a
 	ls -al /dev/pts/ptmx 
 	: chmod a+rw /dev/pts/ptmx
-	docker run --rm -e DISPLAY ${RUNTERM} -v /tmp/:/tmp/:rw $(IMG) ${OPTS} -- ${CMD} ${ARGS}
+	docker run --rm ${RUNTERM} $(IMG) ${OPTS} -- ${CMD} ${ARGS}
 	ls -al /dev/pts/ptmx 
 	: chmod a+rw /dev/pts/ptmx

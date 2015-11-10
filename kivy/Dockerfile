@@ -23,4 +23,6 @@ COPY run.sh /usr/local/src/Deflectouch/
 ## https://wiki.ubuntu.com/Multitouch
 ## https://launchpad.net/canonical-multitouch
 
+RUN update.sh && install.sh alsamixergui pulseaudio && clean.sh
+
 # WORKDIR /usr/local/src/Deflectouch/

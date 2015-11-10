@@ -27,14 +27,73 @@ echo "Selected ALSA card: [$CARD]"
 
 grep -E "^ *${CARD} " /proc/asound/modules || echo "ERROR: Sorry no module for such a card!!!"
 grep -E "^ *${CARD} " /proc/asound/modules && cat <<EOF > $HOME/.asoundrc
+### http://alien.slackbook.org/dokuwiki/doku.php?id=slackware:alsa (2nd version)
+
+#asym fun start here. we define one pcm device called "dmixed"
+pcm.dmixed {
+    ipc_key 1025
+    type dmix
+    slave {
+        pcm "hw:$CARD"
+        period_time 0
+        period_size 1024
+        buffer_size 8192
+        rate 48000
+    }
+}
+
+#one called "dsnooped" for capturing
+pcm.dsnooped {
+    ipc_key 1026
+    type dsnoop
+    slave.pcm "hw:$CARD"
+}
+
+#and this is the real magic
+pcm.asymed {
+    type asym
+    playback.pcm "dmixed"
+    capture.pcm "dsnooped"
+}
+
+#a quick plug plugin for above device to do the converting magic. saves
+#typing when settng the pcm name in an alsa app
+pcm.pasymed {
+    type plug
+    slave.pcm "asymed"
+}
+
+#a ctl device to keep xmms happy
+ctl.pasymed {
+    type hw
+    card $CARD
+}
+
+#here we try to point the aoss script to our asymed device
+pcm.dsp0 {
+    type plug
+    slave.pcm "asymed"
+}
+
+ctl.mixer0 {
+    type hw
+    card $CARD
+}
+
+#this sets the default device
 pcm.!default {
-    type hw
-    card $CARD
+    type plug
+    slave.pcm "asymed"
 }
-ctl.!default {
-    type hw
-    card $CARD
-}
+
+#pcm.!default {
+#    type hw
+#    card $CARD
+#}
+#ctl.!default {
+#    type hw
+#    card $CARD
+#}
 EOF
 
 exit 0
