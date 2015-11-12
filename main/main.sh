@@ -132,8 +132,8 @@ do
  
  if [ ${#ARGS[@]} -eq 0 ]; then
    $SELFDIR/menu.sh \
-     "Your choice please?" 198 \
-     "PTMX_FIX DEMO A_Test_Application_A LIBGL_CUSTOMIZATION Alsa_Test GUI_Shell Bash_in_MainGlueApp X11_Shell X11Server Xephyr Cups_Server CHANGE_SETTINGS X11vnc Xvfb x11comp"
+     "Your choice please?" 197 \
+     "OMD_SERVER PTMX_FIX DEMO A_Test_Application_A LIBGL_CUSTOMIZATION Alsa_Test GUI_Shell Bash_in_MainGlueApp X11_Shell X11Server Xephyr Cups_Server CHANGE_SETTINGS X11vnc Xvfb x11comp"
    ARGS=("$?")
  fi
  
@@ -146,6 +146,16 @@ do
 
  case "$APP" in
 ################################################
+
+    198) # OMD server
+        echo "Starting OMD services ... "
+	# sudo -u default 
+        OMD=$($SELFDIR/sv.sh 'omd' omd_entrypoint.sh)
+        echo "OMD ID: $OLD, LOG:"
+	sleep 1
+	docker logs $OMD 2>&1
+    ;;
+
 
     199) # ptmx
         echo "Starting ptmx workaround ... " 
