@@ -128,8 +128,8 @@ myrunner () {
 #       -e DOCKER_HOST=unix:///var/run/docker.sock -e NO_PROXY=/var/run/docker.sock 
  if [ -z $ID ]; then 
    # run --rm 
+#        -p 631:631 -p 5900:5900 \
    ID=$(docker create -ti --privileged --net=host --ipc=host --pid=host \
-        -p 631:631 -p 5900:5900 \
 	-v /etc/localtime:/etc/localtime:ro \
         -v /dev:/dev:rw \
 	-v /tmp/:/tmp/:rw \

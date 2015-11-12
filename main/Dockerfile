@@ -12,8 +12,8 @@ COPY main.sh menu.sh run.sh sv.sh A.sh generate_ogl.sh settings /usr/local/bin/
 # CMD /usr/local/bin/main.sh
 # /sbin/setuser ?? ___.sh
 
-EXPOSE 5900-5910
-EXPOSE 80
-EXPOSE 6556
-EXPOSE 5000
+#EXPOSE 5900-5910
+#EXPOSE 80
+#EXPOSE 6556
+#EXPOSE 5000
 ## 631

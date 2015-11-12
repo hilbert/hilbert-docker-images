@@ -51,13 +51,13 @@ ARGS="$@"
 #if [ ! -z "$CUPS_SERVER" ]; then
 #  X="$X -e CUPS_SERVER"
 #fi
+#  -p 631:631 -p 5900:5900 \
 
 X="$X \
   -v /etc/localtime:/etc/localtime:ro \
   -v /dev:/dev:rw \
   -v /tmp/:/tmp/:rw \
   -v /run/udev:/run/udev \
-  -p 631:631 -p 5900:5900 \
   -v /var/run/docker.sock:/var/run/docker.sock \
   -v /sys/fs/cgroup:/sys/fs/cgroup:ro \
   -v /run/systemd:/run/systemd \
@@ -137,11 +137,12 @@ mydeamon () {
 #        --lxc-conf='lxc.cgroup.devices.allow=c 116:* rwm' \
 #        --lxc-conf='lxc.cgroup.devices.allow=c  81:* rwm' \
 
-  R="--ipc=host --net=host --pid=host --privileged -P"
+  R="--ipc=host --net=host --pid=host --privileged"
 
 # -v /dev/shm:/dev/shm -v /dev/dri:/dev/dri 
+#  -P
 
-  docker run -d $R -P -e $X \
+  docker run -d $R -e $X \
         "$@"
 
   RET="$?"

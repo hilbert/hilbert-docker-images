@@ -8,7 +8,8 @@ ARGS=
 # -it -a stdin 
 RUNTERM=-a stdout -a stderr --ipc=host --privileged --net=host --pid=host \
         -v /etc/localtime:/etc/localtime:ro -v /tmp/:/tmp/:rw \
-        -v /var/run/docker.sock:/var/run/docker.sock -P
+        -v /var/run/docker.sock:/var/run/docker.sock
+	# -P
 
 ### TODO: switch to remote docker / networking!?
 

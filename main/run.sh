@@ -70,12 +70,12 @@ APP="c_$APP"
 X="$X \
  -v /etc/localtime:/etc/localtime:ro \
  -v /dev:/dev:rw -v /tmp/:/tmp/:rw -v /run/udev:/run/udev \
- -p 631:631 -p 5900:5900 \
  -v /var/run/docker.sock:/var/run/docker.sock \
  -v /sys/fs/cgroup:/sys/fs/cgroup:ro \
  -v /run/systemd:/run/systemd \
  -v /var/run/dbus/system_bus_socket:/var/run/dbus/system_bus_socket \
 "
+#  -p 631:631 -p 5900:5900 \
 
 # -v /etc/passwd:/etc/passwd:ro \
 # -v /etc/shadow:/etc/shadow:ro \
@@ -92,7 +92,8 @@ X="$X \
 # --device /dev/nvidia0:/dev/nvidia0 --device /dev/nvidiactl:/dev/nvidiactl --device /dev/nvidia-uvm:/dev/nvidia-uvm \
 
 # options for running terminal apps via docker run:
-RUNTERM="-a stdout -a stderr --privileged --net=host --ipc=host --pid=host -P"
+# -P
+RUNTERM="-a stdout -a stderr --privileged --net=host --ipc=host --pid=host"
 OPTS="--skip-startup-files --no-kill-all-on-exit --quiet --skip-runit"
 
 #      --lxc-conf='lxc.cgroup.devices.allow=c 195:* rwm' \
