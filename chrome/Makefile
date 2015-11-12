@@ -4,6 +4,7 @@ include ../Makefile.inc
 
 CMD=launch.sh browser.sh
 GOOGLE_CHROME=google-chrome
+# google-chrome
 # chromium-browser
 # opera
 
