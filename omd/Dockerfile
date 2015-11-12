@@ -74,17 +74,10 @@ RUN adduser default crontab
 # Fix some permission issues (not sure why it happens)
 RUN chown -R default.default /omd/sites/default
 
-# Add scripts to start services in baseimage my_init:
-COPY 10_startup_base_services 20_startup_omd_master /etc/my_init.d/
-COPY omd_entrypoint.sh /usr/local/bin/
-
 # Set up runtime options
 EXPOSE 80
 EXPOSE 6556
 EXPOSE 5000
-
-## ENTRYPOINT ["omd_entrypoint.sh"]
-
 
 # http://omdistro.org/doc/generic_quickstart
 # http://omdistro.org/doc/configuration_basics
@@ -100,7 +93,16 @@ EXPOSE 5000
 # mount
 
 RUN omd config default set CORE "icinga"
+RUN omd config default set NAGVIS_URLS "check_mk"
 RUN omd config default show
 
 
+# Add scripts to start services in baseimage my_init:
+## COPY 10_startup_base_services 20_startup_omd_master /etc/my_init.d/
+COPY omd_entrypoint.sh /usr/local/bin/
+RUN chmod +x /usr/local/bin/omd_entrypoint.sh
+
+## ENTRYPOINT ["omd_entrypoint.sh"]
+
 ############## https://github.com/SpringerSBM/basic-docker-omd
+

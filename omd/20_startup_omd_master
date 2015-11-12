@@ -1,2 +1,2 @@
 #!/bin/sh
-omd start master
+omd start default
