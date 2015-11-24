@@ -10,6 +10,9 @@ RUN gpg --keyserver keys.gnupg.net --recv-keys F8C1CA08A57B9ED7 && \
            libpython2.7 omd net-tools netcat xinetd  \
     && clean.sh
 
+#### due to http://www.monitoring-portal.org/wbb/index.php?page=Thread&threadID=32891
+#### http://labs.consol.de/repo/testing/ubuntu (instead of stable) 
+#### is supposed to provide Icinga 2...
 
 # Install the agent to monitor localhost
 ## http://mathias-kettner.de/download/check-mk-agent_1.2.4p5-2_all.deb
