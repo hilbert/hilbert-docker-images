@@ -18,5 +18,5 @@ check: $(TS)
 	test -n "${DISPLAY}"
 	test -z "${DISPLAY}" || xhost +
 	docker ps -a
-	docker run --rm -e MENU_TRY="text" -e DISPLAY ${RUNTERM} $(IMG) ${OPTS} -- ${CMD} ${ARGS}
+	docker run --rm -e MENU_TRY="text" -e DISPLAY ${RUNTERM} --label is_top_app=0 $(IMG) ${OPTS} -- ${CMD} ${ARGS}
 

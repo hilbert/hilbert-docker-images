@@ -12,5 +12,5 @@ check: $(TS)
 	### [ -z "${DISPLAY}" ] && exit 1
 	xhost + || exit 1
 	docker ps -a
-	docker run --rm -e DISPLAY -e MOUSE_CURSOR=off ${RUNTERM} -v /tmp/:/tmp/:rw $(IMG) ${OPTS} -- ${CMD}
+	docker run --rm -e DISPLAY -e MOUSE_CURSOR=off ${RUNTERM} --label is_top_app=0 -v /tmp/:/tmp/:rw $(IMG) ${OPTS} -- ${CMD}
 

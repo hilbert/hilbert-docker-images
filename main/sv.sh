@@ -137,7 +137,7 @@ mydeamon () {
 #        --lxc-conf='lxc.cgroup.devices.allow=c 116:* rwm' \
 #        --lxc-conf='lxc.cgroup.devices.allow=c  81:* rwm' \
 
-  R="--ipc=host --net=host --pid=host --privileged"
+  R="--ipc=host --net=host --pid=host --privileged --label is_top_app=0"
 
 # -v /dev/shm:/dev/shm -v /dev/dri:/dev/dri 
 #  -P

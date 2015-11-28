@@ -11,5 +11,5 @@ check: $(TS)
 	### [ -z "${DISPLAY}" ] && exit 1
 	xhost + || exit 1
 	docker ps -a
-	docker run --rm -e DISPLAY ${RUNTERM} -v /tmp/:/tmp/:rw $(IMG) ${OPTS} -- ${CMD} ; echo $$? > .returncode
+	docker run --rm -e DISPLAY ${RUNTERM} --label is_top_app=1 -v /tmp/:/tmp/:rw $(IMG) ${OPTS} -- ${CMD} ; echo $$? > .returncode
 	cat .returncode && rm .returncode

@@ -20,5 +20,5 @@ OPTS=--skip-startup-files --no-kill-all-on-exit --quiet --skip-runit
 check: $(TS)
 	### [ -z "${DISPLAY}" ] && exit 1
 	docker ps -a
-	docker run --rm ${RUNTERM} $(IMG) ${OPTS} -- ${CMD}
+	docker run --rm ${RUNTERM} --label is_top_app=0 $(IMG) ${OPTS} -- ${CMD}
 

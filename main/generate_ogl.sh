@@ -20,7 +20,7 @@ docker rm -vf $C 1>&2 || true
 docker rmi -f --no-prune=false $D 1>&2 || true
 
 
-R="-it -a stdin -a stdout -a stderr --ipc=host --net=host --pid=host -v /etc/localtime:/etc/localtime:ro -v /tmp/:/tmp/:rw"
+R="-it -a stdin -a stdout -a stderr --label is_top_app=0 --ipc=host --net=host --pid=host -v /etc/localtime:/etc/localtime:ro -v /tmp/:/tmp/:rw"
 O="--skip-startup-files --no-kill-all-on-exit --quiet --skip-runit"
 
 ## Create $C conainer out of $I and run customization script in it:

@@ -32,10 +32,10 @@ ${GL}: ${TS} ${mkfile_dir}/../main/generate_ogl.sh
 #	docker rm -vf $C || true
 #	docker rmi -f --no-prune=false $D || true
 #	sudo rm -Rf ${GL} || true 
-#	docker run ${RUNTERM} --name $C ${IMG} ${OPTS} -- bash -c 'customize.sh' #	docker start $C && sleep 1
+#	docker run ${RUNTERM} --label is_top_app=0 --name $C ${IMG} ${OPTS} -- bash -c 'customize.sh' #	docker start $C && sleep 1
 #	docker commit --change "VOLUME /usr/" --change "VOLUME /etc/" --change "VOLUME /opt/" $C $D
 #	docker diff $C > ${mkfile_dir}/${APP}_${D}.diff
-#	docker run ${RUNTERM} --rm $D ${OPTS} -- bash -c "tar czvf $(GL) --hard-dereference --dereference ${ADDFILES} `docker diff $C | grep -E '^A /(usr|etc|sbin)/' | grep -vE '^A /usr/(src|share/doc|share/man)' | sed 's@^A @@g' | xargs `"
+#	docker run ${RUNTERM} --label is_top_app=0 --rm $D ${OPTS} -- bash -c "tar czvf $(GL) --hard-dereference --dereference ${ADDFILES} `docker diff $C | grep -E '^A /(usr|etc|sbin)/' | grep -vE '^A /usr/(src|share/doc|share/man)' | sed 's@^A @@g' | xargs `"
 #	docker rm -vf $C
 #	$(DOCKER) images | $(GREP) "^${D} " > ${DS}
 
@@ -45,7 +45,7 @@ ${GL}: ${TS} ${mkfile_dir}/../main/generate_ogl.sh
 	# mkdir -p ${GL} && tar xzvf ${GL}.tgz -C ${GL}
 check: ${TS} ${GL}
 	$(DOCKER) ps -a
-	$(DOCKER) run ${RUNTERM} --rm malex984/dockapp:xeyes ${OPTS} -- bash -c "which setup_ogl.sh; setup_ogl.sh $(GZ); sleep 1" 
+	$(DOCKER) run ${RUNTERM} --label is_top_app=1 --rm malex984/dockapp:xeyes ${OPTS} -- bash -c "which setup_ogl.sh; setup_ogl.sh $(GZ); sleep 1"
 	$(DOCKER) ps -a
 
 clean:

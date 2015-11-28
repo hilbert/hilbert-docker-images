@@ -129,7 +129,7 @@ myrunner () {
  if [ -z $ID ]; then 
    # run --rm 
 #        -p 631:631 -p 5900:5900 \
-   ID=$(docker create -ti --privileged --net=host --ipc=host --pid=host \
+   ID=$(docker create -ti --privileged --net=host --ipc=host --pid=host --label is_top_app=0 \
 	-v /etc/localtime:/etc/localtime:ro \
         -v /dev:/dev:rw \
 	-v /tmp/:/tmp/:rw \

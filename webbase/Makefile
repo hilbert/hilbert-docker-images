@@ -13,5 +13,5 @@ check: $(TS)
 	xhost + || exit 1
 	docker ps -a
 	ls -la /dev/pts/ptmx
-	docker run --rm -e DISPLAY ${RUNTERM} -v /tmp/:/tmp/:rw $(IMG) ${OPTS} -- ${CMD} ${ARGS}
+	docker run --rm -e DISPLAY ${RUNTERM} --label is_top_app=1 -v /tmp/:/tmp/:rw $(IMG) ${OPTS} -- ${CMD} ${ARGS}
 	ls -la /dev/pts/ptmx

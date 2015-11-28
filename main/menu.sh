@@ -14,7 +14,7 @@ ID=$(docker ps -a | grep "$IMG" | awk '{ print $1 }')
 
 if [ -z "$ID" ]; then 
   # options for running terminal apps via docker run:
-  RUNTERM="-a stdout -a stderr"
+  RUNTERM="-a stdout -a stderr --label is_top_app=1"
 
   if [ -z "${DISPLAY}" ]; then 
      RUNTERM=" -it -a stdin $RUNTERM"

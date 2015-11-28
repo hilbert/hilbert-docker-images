@@ -20,6 +20,6 @@ OPTS=--skip-startup-files --no-kill-all-on-exit --quiet --skip-runit
 CMD=bash -c 'config_cups.sh && lpq && sleep 3'
 
 check: $(TS)
-	docker run -rm ${RUNTERM} -v /tmp/:/tmp/:rw $(IMG) ${OPTS} -- ${CMD}
+	docker run -rm ${RUNTERM} --label is_top_app=0 -v /tmp/:/tmp/:rw $(IMG) ${OPTS} -- ${CMD}
 
 # -e CUPS_USER_ADMIN=test0 -e CUPS_USER_PASSWORD=test0 -p 6631:631/tcp # unused together with the cups server itself

@@ -15,7 +15,7 @@ CMD=startXephyr.sh
 check: $(TS)
 	echo "CMD: '${CMD}' '${ARGS}'"
 	#	test -z "${DISPLAY}" || xhost + # -e DISPLAY
-	docker run -d -e XCMD=Xvfb -e USER=root -e HOME=/root/  --name xxx ${RUNTERM} $(IMG) ${OPTS} -- ${CMD} -screen 0 1024x768x16
+	docker run -d -e XCMD=Xvfb -e USER=root -e HOME=/root/  --name xxx ${RUNTERM} --label is_top_app=0 $(IMG) ${OPTS} -- ${CMD} -screen 0 1024x768x16
 	sleep 4
 	docker ps -a | grep xxx
 	docker logs xxx 2>&1 | grep DISPLAY

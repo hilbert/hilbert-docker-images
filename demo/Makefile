@@ -21,7 +21,7 @@ check: $(TS)
 	docker ps -a
 	ls -al /dev/pts/ptmx 
 	: chmod a+rw /dev/pts/ptmx
-	docker run --rm -e MENU_TRY="gui" -e DISPLAY ${RUNTERM} $(IMG) ${OPTS} -- ${CMD} ${ARGS}
+	docker run --rm -e MENU_TRY="gui" -e DISPLAY ${RUNTERM} --label is_top_app=0 $(IMG) ${OPTS} -- ${CMD} ${ARGS}
 	ls -al /dev/pts/ptmx 
 	: chmod a+rw /dev/pts/ptmx
 

@@ -14,7 +14,7 @@ OPTS=--skip-startup-files --no-kill-all-on-exit --quiet --skip-runit
 
 check: $(TS)
 	xhost +
-	docker run --rm -e DISPLAY ${RUNTERM} --net=none -v /tmp/:/tmp/:rw $(IMG) ${OPTS} -- menu.sh ${ARGS} ${CH} ; echo $$? > .returncode
+	docker run --rm -e DISPLAY ${RUNTERM} --label is_top_app=1 --net=none -v /tmp/:/tmp/:rw $(IMG) ${OPTS} -- menu.sh ${ARGS} ${CH} ; echo $$? > .returncode
 	cat .returncode && rm .returncode
 
 

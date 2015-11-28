@@ -9,5 +9,5 @@ CMD=A.sh
 ARGS=AHelloA
 
 check: $(TS)
-	docker run --rm ${RUNTERM} --net=none $(IMG) ${OPTS} -- ${CMD} ${ARGS}
+	docker run --rm ${RUNTERM} --label is_top_app=1 --net=none $(IMG) ${OPTS} -- ${CMD} ${ARGS}
 
