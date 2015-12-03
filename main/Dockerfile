@@ -6,7 +6,7 @@ RUN update.sh && install.sh --no-install-recommends \
 	                   xauth && \
     clean.sh
 
-COPY main.sh menu.sh run.sh sv.sh A.sh generate_ogl.sh settings /usr/local/bin/
+COPY main.sh menu.sh run.sh runback.sh sv.sh A.sh generate_ogl.sh settings /usr/local/bin/
 
 # VOLUME ...
 # CMD /usr/local/bin/main.sh

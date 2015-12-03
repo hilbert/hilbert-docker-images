@@ -170,7 +170,7 @@ do
     200) # FF -> DEMO
       if [ ! -z "$DISPLAY" ]; then
         echo "Starting DEMO!... "
-	$SELFDIR/run.sh "demo" demo.sh
+	$SELFDIR/runback.sh "demo" demo.sh
       else
         echo "Please start X11 beforehand!"
       fi

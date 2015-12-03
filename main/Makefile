@@ -1,5 +1,5 @@
 mkfile_path := $(abspath $(lastword $(MAKEFILE_LIST)))
-COPYFILES   := main.sh menu.sh run.sh sv.sh A.sh
+COPYFILES   := main.sh menu.sh run.sh runback.sh sv.sh A.sh
 include ../Makefile.inc
 
 CMD=main.sh
