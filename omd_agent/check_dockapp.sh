@@ -294,6 +294,30 @@ M=$(bashjoin '&' ${MSG[@]})
 WARNING "$N foreign container(s) present: $M|f=$N;;;0; $U"
 }
 
+
+function check_dockapp_heartbeat
+{
+
+HOST_NAME=localhost
+PORT_NUMBER=8080
+
+
+S=`curl -s -X GET "http://${HOST_NAME}:${PORT_NUMBER}/status" 2>&1`
+
+case "$S" in
+OK*)
+echo "$S"; exit 0;;
+WARNING*)
+echo "$S"; exit 1;;
+CRITICAL*)
+echo "$S"; exit 2;;
+esac
+
+echo "$S"; exit 3
+
+}
+
+
 CMD=$(basename "$0" '.sh' | grep -E '^check_dockapp_')
 if [ $? -ne 0 ]; then
   CRITICAL "wrong command: '$0'"
