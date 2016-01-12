@@ -53,12 +53,46 @@ RUN a2enconf docker-servername
 # Set up a default site
 RUN omd create default || true
 
-# We don't want TMPFS as it requires higher privileges
-RUN omd config default set TMPFS off
 ### RUN sed "s/CONFIG_TMPFS='on'/CONFIG_TMPFS='off'/" -i /omd/sites/default/etc/omd/site.conf 
 
-# Accept connections on any IP address, since we get a random one
-RUN omd config default set APACHE_TCP_ADDR 0.0.0.0
+# * We don't want TMPFS as it requires higher privileges
+# * Accept connections on any IP address, since we get a random one
+
+RUN omd config default set TMPFS "off" && \
+ omd config default set ADMIN_MAIL "malex984@googlemail.com" && \
+ omd config default set LIVESTATUS_TCP "on" && \
+ omd config default set MKEVENTD "on"  && \
+ omd config default set NAGIOS_THEME "classicui"  && \
+ omd config default set NAGVIS_URLS "nagios"  && \
+ omd config default set NSCA "on"  && \
+ omd config default set PNP4NAGIOS "on"  && \
+ omd config default set APACHE_TCP_ADDR "0.0.0.0"  && \
+ omd config default set CORE "nagios"  && \
+ omd config default set CRONTAB "on"  && \
+ omd config default set DEFAULT_GUI "welcome"  && \
+ omd config default set DOKUWIKI_AUTH "off" 
+# && \
+# omd config default set MOD_GEARMAN "off"  && \
+# omd config default set MONGODB "off"  && \
+# omd config default set MULTISITE_AUTHORISATION "off"  && \
+# omd config default set MULTISITE_COOKIE_AUTH "off"  && \
+# omd config default set MYSQL "off"  && \
+# omd config default set THRUK_COOKIE_AUTH "off" 
+# omd config default set LIVESTATUS_TCP_PORT "6557" && \
+# omd config default set APACHE_TCP_PORT "5000"  && \
+# omd config default set AUTOSTART "on"  && \
+# omd config default set NSCA_TCP_PORT "5667"  && \
+# omd config default set APACHE_MODE "own"  && \
+# && \
+
+#RUN omd config default set TMPFS "Cleaning up temp filesystem...OK"
+# omd config default set MKEVENTD_SNMPTRAP "off"  && \
+# omd config default set MKEVENTD_SYSLOG "off"  && \
+# omd config default set MKEVENTD_SYSLOG_TCP "off"  && \
+
+## RUN omd config default set CORE "icinga"
+## RUN omd config default set NAGVIS_URLS "check_mk"
+RUN omd config default show
 
 # Add the new user to crontab, to avoid error merging crontabs
 RUN adduser default crontab 
@@ -79,7 +113,9 @@ RUN chown -R default.default /omd/sites/default
 
 # Set up runtime options
 EXPOSE 80
+EXPOSE 514
 EXPOSE 6556
+EXPOSE 5667
 EXPOSE 5000
 
 # http://omdistro.org/doc/generic_quickstart
@@ -95,9 +131,6 @@ EXPOSE 5000
 # omd create mysite && omd start foo
 # mount
 
-RUN omd config default set CORE "icinga"
-RUN omd config default set NAGVIS_URLS "check_mk"
-RUN omd config default show
 
 
 # Add scripts to start services in baseimage my_init:
@@ -108,4 +141,6 @@ RUN chmod +x /usr/local/bin/omd_entrypoint.sh
 ## ENTRYPOINT ["omd_entrypoint.sh"]
 
 ############## https://github.com/SpringerSBM/basic-docker-omd
+
+
 
