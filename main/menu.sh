@@ -24,12 +24,12 @@ if [ -z "$ID" ]; then
 
   OPTS="--skip-startup-files --no-kill-all-on-exit --quiet --skip-runit"
 
-  #docker run --rm $RUNTERM --net=none "$U/$I:menu" $OPTS -- "/usr/local/bin/menu.sh" "$@"
+  #docker run --rm $RUNTERM --net=host "$U/$I:menu" $OPTS -- "/usr/local/bin/menu.sh" "$@"
   #exit $?
   [ -z "$X" ] && X="X" 
 
   #   --name menu \
-  ID=$(docker create $RUNTERM --net=none -e $X -v /tmp/:/tmp/:rw "$IMG" $OPTS -- "menu.sh" "$@")
+  ID=$(docker create $RUNTERM --net=host -e $X -v /tmp/:/tmp/:rw "$IMG" $OPTS -- "menu.sh" "$@")
   #docker ps -a
 fi
 

@@ -201,7 +201,8 @@ if [ ! -z "$O" ]; then
 fi  
 
 
-ARGS=(199) #ARGS="$@"
+#ARGS=(199) # "$@"
+ARGS=()
 
 if [ $# -gt 0 ]; then
   while [ ! -z "$1" ]; do

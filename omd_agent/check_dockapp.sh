@@ -5,6 +5,8 @@
 # License: MIT?
 # Nagios Usage: check_nrpe!check_docker_top1/back/exited/foreign!cpu/mem/t/e/f/b
 # Usage: check_dockapp_back.sh/check_dockapp_exited.sh/check_dockapp_foreign.sh/check_dockapp_top1.sh (link name)
+# PATH: e.g. /usr/local/lib/nagios/plugins/
+## /usr/lib/check_mk_agent/plugins/ ?
 #
 # The script checks if a a single frontent container/app is running.
 #   OK - running 0
@@ -211,7 +213,8 @@ fi
 M=$(bashjoin '&' ${MSG[@]/&*/})
 U=$(res_usage ${MSG[@]/*&/})
 
-UNKNOWN "$N running service(s): $M|b=$N;;;0; $U"
+#UNKNOWN 
+OK "$N running service(s): $M|b=$N;;;0; $U"
 #  echo "UNKNOWN - not a single running TOP app!"
 #  exit 3
 #fi
@@ -298,11 +301,18 @@ WARNING "$N foreign container(s) present: $M|f=$N;;;0; $U"
 function check_dockapp_heartbeat
 {
 
+### TODO: ENV VARS!
 HOST_NAME=localhost
-PORT_NUMBER=8080
+PORT_NUMBER=8888
 
 
 S=`curl -s -X GET "http://${HOST_NAME}:${PORT_NUMBER}/status" 2>&1`
+
+if [ $? -ne 0 ]; then
+  CRITICAL "cannot get heartbeat data"
+#  echo "CRITICAL - cannot determine TOP app"
+#  exit 3
+fi
 
 case "$S" in
 OK*)

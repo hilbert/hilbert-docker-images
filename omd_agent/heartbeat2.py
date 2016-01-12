@@ -1,42 +1,5 @@
 #!/usr/bin/python
 
-### Heartbeat:
-###	webgl: add to render loop (initiate)
-###	multithread / asynchron sending (should not block the application)
-###     non-blocking i/o
-###     how often: 1 beat per second (or less)?
-###     TCPIP connection: leave open?
-###
-###     GET request
-###     sending: add into URL "ID exhibit, heartbeat expectation" (selbstverpflichtung)
-###     The server knows the IP (computer).
-###
-###     initial setup for monitoring software (also list of programs which run on which host)
-###     startup via Nagios?
-###
-###     ----
-###     maintenance mode could be added (you put station on maintenance), if a station is not expected to be running (in order to avoid automatic restart during maintenance)
-
-### Heartbeat protocol:
-### * pass protocol parameters into container via ENVIRONMENT VARIABLES, e.g.
-###
-###   - HEARTBEART_HTTP=http//IP:PORT/heartbeat.html?container=pong&next=%n
-###     = application substitutes %n with minimal time until next heartbeart	(milliseconds) and sends GET request
-###     = server answers with maximal time for next heartbeart (>minimal heartbeat time) (otherwise it will take some action)
-###
-###   - HEARTBEART_TCP=IP:PORT
-###     = CLIENT: send minimal time until next heartbeat (ms)
-###     = SERVER: send maximal time until next heartbeat (ms)
-### 
-### * ENVIRONMENT PARAMETERS are passed by url parameters into browser based applications some API exposed by electron for kiosk applications?
-### 
-### * when container is starting, the management system is waiting for some predefined time (15 seconds? same as regular waiting time when the app is running properly) before expecting the first heartbeat; afterwards the protocol is self tuning
-
-### Heartbeat protocol implementation:
-### 
-### * asynchronous HTTP requests in JS
-### * provide a JS library the ???
-
 # import sched, time
 from time import time
 from time import sleep
@@ -53,10 +16,10 @@ from BaseHTTPServer import BaseHTTPRequestHandler,HTTPServer
 # https://docs.python.org/2/library/sched.html
 #### SH = sched.scheduler(time, sleep)
 
-PORT_NUMBER = 8080
+PORT_NUMBER = 8888
 HOST_NAME = 'localhost'
 
-# localhost:8080/hb_init?48&appid=test_client_python =>
+# localhost:8888/hb_init?48&appid=test_client_python =>
 #         /hb_init
 #         [*] 
 #         ['48', 'appid=test_client_python']
@@ -100,9 +63,9 @@ class MyHandler(BaseHTTPRequestHandler):
         
         if od == 0:
             s.wfile.write("OK - fine " + app)
-        if od > 0:
+        elif od > 0:
             s.wfile.write("WARNING - somewhat late " + app)
-        if od > 2:
+        elif od > 2:
             s.wfile.write("CRITICAL - somewhat late " + app)
 
 
@@ -112,7 +75,8 @@ class MyHandler(BaseHTTPRequestHandler):
         
         s.send_response(200)
         s.send_header('Content-type','text/html')
-       	s.end_headers()
+        s.send_header('Access-Control-Allow-Origin','*')
+        s.end_headers()
         
         ### TODO: FIXME: the following url parsing is neither failsafe nor secure! :-(
         path, _, tail = s.path.partition('?')
@@ -139,7 +103,7 @@ class MyHandler(BaseHTTPRequestHandler):
                 elif len(visits) > 1:
                     s.wfile.write("WARNING - multiple (" + str(len(visits)) + ") applications" )
                 else:
-                    s.wfile.write("UNKNOWN -  no heartbeats yes!" )
+                    s.wfile.write("UNKNOWN -  no heartbeat clients yet..." )
                     
             return
         
@@ -207,24 +171,27 @@ def test_server(HandlerClass = MyHandler, ServerClass = HTTPServer, protocol="HT
 def test_client():
     t = randint(2, 5)
     APP_ID = "test_client_python%" + str(randint(99999999, 9999999999)) # TODO: get unique ID from server?
+    HB_SERVER_URL = "http://" + HOST_NAME + ":" + str(PORT_NUMBER)
 
-    print "List HB apps: " + urlopen("http://" + HOST_NAME + ":" + str(PORT_NUMBER) + "/list" ).read()
-    print "APP HB Status: " + urlopen("http://" + HOST_NAME + ":" + str(PORT_NUMBER) + "/status" ).read()
+    print "List HB apps: " + urlopen(HB_SERVER_URL + "/list" ).read()
+    print "APP HB Status: " + urlopen(HB_SERVER_URL + "/status" ).read()
     
-    tt = urlopen("http://" + HOST_NAME + ":" + str(PORT_NUMBER) + "/hb_init?" + str(t) + "&appid="+ APP_ID ).read()
+    tt = urlopen(HB_SERVER_URL + "/hb_init?" + str(t) + "&appid="+ APP_ID ).read()
     print "Initial response: ", tt
 
-    print "List HB apps: " + urlopen("http://" + HOST_NAME + ":" + str(PORT_NUMBER) + "/list" ).read()
-    print "APP HB Status: " + urlopen("http://" + HOST_NAME + ":" + str(PORT_NUMBER) + "/status" ).read()
+    print "List HB apps: " + urlopen(HB_SERVER_URL + "/list" ).read()
+    print "APP HB Status: " + urlopen(HB_SERVER_URL + "/status" ).read()
     
     overdue = 0
     
-    for i in xrange(1, 30):
+    i = 0
+    for i in xrange(1, 25):
+#    while True:    
+        i = i + 1
         d = randint(0, (int(t) * 2)/1)
         
-        print d, " > ", tt, "?"
-        
         try:
+            print d, " > ", tt, "?"        
             if d > int(tt):
                 overdue += 1
         except:
@@ -236,23 +203,24 @@ def test_client():
         # heartbeat: 
         t = randint(0, 5)
         
-        print "List HB apps: " + urlopen("http://" + HOST_NAME + ":" + str(PORT_NUMBER) + "/list" ).read()
-        print "APP HB Status: " + urlopen("http://" + HOST_NAME + ":" + str(PORT_NUMBER) + "/status" ).read()
+        print "List HB apps: " + urlopen(HB_SERVER_URL + "/list" ).read()
+        print "APP HB Status: " + urlopen(HB_SERVER_URL + "/status" ).read()
         
         print "Ping: ", t
-        tt = urlopen("http://" + HOST_NAME + ":" + str(PORT_NUMBER) + "/hb_ping?" + str(t) + "&appid="+ APP_ID ).read()
+        tt = urlopen(HB_SERVER_URL + "/hb_ping?" + str(t) + "&appid="+ APP_ID ).read()
         print "Pong: ", tt
         
-        print "List HB apps: " + urlopen("http://" + HOST_NAME + ":" + str(PORT_NUMBER) + "/list" ).read()
-        print "APP HB Status: " + urlopen("http://" + HOST_NAME + ":" + str(PORT_NUMBER) + "/status" ).read()
+        print "List HB apps: " + urlopen(HB_SERVER_URL + "/list" ).read()
+        print "APP HB Status: " + urlopen(HB_SERVER_URL + "/status" ).read()
         
-        if tt == "dead":
+        if tt == "dead": # Just for testing...
+            
             print "Ups: we run out of time..."
-            tt = urlopen("http://" + HOST_NAME + ":" + str(PORT_NUMBER) + "/hb_done?0"+ "&appid="+ APP_ID ).read()
+            tt = urlopen(HB_SERVER_URL + "/hb_done?0"+ "&appid="+ APP_ID ).read()
             print "Goodbye message: ", tt
 
-            print "List HB apps: " + urlopen("http://" + HOST_NAME + ":" + str(PORT_NUMBER) + "/list" ).read()
-            print "APP HB Status: " + urlopen("http://" + HOST_NAME + ":" + str(PORT_NUMBER) + "/status" ).read()
+            print "List HB apps: " + urlopen(HB_SERVER_URL + "/list" ).read()
+            print "APP HB Status: " + urlopen(HB_SERVER_URL + "/status" ).read()
 
             break
     
@@ -262,6 +230,48 @@ if __name__ == '__main__':
     print(sys.argv)
     if (len(sys.argv) == 1):
         test_client()
-    else:
-#        if (sys.argv[1] == "-s"):
+    else: # Any Arguments? => Start HB Server
+#        if (sys.argv[1] == "-server"):
         test_server()
+
+#####################################################################
+### Initial HB design:
+###
+
+### Heartbeat:
+###	webgl: add to render loop (initiate)
+###	multithread / asynchron sending (should not block the application)
+###     non-blocking i/o
+###     how often: 1 beat per second (or less)?
+###     TCPIP connection: leave open?
+###
+###     GET request
+###     sending: add into URL "ID exhibit, heartbeat expectation" (selbstverpflichtung)
+###     The server knows the IP (computer).
+###
+###     initial setup for monitoring software (also list of programs which run on which host)
+###     startup via Nagios?
+###
+###     ----
+###     maintenance mode could be added (you put station on maintenance), if a station is not expected to be running (in order to avoid automatic restart during maintenance)
+
+### Heartbeat protocol:
+### * pass protocol parameters into container via ENVIRONMENT VARIABLES, e.g.
+###
+###   - HEARTBEART_HTTP=http//IP:PORT/heartbeat.html?container=pong&next=%n
+###     = application substitutes %n with minimal time until next heartbeart	(milliseconds) and sends GET request
+###     = server answers with maximal time for next heartbeart (>minimal heartbeat time) (otherwise it will take some action)
+###
+###   - HEARTBEART_TCP=IP:PORT
+###     = CLIENT: send minimal time until next heartbeat (ms)
+###     = SERVER: send maximal time until next heartbeat (ms)
+### 
+### * ENVIRONMENT PARAMETERS are passed by url parameters into browser based applications some API exposed by electron for kiosk applications?
+### 
+### * when container is starting, the management system is waiting for some predefined time (15 seconds? same as regular waiting time when the app is running properly) before expecting the first heartbeat; afterwards the protocol is self tuning
+
+### Heartbeat protocol implementation:
+### 
+### * asynchronous HTTP requests in JS
+### * provide a JS library the ???
+
