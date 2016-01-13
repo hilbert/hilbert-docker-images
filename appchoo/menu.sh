@@ -105,18 +105,18 @@ if [ -z "${DISPLAY}" ]; then
 
 else
 
-#  export APP_ID="test_client_GUI_menu%`shuf -i '99999999-9999999999' -n '1'`"
+export APP_ID="test_client_GUI_menu%`shuf -i '99999999-9999999999' -n '1'`"
 
-#  ### HB: 
-#  INIT_TIME=5
+  ### HB: 
+  INIT_TIME=5
 
-#  hb=`HB "hb_init" "${INIT_TIME}"`
-#  if [ $? -ne 0 ]; then
-#    echo "WARNING: no heartbeat server detected => No heartbeat..."  1>&2
-#    unset APP_ID
-##  else
-##    echo "OK: Heartbeat server ('${HB_URL}') init response: '$hb'"
-#  fi
+  hb=`HB "hb_init" "${INIT_TIME}"`
+  if [ $? -ne 0 ]; then
+    echo "WARNING: no heartbeat server detected => No heartbeat..."  1>&2
+    unset APP_ID
+#  else
+#    echo "OK: Heartbeat server ('${HB_URL}') init response: '$hb'"
+  fi
 
   CHOO=$(./txt2jpg.sh $ARGS | ./$APP -p "$PS3")
   choice=$(echo $CHOO | sed 's@^.*:@@g')
