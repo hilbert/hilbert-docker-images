@@ -7,7 +7,7 @@ RUN gpg --keyserver keys.gnupg.net --recv-keys F8C1CA08A57B9ED7 && \
     gpg --armor --export F8C1CA08A57B9ED7 | apt-key add - && \
     echo 'deb http://labs.consol.de/repo/stable/ubuntu trusty main' >> /etc/apt/sources.list && \
     update.sh && install.sh \
-           libpython2.7 omd net-tools netcat xinetd  \
+           libpython2.7 omd net-tools netcat xinetd at \
     && clean.sh
 
 #### due to http://www.monitoring-portal.org/wbb/index.php?page=Thread&threadID=32891
