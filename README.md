@@ -39,7 +39,7 @@ share images as much as possible).
 
 ## The sequence of actions 3..5 looks approximately as follows:
 
-![Approximate Sequence Diagram](http://www.websequencediagrams.com/cgi-bin/cdraw?lz=dGl0bGUgRHluYW1pYyBEb2NrZXIgQXBwbGljYXRpb24KCnBhcnRpY2lwYW50IEhvc3QKbm90ZSBvdmVyAAoFOiAKSG9zdCBMaW51eCB3aXRoAD8HCmVuZCBub3RlCgoAHQUtPisAKgYuL3J1bm1lLnNoCgBQDiI6TWFpbiIAJgkACQc6IDptYWluL21haW4AMAVsb29wIHRoZSBtYWluIGdsdWUgAA4FcnVuIHVudGlsIFF1aXQASxFlbnUiCgoAXgcAWQZlbnUAWgVlbnUvbWVudS5zaAoAIwctLT4tAHgJY2hvc2VuIEFwcC9TZXJ2aWNlIG9yAGAGZGVzdHJveQBXCmFsdCBQdWxsL1J1biBkZWFtb24gOgAvBwCBYBAARgciAIEMCgAKCgCBbwhzdgCBEAYAJAgAghQFABsKZXhlYyAAVgllbHNlAHQKYW5kIEQAgRkHOkFwcEEAgmAQQXBwQQBwDQAMBQCCaQhydQCCawUAIAcAgwwFABkHAHAFAEwFABUIAIIiDGV4aXQgY29kZSAAghMLAGUGAIEbBgCDGQYAgwIILT4tAIRDBgAvCQCCSQwAhAwGZW5kCgplbmQKCgoKCgoK&s=modern-blue)
+![Approximate Sequence Diagram](http://www.websequencediagrams.com/cgi-bin/cdraw?lz=dGl0bGUgRHluYW1pYyBEb2NrZXIgQXBwbGljYXRpb24KCnBhcnRpY2lwYW50IEhvc3QKbm90ZSBvdmVyAAoFOiAKSG9zdCBMaW51eCB3aXRoAD8HCmVuZCBub3RlCgoAHQUtPisAKgYuL3J1bm1lLnNoAE8OIjpNYWluIgAmCCoACQc6IHN0YXJ0IDptYWluCgoAHwctPisAFwltYWluAEkFbG9vcCB0aGUADQUgZ2x1ZSAADgVydW4gdW50aWwgUXVpdABlEWVudSIATgsqAAwHAG8KZW51CgAhBwByBgAZBm1lbnUuc2gAEgktPi0AMgl1c2VyJ3MgY2hvaWNlABcLAIFMCWNob3NlbiBBcHAvU2VydmljZSBvcgCBGgZkZXN0cm95AIERCmFsdCBQdWxsL1J1biBkZWFtb24gOgAvBwCCNBAARgciAIFDDQANCDogc3Yuc2ggADQIACUKAIJLBQAcCwCBDQYAgx8FZWxzZQB1CmFuZCBEAIEaBzpBcHBBAIM1EEFwcEEAcA4ADQU6IHJ1bi5zaCAALwUAIAcAg0EFABgHQXBwQQCCSAYAFQYAgkkFADQHZXhpdAAOCwCEEQlleGl0IGNvZGUgAIIqCwB7BgCBMQYAg2oGAIQsCACDGwYAMQoADgsAhUUGAEcJAIJ4DACFCgstPi0AhW0HZW5kCgplbmQK&s=modern-blue)
 
 ## Currently we provide the following images:
 
@@ -75,7 +75,7 @@ Depending on `MENU_TRY` it can be either GUI or TEXT style.
 * [![](https://badge.imagelayers.io/malex984/dockapp:iceweasel.svg)](https://imagelayers.io/?images=malex984/dockapp:iceweasel'Get your own badge on imagelayers.io')
 `:iceweasel` Firefox & Iceweasel
 * [![](https://badge.imagelayers.io/malex984/dockapp:chrome.svg)](https://imagelayers.io/?images=malex984/dockapp:chrome'Get your own badge on imagelayers.io')
-`:chrome` Google Chrome & Chromium
+`:chrome` Google Chrome & Chromium & Opera
 * [![](https://badge.imagelayers.io/malex984/dockapp:kiosk.svg)](https://imagelayers.io/?images=malex984/dockapp:kiosk'Get your own badge on imagelayers.io')
 `:kiosk` Kiosk-mode web-wrowser using Electron (based on Chromium)
 
@@ -96,7 +96,13 @@ Some applications may need further deamons to run in background. Here is a list 
 * [![](https://badge.imagelayers.io/malex984/dockapp:ptmx.svg)](https://imagelayers.io/?images=malex984/dockapp:ptmx'Get your own badge on imagelayers.io')
 `:ptmx` is a service to try to workarouind the docker problem of permissions to /dev/pts/ptmx
 * [![](https://badge.imagelayers.io/malex984/dockapp:omd.svg)](https://imagelayers.io/?images=malex984/dockapp:omd'Get your own badge on imagelayers.io')
-`:omd` containes pre-cofigured OMD service instance (**NOTE:** under development). 
+`:omd` containes pre-cofigured OMD service instance (**NOTE:** under development).
+[![](https://badge.imagelayers.io/malex984/dockapp:omd_agent.svg)](https://imagelayers.io/?images=malex984/dockapp:omd_agent'Get your own badge on imagelayers.io')
+`:omd_agent` containes pre-cofigured OMD / Check_MK Agent (inc.
+check_dockapp*) and HeartBeat server instance, see [Current Specs](https://gist.github.com/malex984/dbec16e9c7d88f295071) (**NOTE:** under development)
+* [![](https://badge.imagelayers.io/malex984/dockapp:qrhandler.svg)](https://imagelayers.io/?images=malex984/dockapp:qrhandler'Get your own badge on imagelayers.io')
+`:qrhandler` is a service to exclusively handle QR Reader and take some action upon each new scanned code (show message & takes screenshot)
+
 
 ## The dependencies between images are as follows: 
 ![Dependencies between docker images](deps.png)

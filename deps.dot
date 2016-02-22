@@ -3,6 +3,7 @@ digraph deps{ graph [label="an arrow means that its source is based on the arrow
 ":appa" -> ":base" ;
 ":appchoo" -> ":base" ;
 ":base" -> "phusion/baseimage:0.9.16" ;
+":cc" -> ":base" ;
 ":chrome" -> ":webbase" ;
 ":cups" -> ":base" ;
 ":dd" -> ":base" ;
@@ -14,9 +15,11 @@ digraph deps{ graph [label="an arrow means that its source is based on the arrow
 ":kivy" -> ":test" ;
 ":main" -> ":dd" ;
 ":omd" -> ":base" ;
+":omd_agent" -> ":dd" ;
 ":play" -> ":gui" ;
 ":ptmx" -> ":base" ;
 ":q3" -> ":xeyes" ;
+":qrhandler" -> ":xeyes" ;
 ":skype" -> ":base" ;
 ":surfer" -> ":gui" ;
 ":test" -> ":gui" ;
