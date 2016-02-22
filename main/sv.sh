@@ -3,6 +3,9 @@
 
 APP="$1"
 
+shift
+ARGS="$@"
+
 # USER_UID=$(id -u)
 
 #U=malex984
@@ -40,9 +43,6 @@ else
 fi
 
 APP="c_$APP"
-
-shift
-ARGS="$@"
 
 # XSOCK=/tmp/.X11-unix/
 # [ -z "$X" ] && X="DISPLAY -e XAUTHORITY"
