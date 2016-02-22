@@ -1,13 +1,14 @@
 #!/bin/bash
 
 # NOTE: just for testing:
-gcc --static event.c -o event || exit 1
+### gcc --static event.c -o event || exit 1
 
 OLDDIR="${PWD}"
 SELFDIR=`dirname "$0"`
 cd "${SELFDIR}"
 
 N="$1"
+N="${N:-${QR_DEVICE_ID}}"
 N="${N:-AT Translated Set 2 keyboard}"
 
 echo "Device: '${N}'..." 1>&2
