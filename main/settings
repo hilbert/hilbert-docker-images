@@ -212,6 +212,8 @@ addoption "LANGUAGE" "en" "en:de:ru"
 addoption "MENU_TRY" "text" "gui:text"
 addoption "VNC_PASSWD" ""
 
+addoption QR_DEVICE_ID "AT Translated Set 2 keyboard"
+
 
 mygetenv() 
 {

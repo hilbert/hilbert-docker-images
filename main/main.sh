@@ -132,8 +132,8 @@ do
  
  if [ ${#ARGS[@]} -eq 0 ]; then
    $SELFDIR/menu.sh \
-     "Your choice please?" 196 \
-     "OMD_AGENT OMD_SERVER PTMX_FIX DEMO A_Test_Application_A LIBGL_CUSTOMIZATION Alsa_Test GUI_Shell Bash_in_MainGlueApp X11_Shell X11Server Xephyr Cups_Server CHANGE_SETTINGS X11vnc Xvfb x11comp"
+     "Your choice please?" 195 \
+     "QR_Handler OMD_AGENT OMD_SERVER PTMX_FIX DEMO A_Test_Application_A LIBGL_CUSTOMIZATION Alsa_Test GUI_Shell Bash_in_MainGlueApp X11_Shell X11Server Xephyr Cups_Server CHANGE_SETTINGS X11vnc Xvfb x11comp"
    ARGS=("$?")
  fi
  
@@ -147,21 +147,30 @@ do
  case "$APP" in
 ################################################
 
+    196) # QR Handler service: qrhandler
+        echo "Starting OMD agent on this host! ... "
+	# sudo -u default 
+        QR=$($SELFDIR/sv.sh 'qrhandler' qrhandler.sh)
+        echo "QR ID: $QR, LOG:"
+	sleep 1
+	docker logs $QR 2>&1
+    ;;    
+
     197) # OMD agent
         echo "Starting OMD agent on this host! ... "
 	# sudo -u default 
-        OMD=$($SELFDIR/sv.sh 'omd_agent' omd_agent_entrypoint.sh)
-        echo "OMD ID: $OLD, LOG:"
+        OMDA=$($SELFDIR/sv.sh 'omd_agent' omd_agent_entrypoint.sh)
+        echo "OMD AGENT ID: $OMDA, LOG:"
 	sleep 1
-	docker logs $OMD 2>&1
+	docker logs $OMDA 2>&1
     ;;
 
     198) # OMD server
         echo "Starting OMD services ... "
 	# sudo -u default 
         OMD=$($SELFDIR/sv.sh 'omd' omd_entrypoint.sh)
-        echo "OMD ID: $OLD, LOG:"
-	sleep 1
+        echo "OMD ID: $OMD, LOG:"
+	sleep 3
 	docker logs $OMD 2>&1
     ;;
 
