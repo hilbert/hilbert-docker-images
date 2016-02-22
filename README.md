@@ -97,9 +97,8 @@ Some applications may need further deamons to run in background. Here is a list 
 `:ptmx` is a service to try to workarouind the docker problem of permissions to /dev/pts/ptmx
 * [![](https://badge.imagelayers.io/malex984/dockapp:omd.svg)](https://imagelayers.io/?images=malex984/dockapp:omd'Get your own badge on imagelayers.io')
 `:omd` containes pre-cofigured OMD service instance (**NOTE:** under development).
-[![](https://badge.imagelayers.io/malex984/dockapp:omd_agent.svg)](https://imagelayers.io/?images=malex984/dockapp:omd_agent'Get your own badge on imagelayers.io')
-`:omd_agent` containes pre-cofigured OMD / Check_MK Agent (inc.
-check_dockapp*) and HeartBeat server instance, see [Current Specs](https://gist.github.com/malex984/dbec16e9c7d88f295071) (**NOTE:** under development)
+* [![](https://badge.imagelayers.io/malex984/dockapp:omd_agent.svg)](https://imagelayers.io/?images=malex984/dockapp:omd_agent'Get your own badge on imagelayers.io')
+`:omd_agent` containes pre-cofigured OMD/Check_MK Agent (with our addition: `check_dockapp.sh`) and HeartBeat server instance, see [Current Specs](https://gist.github.com/malex984/dbec16e9c7d88f295071) (**NOTE:** under development)
 * [![](https://badge.imagelayers.io/malex984/dockapp:qrhandler.svg)](https://imagelayers.io/?images=malex984/dockapp:qrhandler'Get your own badge on imagelayers.io')
 `:qrhandler` is a service to exclusively handle QR Reader and take some action upon each new scanned code (show message & takes screenshot)
 
