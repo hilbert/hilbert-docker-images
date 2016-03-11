@@ -1,0 +1,188 @@
+version: '2'
+services:
+  base:
+    image: malex984/dockapp:base
+    build: base/  
+    volumes:
+     - /tmp/:/tmp/:rw
+     - /etc/localtime:/etc/localtime:ro 
+     - ~/:/HOME/:ro
+
+  admin:
+    extends: 
+      service: base
+    volumes:
+     - /dev:/dev:rw
+     - /run/udev:/run/udev
+     - /sys/fs/cgroup:/sys/fs/cgroup:ro
+     - /run/systemd:/run/systemd
+     - /var/run/dbus/system_bus_socket:/var/run/dbus/system_bus_socket
+    privileged: true
+    ipc: host
+    pid: "host"
+    network_mode: "host"
+    cap_add:
+     - SYS_ADMIN
+     - NET_ADMIN
+     - ALL
+
+  busybox:
+    extends: 
+      service: admin
+    image: busybox
+    command: sh
+    
+  reboot:
+    extends: 
+      service: busybox
+    command: reboot
+
+  poweroff:
+    extends: 
+      service: busybox
+    command: poweroff
+
+
+  omd:
+    extends: 
+      service: admin
+    image: malex984/dockapp:omd
+    build: omd/
+    ports:
+     - "80"
+     - "514"
+     - "5667"
+     - "5000"     
+    labels:
+     - "is_top_app=1"
+    stdin_open: false
+    tty: false
+    restart: always
+    entrypoint: /sbin/my_init
+    command: --skip-startup-files --quiet --skip-runit --no-kill-all-on-exit -- omd_entrypoint.sh
+
+
+  ddd:
+    extends: 
+      service: admin
+    image: malex984/dockapp:ddd
+    build: ddd/
+    volumes:
+     - /var/run/docker.sock:/var/run/docker.sock
+    environment:
+     - DOCKER_HOST=unix:///var/run/docker.sock
+     - NO_PROXY=/var/run/docker.sock
+    entrypoint: bash
+    command: -c "docker info"
+
+
+  omd_agent:
+    extends: 
+      service: ddd
+    image: malex984/dockapp:omd_agent
+    build: omd_agent/
+    ports:
+     - "6556"
+     - "8888"
+    labels:
+     - "is_top_app=0"
+    stdin_open: false
+    tty: false
+    restart: always
+    entrypoint: /sbin/my_init
+    command: --skip-startup-files --quiet --skip-runit --no-kill-all-on-exit -- omd_agent_entrypoint.sh
+
+
+
+  pa:
+    extends: 
+      service: admin
+    volumes:
+     - /run/user/1192/pulse:/run/pulse
+    environment:
+     - PULSE_SERVER=/run/pulse/native
+  
+  gui:
+    extends: 
+      service: pa
+    environment:
+     - QT_X11_NO_MITSHM=1
+     - XLIB_SKIP_ARGB_VISUALS=1
+     - DISPLAY=unix:0.0
+     - XAUTHORITY=/tmp/.docker.xauth
+    stdin_open: false
+    tty: false
+
+  ptmx:
+    extends: 
+      service: admin
+    image: malex984/dockapp:ptmx
+    build: ptmx/
+    stdin_open: false
+    tty: false
+    restart: always
+    labels:
+     - "is_top_app=0"
+    entrypoint: /sbin/my_init
+    command: --skip-startup-files --quiet --skip-runit --no-kill-all-on-exit -- ptmx.sh
+
+
+
+  x11vnc:
+    extends: 
+      service: gui
+    image: malex984/dockapp:x11vnc
+    build: x11vnc/
+    restart: always
+    ports:
+     - "127.0.0.1:5900-5910:5900-5910"
+    labels:
+     - "is_top_app=0"     
+    entrypoint: /sbin/my_init
+    command: --skip-startup-files --quiet --skip-runit --no-kill-all-on-exit -- x11vnc.sh
+
+
+  xeyes:
+    extends: 
+      service: gui
+    image: malex984/dockapp:xeyes
+    build: xeyes/
+    restart: always    
+    labels:
+     - "is_top_app=1"
+    entrypoint: /sbin/my_init
+    command: --skip-startup-files --quiet --skip-runit --no-kill-all-on-exit -- xeyes
+    
+  kiosk:
+    extends: 
+      service: gui
+    image: malex984/dockapp:kiosk
+    build: kiosk/
+    labels:
+     - "is_top_app=1"
+    entrypoint: /sbin/my_init
+    command: --skip-startup-files --quiet --skip-runit --no-kill-all-on-exit -- launch.sh browser.sh
+    
+
+
+  dockapp:
+    extends: 
+      service: gui
+    working_dir: /dockapp
+    volumes:
+     - .:/dockapp
+    labels:
+     - "is_top_app=1"
+      
+
+  dev_bus_usb:
+    extends: 
+      service: dockapp
+    devices:
+     - "/dev/bus/usb:/dev/bus/usb:rwm"
+     - "/dev/nvidia0:/dev/nvidia0"
+     - "/dev/nvidiactl:/dev/nvidiactl"
+     - "/dev/dri:/dev/dri"
+     - "/dev/snd:/dev/snd"
+     - "/dev/shm:/dev/shm"
+     - "/dev/input:/dev/input"
