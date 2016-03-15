@@ -2,15 +2,59 @@ version: '2'
 services:
   base:
     image: malex984/dockapp:base
-    build: base/  
+    build: base/
     volumes:
      - /tmp/:/tmp/:rw
+     - .:/DOCKAPP
      - /etc/localtime:/etc/localtime:ro 
-     - ~/:/HOME/:ro
+    working_dir: /DOCKAPP
+    environment:
+     - CFG_DIR=/DOCKAPP
+    entrypoint: /sbin/my_init
+    command: --skip-startup-files --quiet --skip-runit --no-kill-all-on-exit -- bash
+
+  ddd:
+    extends: 
+      service: base
+    image: malex984/dockapp:ddd
+    build: ddd/
+    labels:
+     - "is_top_app=0"
+    volumes:
+     - $NO_PROXY:$NO_PROXY
+     - $DOCKER_PLUGINS:$DOCKER_PLUGINS
+    environment:
+     - DOCKER_HOST
+     - NO_PROXY
+    entrypoint: bash
+    command: -c "docker info"
+
+  luncher:
+    extends: 
+      service: ddd
+    image: malex984/dockapp:ddd
+    entrypoint: bash
+    command: -c "luncher.sh version"
+
+  omd_agent:
+    extends: 
+      service: ddd
+    image: malex984/dockapp:omd_agent
+    build: omd_agent/
+    ports:
+     - "6556"
+     - "8888"
+    labels:
+     - "is_top_app=0"
+    stdin_open: false
+    tty: false
+    restart: always
+    entrypoint: /sbin/my_init
+    command: --skip-startup-files --quiet --skip-runit --no-kill-all-on-exit -- omd_agent_entrypoint.sh
 
   admin:
     extends: 
-      service: base
+      service: ddd
     volumes:
      - /dev:/dev:rw
      - /run/udev:/run/udev
@@ -60,39 +104,6 @@ services:
     restart: always
     entrypoint: /sbin/my_init
     command: --skip-startup-files --quiet --skip-runit --no-kill-all-on-exit -- omd_entrypoint.sh
-
-
-  ddd:
-    extends: 
-      service: admin
-    image: malex984/dockapp:ddd
-    build: ddd/
-    volumes:
-     - /var/run/docker.sock:/var/run/docker.sock
-    environment:
-     - DOCKER_HOST=unix:///var/run/docker.sock
-     - NO_PROXY=/var/run/docker.sock
-    entrypoint: bash
-    command: -c "docker info"
-
-
-  omd_agent:
-    extends: 
-      service: ddd
-    image: malex984/dockapp:omd_agent
-    build: omd_agent/
-    ports:
-     - "6556"
-     - "8888"
-    labels:
-     - "is_top_app=0"
-    stdin_open: false
-    tty: false
-    restart: always
-    entrypoint: /sbin/my_init
-    command: --skip-startup-files --quiet --skip-runit --no-kill-all-on-exit -- omd_agent_entrypoint.sh
-
-
 
   pa:
     extends: 
@@ -168,12 +179,11 @@ services:
   dockapp:
     extends: 
       service: gui
-    working_dir: /dockapp
+    working_dir: /APP/
     volumes:
-     - .:/dockapp
+     - .:/APP
     labels:
      - "is_top_app=1"
-      
 
   dev_bus_usb:
     extends: 
@@ -186,3 +196,4 @@ services:
      - "/dev/snd:/dev/snd"
      - "/dev/shm:/dev/shm"
      - "/dev/input:/dev/input"
+

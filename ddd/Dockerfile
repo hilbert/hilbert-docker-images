@@ -4,3 +4,8 @@ MAINTAINER Oleksandr Motsak <malex984@googlemail.com>
 
 RUN apk update && apk add bash docker 
 # && apk cache clean
+
+COPY luncher.sh /usr/local/bin/
+
+ENTRYPOINT ["luncher.sh"]
+

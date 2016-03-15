@@ -12,39 +12,42 @@
 # the $COMPOSE_OPTIONS environment variable.
 #
 
+SELFDIR=`dirname "$0"`
+SELFDIR=`cd "$SELFDIR" && pwd`
 
 set -e
 
-#VERSION="1.6.2"
-IMAGE="malex984/dockapp:ddd"
-#"docker/compose:$VERSION"
+if [ -z "$CFG_DIR" ]; then
+    export CFG_DIR="$SELFDIR" # HOME/.config/dockapp
+fi
 
+if [ -r "$CFG_DIR/docker.cfg" ]; then
+    . "$CFG_DIR/docker.cfg"
+fi
+
+
+#VERSION="1.6.2"
+if [ -z "$DOCKER_COMPOSE_IMAGE" ]; then
+    DOCKER_COMPOSE_IMAGE="malex984/dockapp:ddd"
+#"docker/compose:$VERSION"
+fi
 
 # Setup options for connecting to docker host
-if [ -z "$DOCKER_HOST" ]; then
-    DOCKER_HOST="/var/run/docker.sock"
+if [ -z "$NO_PROXY" ]; then
+    NO_PROXY="/var/run/docker.sock"
+    DOCKER_HOST="unix://$NO_PROXY"
+    DOCKER_PLUGINS="/run/docker/plugins/"
 fi
-if [ -S "$DOCKER_HOST" ]; then
-    DOCKER_ADDR="-v $DOCKER_HOST:$DOCKER_HOST -e DOCKER_HOST"
+
+if [ -S "$NO_PROXY" ]; then
+    DOCKER_ADDR="-v $NO_PROXY:$NO_PROXY -e DOCKER_HOST -e NO_PROXY -v $DOCKER_PLUGINS:$DOCKER_PLUGINS"
 else
     DOCKER_ADDR="-e DOCKER_HOST -e DOCKER_TLS_VERIFY -e DOCKER_CERT_PATH"
 fi
 
 
 # Setup volume mounts for compose config and context
-if [ "$(pwd)" != '/' ]; then
-    VOLUMES="-v $(pwd):$(pwd)"
-fi
-if [ -n "$COMPOSE_FILE" ]; then
-    compose_dir=$(dirname $COMPOSE_FILE)
-fi
-# TODO: also check --file argument
-if [ -n "$compose_dir" ]; then
-    VOLUMES="$VOLUMES -v $compose_dir:$compose_dir"
-fi
-if [ -n "$HOME" ]; then
-    VOLUMES="$VOLUMES -v $HOME:$HOME -v $HOME:/root" # mount $HOME in /root to share docker.config
-fi
+VOLUMES="-v $CFG_DIR:/DOCKAPP -e CFG_DIR=/DOCKAPP"
 
 # Only allocate tty if we detect one
 if [ -t 1 ]; then
@@ -54,4 +57,6 @@ if [ -t 0 ]; then
     DOCKER_RUN_OPTIONS="$DOCKER_RUN_OPTIONS -i"
 fi
 
-exec docker run --rm $DOCKER_RUN_OPTIONS $DOCKER_ADDR $COMPOSE_OPTIONS $VOLUMES -w "$(pwd)" $IMAGE "$@"
+echo "CMD: [exec docker run --rm $DOCKER_RUN_OPTIONS $DOCKER_ADDR $COMPOSE_OPTIONS $VOLUMES $DOCKER_COMPOSE_IMAGE '$@']"
+
+exec docker run --rm $DOCKER_RUN_OPTIONS $DOCKER_ADDR $COMPOSE_OPTIONS $VOLUMES $DOCKER_COMPOSE_IMAGE "$@"
