@@ -5,13 +5,13 @@ services:
     build: base/
     volumes:
      - /tmp/:/tmp/:rw
-     - .:/DOCKAPP
+     - CFG:/DOCKAPP
      - /etc/localtime:/etc/localtime:ro 
     working_dir: /DOCKAPP
     environment:
      - CFG_DIR=/DOCKAPP
-    entrypoint: /sbin/my_init
-    command: --skip-startup-files --quiet --skip-runit --no-kill-all-on-exit -- bash
+    entrypoint: 
+     - /bin/sh
 
   ddd:
     extends: 
@@ -26,15 +26,14 @@ services:
     environment:
      - DOCKER_HOST
      - NO_PROXY
-    entrypoint: bash
-    command: -c "docker info"
+    entrypoint: 
+     - /bin/sh
 
   luncher:
     extends: 
       service: ddd
-    image: malex984/dockapp:ddd
-    entrypoint: bash
-    command: -c "luncher.sh version"
+    entrypoint: 
+     - luncher.sh
 
   omd_agent:
     extends: 
@@ -49,8 +48,15 @@ services:
     stdin_open: false
     tty: false
     restart: always
-    entrypoint: /sbin/my_init
-    command: --skip-startup-files --quiet --skip-runit --no-kill-all-on-exit -- omd_agent_entrypoint.sh
+    entrypoint: 
+     - /sbin/my_init
+     - --skip-startup-files
+     - --quiet
+     - --skip-runit
+     - --no-kill-all-on-exit
+     - --
+    command: 
+     - omd_agent_entrypoint.sh
 
   admin:
     extends: 
@@ -74,18 +80,19 @@ services:
     extends: 
       service: admin
     image: busybox
-    command: sh
+    entrypoint: 
+     - /bin/sh
     
-  reboot:
+  ptmx:
     extends: 
       service: busybox
-    command: reboot
-
-  poweroff:
-    extends: 
-      service: busybox
-    command: poweroff
-
+    stdin_open: false
+    tty: false
+    restart: always
+    labels:
+     - "is_top_app=0"
+    command:
+     - ptmx/ptmx.sh
 
   omd:
     extends: 
@@ -102,16 +109,25 @@ services:
     stdin_open: false
     tty: false
     restart: always
-    entrypoint: /sbin/my_init
-    command: --skip-startup-files --quiet --skip-runit --no-kill-all-on-exit -- omd_entrypoint.sh
+    entrypoint: 
+     - /sbin/my_init
+     - --skip-startup-files
+     - --quiet
+     - --skip-runit
+     - --no-kill-all-on-exit
+     - --
+    command: 
+     - omd_entrypoint.sh
 
   pa:
     extends: 
       service: admin
     volumes:
-     - /run/user/1192/pulse:/run/pulse
+     - ${PULSE_SOCKET}:/run/pulse/native
+     - ${PULSE_COOKIE}:/run/pulse_cookie
     environment:
      - PULSE_SERVER=/run/pulse/native
+     - PULSE_COOKIE=/run/pulse_cookie
   
   gui:
     extends: 
@@ -123,20 +139,13 @@ services:
      - XAUTHORITY=/tmp/.docker.xauth
     stdin_open: false
     tty: false
-
-  ptmx:
-    extends: 
-      service: admin
-    image: malex984/dockapp:ptmx
-    build: ptmx/
-    stdin_open: false
-    tty: false
-    restart: always
-    labels:
-     - "is_top_app=0"
-    entrypoint: /sbin/my_init
-    command: --skip-startup-files --quiet --skip-runit --no-kill-all-on-exit -- ptmx.sh
-
+    entrypoint: 
+     - /sbin/my_init
+     - --skip-startup-files
+     - --quiet
+     - --skip-runit
+     - --no-kill-all-on-exit
+     - --
 
 
   x11vnc:
@@ -149,8 +158,8 @@ services:
      - "127.0.0.1:5900-5910:5900-5910"
     labels:
      - "is_top_app=0"     
-    entrypoint: /sbin/my_init
-    command: --skip-startup-files --quiet --skip-runit --no-kill-all-on-exit -- x11vnc.sh
+    command: 
+     - x11vnc.sh
 
 
   xeyes:
@@ -161,8 +170,8 @@ services:
     restart: always    
     labels:
      - "is_top_app=1"
-    entrypoint: /sbin/my_init
-    command: --skip-startup-files --quiet --skip-runit --no-kill-all-on-exit -- xeyes
+    command: 
+     - xeyes
     
   kiosk:
     extends: 
@@ -171,9 +180,36 @@ services:
     build: kiosk/
     labels:
      - "is_top_app=1"
-    entrypoint: /sbin/my_init
-    command: --skip-startup-files --quiet --skip-runit --no-kill-all-on-exit -- launch.sh browser.sh
+    entrypoint: 
+     - /sbin/my_init 
+     - --skip-startup-files
+     - --quiet 
+     - --skip-runit 
+     - --no-kill-all-on-exit 
+     - -- 
+     - launch.sh
+    command: 
+     - browser.sh
+     - -l
+     - http://localhost:5000/default/
     
+  kivy:
+    extends: 
+      service: gui
+    image: malex984/dockapp:kivy
+    build: kivy/
+    labels:
+     - "is_top_app=1"
+    entrypoint: 
+     - /sbin/my_init 
+     - --skip-startup-files
+     - --quiet 
+     - --skip-runit 
+     - --no-kill-all-on-exit 
+     - -- 
+     - launch.sh
+    command:
+     - /usr/local/src/Deflectouch/run.sh
 
 
   dockapp:
@@ -197,3 +233,7 @@ services:
      - "/dev/shm:/dev/shm"
      - "/dev/input:/dev/input"
 
+
+volumes:
+  CFG:
+    external: true

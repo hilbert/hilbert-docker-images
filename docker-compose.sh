@@ -12,19 +12,23 @@
 # the $COMPOSE_OPTIONS environment variable.
 #
 
-SELFDIR=`dirname "$0"`
-SELFDIR=`cd "$SELFDIR" && pwd`
+#SELFDIR=`dirname "$0"`
+#SELFDIR=`cd "$SELFDIR" && pwd`
 
 set -e
 
-if [ -z "$CFG_DIR" ]; then
-    export CFG_DIR="$SELFDIR" # HOME/.config/dockapp
-fi
+rm -f /tmp/.docker.cfg
+docker run --rm -v CFG:/A busybox cat /A/docker.cfg > /tmp/.docker.cfg
 
-if [ -r "$CFG_DIR/docker.cfg" ]; then
-    . "$CFG_DIR/docker.cfg"
-fi
+SAVE_NO_PROXY=${NO_PROXY}
+SAVE_DOCKER_HOST=${DOCKER_HOST}
 
+unset NO_PROXY
+unset DOCKER_HOST
+
+cat /tmp/.docker.cfg
+source /tmp/.docker.cfg
+rm -f /tmp/.docker.cfg
 
 #VERSION="1.6.2"
 if [ -z "$DOCKER_COMPOSE_IMAGE" ]; then
@@ -40,14 +44,14 @@ if [ -z "$NO_PROXY" ]; then
 fi
 
 if [ -S "$NO_PROXY" ]; then
-    DOCKER_ADDR="-v $NO_PROXY:$NO_PROXY -e DOCKER_HOST -e NO_PROXY -v $DOCKER_PLUGINS:$DOCKER_PLUGINS"
+    DOCKER_ADDR="-v $NO_PROXY:$NO_PROXY -e DOCKER_HOST=${DOCKER_HOST} -e NO_PROXY=${NO_PROXY} -v $DOCKER_PLUGINS:$DOCKER_PLUGINS"
 else
-    DOCKER_ADDR="-e DOCKER_HOST -e DOCKER_TLS_VERIFY -e DOCKER_CERT_PATH"
+    DOCKER_ADDR="-e DOCKER_HOST=${DOCKER_HOST} -e DOCKER_TLS_VERIFY=${DOCKER_TLS_VERIFY} -e DOCKER_CERT_PATH=${DOCKER_CERT_PATH}"
 fi
 
 
 # Setup volume mounts for compose config and context
-VOLUMES="-v $CFG_DIR:/DOCKAPP -e CFG_DIR=/DOCKAPP"
+VOLUMES="-v CFG:/DOCKAPP -e CFG_DIR=/DOCKAPP"
 
 # Only allocate tty if we detect one
 if [ -t 1 ]; then
@@ -58,5 +62,11 @@ if [ -t 0 ]; then
 fi
 
 echo "CMD: [exec docker run --rm $DOCKER_RUN_OPTIONS $DOCKER_ADDR $COMPOSE_OPTIONS $VOLUMES $DOCKER_COMPOSE_IMAGE '$@']"
+
+unset NO_PROXY
+unset DOCKER_HOST
+
+export NO_PROXY=${SAVE_NO_PROXY}
+export DOCKER_HOST=${SAVE_DOCKER_HOST}
 
 exec docker run --rm $DOCKER_RUN_OPTIONS $DOCKER_ADDR $COMPOSE_OPTIONS $VOLUMES $DOCKER_COMPOSE_IMAGE "$@"
