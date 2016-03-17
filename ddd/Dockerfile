@@ -2,7 +2,8 @@ FROM docker/compose:1.6.2
 
 MAINTAINER Oleksandr Motsak <malex984@googlemail.com>
 
-RUN apk update && apk add bash docker 
+RUN apk update && apk add bash
+###### docker 
 # && apk cache clean
 
 COPY luncher.sh /usr/local/bin/

@@ -17,8 +17,10 @@
 
 set -e
 
-rm -f /tmp/.docker.cfg
-docker run --rm -v CFG:/A busybox cat /A/docker.cfg > /tmp/.docker.cfg
+TMP_DOCKER_CFG=/tmp/.docker.cfg
+rm -f ${TMP_DOCKER_CFG}
+
+docker run --rm -v CFG:/A busybox cat /A/docker.cfg > ${TMP_DOCKER_CFG}
 
 SAVE_NO_PROXY=${NO_PROXY}
 SAVE_DOCKER_HOST=${DOCKER_HOST}
@@ -26,9 +28,9 @@ SAVE_DOCKER_HOST=${DOCKER_HOST}
 unset NO_PROXY
 unset DOCKER_HOST
 
-cat /tmp/.docker.cfg
-source /tmp/.docker.cfg
-rm -f /tmp/.docker.cfg
+### cat ${TMP_DOCKER_CFG}
+source ${TMP_DOCKER_CFG}
+### rm -f ${TMP_DOCKER_CFG}
 
 #VERSION="1.6.2"
 if [ -z "$DOCKER_COMPOSE_IMAGE" ]; then
@@ -61,12 +63,12 @@ if [ -t 0 ]; then
     DOCKER_RUN_OPTIONS="$DOCKER_RUN_OPTIONS -i"
 fi
 
-echo "CMD: [exec docker run --rm $DOCKER_RUN_OPTIONS $DOCKER_ADDR $COMPOSE_OPTIONS $VOLUMES $DOCKER_COMPOSE_IMAGE '$@']"
-
 unset NO_PROXY
 unset DOCKER_HOST
 
 export NO_PROXY=${SAVE_NO_PROXY}
 export DOCKER_HOST=${SAVE_DOCKER_HOST}
 
-exec docker run --rm $DOCKER_RUN_OPTIONS $DOCKER_ADDR $COMPOSE_OPTIONS $VOLUMES $DOCKER_COMPOSE_IMAGE "$@"
+echo "CMD: exec docker run --rm [$DOCKER_RUN_OPTIONS $DOCKER_ADDR $COMPOSE_OPTIONS $VOLUMES $DOCKER_COMPOSE_IMAGE $@]"
+
+exec docker -D run --rm $DOCKER_RUN_OPTIONS $DOCKER_ADDR $COMPOSE_OPTIONS $VOLUMES $DOCKER_COMPOSE_IMAGE $@

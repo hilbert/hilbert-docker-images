@@ -14,21 +14,22 @@
 
 set -e
 
-echo $PWD
+# echo $PWD
 
-echo "Args: "
-echo "["
-echo "$@"
-echo "]"
+# echo "Args: "
+# echo "["
+# echo "$@"
+# echo "]"
 
-export 
+# export 
 
 if [ -z "$CFG_DIR" ]; then
     export CFG_DIR="$HOME/.config/dockapp"
 fi
 
 cd $CFG_DIR
-ls -la 
+
+# ls -la 
 
 if [ -r "$CFG_DIR/docker.cfg" ]; then
     . "$CFG_DIR/docker.cfg"
@@ -38,6 +39,10 @@ if [ -r "$CFG_DIR/compose.cfg" ]; then
     . "$CFG_DIR/compose.cfg"
 fi
 
-export 
+#if [ -r "$CFG_DIR/lastapp.cfg" ]; then
+#    . "$CFG_DIR/lastapp.cfg"
+#fi
+
+# export 
 
 exec docker-compose "$@"

@@ -7,6 +7,8 @@ services:
      - /tmp/:/tmp/:rw
      - CFG:/DOCKAPP
      - /etc/localtime:/etc/localtime:ro 
+    labels:
+     - "is_top_app=0"
     working_dir: /DOCKAPP
     environment:
      - CFG_DIR=/DOCKAPP
@@ -16,7 +18,7 @@ services:
   ddd:
     extends: 
       service: base
-    image: malex984/dockapp:ddd
+    image: ${DOCKER_COMPOSE_IMAGE}
     build: ddd/
     labels:
      - "is_top_app=0"
@@ -32,31 +34,10 @@ services:
   luncher:
     extends: 
       service: ddd
-    entrypoint: 
-     - luncher.sh
-
-  omd_agent:
-    extends: 
-      service: ddd
-    image: malex984/dockapp:omd_agent
-    build: omd_agent/
-    ports:
-     - "6556"
-     - "8888"
     labels:
      - "is_top_app=0"
-    stdin_open: false
-    tty: false
-    restart: always
     entrypoint: 
-     - /sbin/my_init
-     - --skip-startup-files
-     - --quiet
-     - --skip-runit
-     - --no-kill-all-on-exit
-     - --
-    command: 
-     - omd_agent_entrypoint.sh
+     - luncher.sh
 
   admin:
     extends: 
@@ -67,6 +48,8 @@ services:
      - /sys/fs/cgroup:/sys/fs/cgroup:ro
      - /run/systemd:/run/systemd
      - /var/run/dbus/system_bus_socket:/var/run/dbus/system_bus_socket
+    labels:
+     - "is_top_app=0"
     privileged: true
     ipc: host
     pid: "host"
@@ -76,9 +59,38 @@ services:
      - NET_ADMIN
      - ALL
 
+  omd_agent:
+    extends: 
+      service: admin
+    image: malex984/dockapp:omd_agent
+    build: omd_agent/
+    environment:
+     - HB_PORT
+     - HB_HOST
+     - HB_URL
+    ports:
+     - "6556"
+     - "${HB_PORT}"
+    stdin_open: false
+    tty: false
+    restart: always
+    labels:
+     - "is_top_app=0"
+    entrypoint: 
+     - /sbin/my_init
+     - --skip-startup-files
+     - --quiet
+     - --skip-runit
+     - --no-kill-all-on-exit
+     - --
+    command: 
+     - omd_agent_entrypoint.sh
+
   busybox:
     extends: 
       service: admin
+    labels:
+     - "is_top_app=0"
     image: busybox
     entrypoint: 
      - /bin/sh
@@ -86,11 +98,11 @@ services:
   ptmx:
     extends: 
       service: busybox
+    labels:
+     - "is_top_app=0"
     stdin_open: false
     tty: false
     restart: always
-    labels:
-     - "is_top_app=0"
     command:
      - ptmx/ptmx.sh
 
@@ -109,6 +121,8 @@ services:
     stdin_open: false
     tty: false
     restart: always
+    volumes:
+     - OMD:/omd/sites
     entrypoint: 
      - /sbin/my_init
      - --skip-startup-files
@@ -122,21 +136,25 @@ services:
   pa:
     extends: 
       service: admin
+    labels:
+     - "is_top_app=0"
     volumes:
      - ${PULSE_SOCKET}:/run/pulse/native
-     - ${PULSE_COOKIE}:/run/pulse_cookie
+     - ${PULSE_COOKIE}:/run/pulse/cookie
     environment:
      - PULSE_SERVER=/run/pulse/native
-     - PULSE_COOKIE=/run/pulse_cookie
+     - PULSE_COOKIE=/run/pulse/cookie
   
   gui:
     extends: 
       service: pa
+    labels:
+     - "is_top_app=0"
     environment:
      - QT_X11_NO_MITSHM=1
      - XLIB_SKIP_ARGB_VISUALS=1
-     - DISPLAY=unix:0.0
-     - XAUTHORITY=/tmp/.docker.xauth
+     - XAUTHORITY
+     - DISPLAY
     stdin_open: false
     tty: false
     entrypoint: 
@@ -147,17 +165,33 @@ services:
      - --no-kill-all-on-exit
      - --
 
-
+  qrhandler:
+    extends: 
+      service: gui
+    labels:
+     - "is_top_app=0"
+    image: malex984/dockapp:qrhandler
+    build: qrhandler/
+    restart: always
+    volumes:
+     - supernova:/supernova
+    environment:
+     - qrs_screenshot_message="Bild gespeichert.\n\nImage saved."
+     - qr_uploadlocs="/supernova"
+     - QR_DEVICE_ID="AT Translated Set 2 keyboard"
+    command: 
+     - qrhandler.sh
+ 
   x11vnc:
     extends: 
       service: gui
+    labels:
+     - "is_top_app=0"
     image: malex984/dockapp:x11vnc
     build: x11vnc/
     restart: always
     ports:
      - "127.0.0.1:5900-5910:5900-5910"
-    labels:
-     - "is_top_app=0"     
     command: 
      - x11vnc.sh
 
@@ -190,9 +224,38 @@ services:
      - launch.sh
     command: 
      - browser.sh
-     - -l
+     
+  chrome:
+    extends: 
+      service: gui
+    image: malex984/dockapp:chrome
+    build: chrome/
+    labels:
+     - "is_top_app=1"
+    entrypoint: 
+     - /sbin/my_init 
+     - --skip-startup-files
+     - --quiet 
+     - --skip-runit 
+     - --no-kill-all-on-exit 
+     - -- 
+     - launch.sh
+    command: 
+     - browser.sh
      - http://localhost:5000/default/
-    
+
+  opera:
+    extends: 
+      service: chrome
+    environment:
+     - GOOGLE_CHROME=opera
+
+  chromium:
+    extends: 
+      service: chrome
+    environment:
+     - GOOGLE_CHROME=chromium-browser
+
   kivy:
     extends: 
       service: gui
@@ -215,15 +278,16 @@ services:
   dockapp:
     extends: 
       service: gui
-    working_dir: /APP/
     volumes:
-     - .:/APP
+     - .:/DOCKAPP
+    working_dir: /DOCKAPP/
     labels:
      - "is_top_app=1"
 
   dev_bus_usb:
     extends: 
       service: dockapp
+    image: imaginary.mfo.de:5000/malex984/alpine
     devices:
      - "/dev/bus/usb:/dev/bus/usb:rwm"
      - "/dev/nvidia0:/dev/nvidia0"
@@ -233,7 +297,10 @@ services:
      - "/dev/shm:/dev/shm"
      - "/dev/input:/dev/input"
 
-
 volumes:
   CFG:
     external: true
+  OMD:
+    external: true
+  supernova:
+    driver: local
