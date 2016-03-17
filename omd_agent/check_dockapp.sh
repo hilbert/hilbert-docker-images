@@ -301,12 +301,13 @@ WARNING "$N foreign container(s) present: $M|f=$N;;;0; $U"
 function check_dockapp_heartbeat
 {
 
-### TODO: ENV VARS!
-HOST_NAME=localhost
-PORT_NUMBER=8888
+### Following heartbeat2.py
+PORT_NUMBER=${HB_PORT:-8888}
+HOST_NAME=${HB_HOST:-127.0.0.1}
+DEFAULT_URL="http://${HOST_NAME}:${PORT_NUMBER}"
+HB_URL=${HB_URL:-$DEFAULT_URL}
 
-
-S=`curl -s -X GET "http://${HOST_NAME}:${PORT_NUMBER}/status" 2>&1`
+S=`curl -s -X GET "${HB_URL}/status" 2>&1`
 
 if [ $? -ne 0 ]; then
   CRITICAL "cannot get heartbeat data"

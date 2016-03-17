@@ -1,6 +1,12 @@
 #!/bin/bash
 
-APP=${APP:-UNKNOWN_APP}
+unset current_app
+
+if [ -r "$CFG_DIR/lastapp.cfg" ]; then
+    source "$CFG_DIR/lastapp.cfg"
+fi
+
+APP="${current_app:-UNKNOWN_APPLICATION}"
 TIME=`date +"%s_%N"`
 QR="$@"
 MD5=`echo -E "$QR" | md5sum -t - | sed 's@ .*$@@g'`
@@ -8,7 +14,7 @@ MD5=`echo -E "$QR" | md5sum -t - | sed 's@ .*$@@g'`
 
 #!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
 
-S="/tmp/SCROT.${APP}.${TIME}.${MD5}.png"
+S="${qr_uploadlocs}/SCROT.${APP}.${TIME}.${MD5}.png"
 
 #!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
 
@@ -16,6 +22,10 @@ echo -E "'${QR}' => '${S}'" 1>&2
 
 xmessage -buttons "OK:0" -center -timeout 4 "Taking Screenshot in 5 sec..." > /dev/null 2>&1 &
 scrot -u -m -cd 5 "${S}" 
+
+qrs_screenshot_message="${qrs_screenshot_message:-IMAGE: $S}"
+xmessage -buttons "OK:0" -center -timeout 1 "${qrs_screenshot_message}" > /dev/null 2>&1 &
+
 
 # https://wiki.archlinux.org/index.php/taking_a_screenshot 
 

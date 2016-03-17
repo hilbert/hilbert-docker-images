@@ -3,6 +3,10 @@
 # NOTE: just for testing:
 ### gcc --static event.c -o event || exit 1
 
+if [ -z "$CFG_DIR" ]; then
+    export CFG_DIR="$HOME/.config/dockapp"
+fi
+
 OLDDIR="${PWD}"
 SELFDIR=`dirname "$0"`
 cd "${SELFDIR}"
@@ -10,6 +14,8 @@ cd "${SELFDIR}"
 N="$1"
 N="${N:-${QR_DEVICE_ID}}"
 N="${N:-AT Translated Set 2 keyboard}"
+
+export qr_uploadlocs=${qr_uploadlocs:-/tmp}
 
 echo "Device: '${N}'..." 1>&2
 

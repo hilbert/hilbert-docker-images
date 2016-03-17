@@ -8,6 +8,7 @@ from threading import Timer
 
 from urllib2 import urlopen
 
+import os # environment vars
 import sys # what?
 import urllib # what? why?
 
@@ -16,8 +17,9 @@ from BaseHTTPServer import BaseHTTPRequestHandler,HTTPServer
 # https://docs.python.org/2/library/sched.html
 #### SH = sched.scheduler(time, sleep)
 
-PORT_NUMBER = 8888
-HOST_NAME = 'localhost'
+PORT_NUMBER   = int(os.getenv('HB_PORT', 8888))
+HOST_NAME     = os.getenv('HB_HOST', '127.0.0.1')
+HB_SERVER_URL = os.getenv('HB_URL' , "http://" + HOST_NAME + ":" + str(PORT_NUMBER))
 
 # localhost:8888/hb_init?48&appid=test_client_python =>
 #         /hb_init
@@ -157,8 +159,7 @@ def test_server(HandlerClass = MyHandler, ServerClass = HTTPServer, protocol="HT
     """Test the HTTP request handler class.
     """
 
-    port = PORT_NUMBER
-    server_address = (HOST_NAME, port)
+    server_address = (HOST_NAME, PORT_NUMBER)
 
     HandlerClass.protocol_version = protocol
     httpd = ServerClass(server_address, HandlerClass)
@@ -171,7 +172,6 @@ def test_server(HandlerClass = MyHandler, ServerClass = HTTPServer, protocol="HT
 def test_client():
     t = randint(2, 5)
     APP_ID = "test_client_python%" + str(randint(99999999, 9999999999)) # TODO: get unique ID from server?
-    HB_SERVER_URL = "http://" + HOST_NAME + ":" + str(PORT_NUMBER)
 
     print "List HB apps: " + urlopen(HB_SERVER_URL + "/list" ).read()
     print "APP HB Status: " + urlopen(HB_SERVER_URL + "/status" ).read()
@@ -225,7 +225,6 @@ def test_client():
             break
     
     
-# port = int(sys.argv[1])
 if __name__ == '__main__':
     print(sys.argv)
     if (len(sys.argv) == 1):
