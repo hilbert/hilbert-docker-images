@@ -118,6 +118,33 @@ services:
     command: 
      - omd_agent_entrypoint.sh
 
+  hb_test:
+    extends: 
+      service: admin
+    image: malex984/dockapp:omd_agent
+    build: omd_agent/
+    environment:
+     - HB_PORT
+     - HB_HOST
+     - HB_URL
+    ports:
+     - "${HB_PORT}"
+    stdin_open: false
+    tty: false
+    restart: always
+    labels:
+     - "is_top_app=1"
+    entrypoint: 
+     - /sbin/my_init
+     - --skip-startup-files
+     - --quiet
+     - --skip-runit
+     - --no-kill-all-on-exit
+     - --
+    command: 
+     - python2.7 
+     - /usr/local/bin/heartbeat2.py 
+
   busybox:
     extends: 
       service: admin

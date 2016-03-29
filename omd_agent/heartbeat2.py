@@ -185,18 +185,19 @@ def test_client():
     overdue = 0
     
     i = 0
-    for i in xrange(1, 25):
+#    for i in xrange(1, 25):
 #    while True:    
+    while tt != "dead":        
         i = i + 1
-        d = randint(0, (int(t) * 2)/1)
+        d = randint(0, (int(t) * 5)/4)
         
         try:
-            print d, " > ", tt, "?"        
             if d > int(tt):
+                print d, " > ", tt, "?"        
                 overdue += 1
         except:
-            pass        
-            
+            pass
+        
         print "heart-beat: ", i, "! Promise: ", t, ", Max: ", tt, ", Delay: ", d, " sec........ overdues?: ", overdue
         sleep(d)
         
@@ -213,18 +214,15 @@ def test_client():
 #        print "List HB apps: " + urlopen(HB_SERVER_URL + "/list" ).read()
 #        print "APP HB Status: " + urlopen(HB_SERVER_URL + "/status" ).read()
         
-        if tt == "dead": # Just for testing...
             
-            print "Ups: we run out of time..."
-            tt = urlopen(HB_SERVER_URL + "/hb_done?0"+ "&appid="+ APP_ID ).read()
-            print "Goodbye message: ", tt
+    print "Ups: we run out of time..."
+    tt = urlopen(HB_SERVER_URL + "/hb_done?0"+ "&appid="+ APP_ID ).read()
+    print "Goodbye message: ", tt
 
-            print "List HB apps: " + urlopen(HB_SERVER_URL + "/list" ).read()
-            print "APP HB Status: " + urlopen(HB_SERVER_URL + "/status" ).read()
+    print "List HB apps: " + urlopen(HB_SERVER_URL + "/list" ).read()
+    print "APP HB Status: " + urlopen(HB_SERVER_URL + "/status" ).read()
+    
 
-            break
-    
-    
 if __name__ == '__main__':
     print(sys.argv)
     if (len(sys.argv) == 1):
