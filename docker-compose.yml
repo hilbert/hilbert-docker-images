@@ -58,6 +58,38 @@ services:
      - SYS_ADMIN
      - NET_ADMIN
      - ALL
+     
+  x11:
+    extends:
+      service: admin
+    image: malex984/dockapp:dummy
+    build: dummy/
+    stdin_open: false
+    tty: false
+    restart: always
+    entrypoint: 
+     - /sbin/my_init
+     - --skip-startup-files
+     - --quiet
+     - --skip-runit
+     - --no-kill-all-on-exit
+     - --
+    command: 
+     - startXephyr.sh
+
+  xephyr:
+    extends:
+      service: x11
+    environment:
+     - XCMD=Xephyr
+
+  xvfb:
+    extends:
+      service: x11
+    environment:
+     - XCMD=Xvfb
+    command: 
+     - startXephyr.sh -screen 0 1024x768x16
 
   omd_agent:
     extends: 
@@ -98,13 +130,19 @@ services:
   ptmx:
     extends: 
       service: busybox
-    labels:
-     - "is_top_app=0"
     stdin_open: false
     tty: false
     restart: always
     command:
      - ptmx/ptmx.sh
+
+  reboot:
+    extends: 
+      service: busybox
+    stdin_open: false
+    tty: false
+    command:
+     - reboot
 
   omd:
     extends: 
@@ -284,7 +322,7 @@ services:
     labels:
      - "is_top_app=1"
 
-  dev_bus_usb:
+  register:
     extends: 
       service: dockapp
     image: imaginary.mfo.de:5000/malex984/alpine
