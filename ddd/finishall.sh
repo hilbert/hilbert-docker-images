@@ -11,13 +11,17 @@ fi
 
 cd $CFG_DIR
 
+if [ -r "$CFG_DIR/station.cfg" ]; then
+    . "$CFG_DIR/station.cfg"
+fi
+
 if [ -r "$CFG_DIR/startup.cfg" ]; then
     . "$CFG_DIR/startup.cfg"
 fi
 
-if [ -r "$CFG_DIR/docker.cfg" ]; then
-    . "$CFG_DIR/docker.cfg"
-fi
+#if [ -r "$CFG_DIR/docker.cfg" ]; then
+#    . "$CFG_DIR/docker.cfg"
+#fi
 
 #if [ -r "$CFG_DIR/compose.cfg" ]; then
 #    . "$CFG_DIR/compose.cfg"

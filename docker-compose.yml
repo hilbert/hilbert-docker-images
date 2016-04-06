@@ -47,7 +47,7 @@ services:
     entrypoint: 
      - finishall.sh
 
-  finishall:
+  topswitch:
     extends: 
       service: ddd
     labels:
@@ -96,6 +96,8 @@ services:
     extends:
       service: consul_base
     command: 
+     - "-advertise"
+     - "{station_public_ip}"
      - "-join"
      - "${management_server_ip}"
 
@@ -107,9 +109,23 @@ services:
     command: 
      - "-server"
      - "-bootstrap"
+     - "-advertise"
+     - "{station_public_ip}"
      - "-ui-dir"
      - "/ui"
 
+  registrator
+    extends:
+      service: admin
+    image: gliderlabs/registrator:latest
+    entrypoint:
+     - "/bin/registrator"
+    command:
+     - "consul://${management_server_ip}:8500"
+
+	    
+		      
+		      
   x11:
     extends:
       service: admin

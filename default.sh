@@ -40,17 +40,19 @@ fi
 ## chmod +x local-persist-linux-amd64
 
 
-docker volume create -d local-persist -o mountpoint=$CFG_DIR/KV --name=KV
-docker volume create -d local-persist -o mountpoint=$CFG_DIR/CFG --name=CFG
-docker volume create -d local-persist -o mountpoint=$CFG_DIR/OMD --name=OMD
 #docker volume create -d local-persist -o mountpoint=$CFG_DIR/KV --name=KV
+#docker volume create -d local-persist -o mountpoint=$CFG_DIR/CFG --name=CFG
+#docker volume create -d local-persist -o mountpoint=$CFG_DIR/OMD --name=OMD
+######docker volume create -d local-persist -o mountpoint=$CFG_DIR/KV --name=KV
 
 
 ## export 
 
 # TODO: if DISPLAY is not set seatch in /tmp/.X11-unix/... as in our startX.sh
-if [ -n "$DISPLAY" ]; then 
-  xauth nlist $DISPLAY | sed -e 's/^..../ffff/' | xauth -f $XAUTHORITY nmerge -
+if [ -n "$DISPLAY" ]; then
+  echo "DISPLAY: '$DISPLAY'"
+#  xauth nlist $DISPLAY | sed -e 's/^..../ffff/' | xauth -f $XAUTHORITY nmerge -
+else
   export DISPLAY=""
   export XAUTHORITY=""
 fi
