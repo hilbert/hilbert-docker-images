@@ -38,7 +38,24 @@ services:
      - "is_top_app=0"
     entrypoint: 
      - luncher.sh
+     
+  finishall:
+    extends: 
+      service: ddd
+    labels:
+     - "is_top_app=0"
+    entrypoint: 
+     - finishall.sh
 
+  finishall:
+    extends: 
+      service: ddd
+    labels:
+     - "is_top_app=0"
+    entrypoint: 
+     - topswitch.sh
+
+     
   admin:
     extends: 
       service: ddd
@@ -59,6 +76,40 @@ services:
      - NET_ADMIN
      - ALL
      
+  consul_base:
+    extends:
+      service: admin
+    image: progrium/consul
+    ports:
+     - "8400:8400"
+     - "8500:8500"
+     - "8600:53/udp"
+    labels:
+     - "is_top_app=0"
+    stdin_open: false
+    tty: false
+    restart: always
+    entrypoint: 
+     - /bin/start
+
+  consul_agent:
+    extends:
+      service: consul_base
+    command: 
+     - "-join"
+     - "${management_server_ip}"
+
+  consul:
+    extends:
+      service: consul_base
+    volumes:
+     - KV:/data
+    command: 
+     - "-server"
+     - "-bootstrap"
+     - "-ui-dir"
+     - "/ui"
+
   x11:
     extends:
       service: admin
@@ -89,7 +140,10 @@ services:
     environment:
      - XCMD=Xvfb
     command: 
-     - startXephyr.sh -screen 0 1024x768x16
+     - startXephyr.sh
+     - "-screen" 
+     - "0"
+     - "1024x768x16"
 
   omd_agent:
     extends: 
@@ -366,6 +420,8 @@ volumes:
   CFG:
     external: true
   OMD:
+    external: true
+  KV:
     external: true
   supernova:
     driver: local

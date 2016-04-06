@@ -34,6 +34,13 @@ if [ -r "$CFG_DIR/compose.cfg" ]; then
     . "$CFG_DIR/compose.cfg"
 fi
 
+## install Docker Volume 'local-persist' plugin
+
+docker volume create -d local-persist -o mountpoint=$CFG_DIR/KV --name=KV
+docker volume create -d local-persist -o mountpoint=$CFG_DIR/CFG --name=CFG
+docker volume create -d local-persist -o mountpoint=$CFG_DIR/OMD --name=OMD
+#docker volume create -d local-persist -o mountpoint=$CFG_DIR/KV --name=KV
+
 
 ## export 
 
