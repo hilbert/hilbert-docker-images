@@ -34,7 +34,11 @@ if [ -r "$CFG_DIR/compose.cfg" ]; then
     . "$CFG_DIR/compose.cfg"
 fi
 
-## install Docker Volume 'local-persist' plugin
+## install Docker Volume 'local-persist' plugin following https://github.com/CWSpear/local-persist
+#curl -fsSL https://raw.githubusercontent.com/CWSpear/local-persist/master/scripts/install.sh | sudo bash
+## wget https://github.com/CWSpear/local-persist/releases/download/v1.1.0/local-persist-linux-amd64
+## chmod +x local-persist-linux-amd64
+
 
 docker volume create -d local-persist -o mountpoint=$CFG_DIR/KV --name=KV
 docker volume create -d local-persist -o mountpoint=$CFG_DIR/CFG --name=CFG
@@ -45,7 +49,11 @@ docker volume create -d local-persist -o mountpoint=$CFG_DIR/OMD --name=OMD
 ## export 
 
 # TODO: if DISPLAY is not set seatch in /tmp/.X11-unix/... as in our startX.sh
-xauth nlist $DISPLAY | sed -e 's/^..../ffff/' | xauth -f XAUTHORITY nmerge -
+if [ -n "$DISPLAY" ]; then 
+  xauth nlist $DISPLAY | sed -e 's/^..../ffff/' | xauth -f $XAUTHORITY nmerge -
+  export DISPLAY=""
+  export XAUTHORITY=""
+fi
 
 for d in ${background_services}; do
   "$CFG_DIR/docker-compose.sh" up -d "$d"
