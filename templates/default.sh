@@ -1,4 +1,4 @@
-#!/bin/bash
+#!/bin/sh
 
 SELFDIR=`dirname "$0"`
 SELFDIR=`cd "$SELFDIR" && pwd`
@@ -26,31 +26,20 @@ else
     echo "export current_app='${current_app}'" > "$CFG_DIR/lastapp.cfg"
 fi
 
+
+### TODO: detect docker settings
 if [ -r "$CFG_DIR/docker.cfg" ]; then
     . "$CFG_DIR/docker.cfg"
 fi
 
+### TODO: detect audio/video settings
 if [ -r "$CFG_DIR/compose.cfg" ]; then
     . "$CFG_DIR/compose.cfg"
 fi
 
-## install Docker Volume 'local-persist' plugin following https://github.com/CWSpear/local-persist
-#curl -fsSL https://raw.githubusercontent.com/CWSpear/local-persist/master/scripts/install.sh | sudo bash
-## wget https://github.com/CWSpear/local-persist/releases/download/v1.1.0/local-persist-linux-amd64
-## chmod +x local-persist-linux-amd64
-
-
-#docker volume create -d local-persist -o mountpoint=$CFG_DIR/KV --name=KV
-#docker volume create -d local-persist -o mountpoint=$CFG_DIR/CFG --name=CFG
-#docker volume create -d local-persist -o mountpoint=$CFG_DIR/OMD --name=OMD
-######docker volume create -d local-persist -o mountpoint=$CFG_DIR/KV --name=KV
-
-
-## export 
-
 # TODO: if DISPLAY is not set seatch in /tmp/.X11-unix/... as in our startX.sh
-if [ -n "$DISPLAY" ]; then
-  echo "DISPLAY: '$DISPLAY'"
+if [ -n "$XAUTHORITY" ]; then
+  echo "DISPLAY: '$DISPLAY', XAUTHORITY: '$XAUTHORITY'"
 #  xauth nlist $DISPLAY | sed -e 's/^..../ffff/' | xauth -f $XAUTHORITY nmerge -
 else
   export DISPLAY=""

@@ -114,7 +114,7 @@ services:
      - "-ui-dir"
      - "/ui"
 
-  registrator
+  registrator:
     extends:
       service: admin
     image: gliderlabs/registrator:latest
@@ -123,9 +123,6 @@ services:
     command:
      - "consul://${management_server_ip}:8500"
 
-	    
-		      
-		      
   x11:
     extends:
       service: admin

@@ -1,5 +1,5 @@
-#!/bin/bash
-#
+#!/bin/sh
+
 # Run docker-compose in a container
 #
 # This script will attempt to mirror the host paths by using volumes for the
@@ -18,7 +18,10 @@
 set -e
 
 TMP_DOCKER_CFG=/tmp/.docker.cfg
-rm -f ${TMP_DOCKER_CFG}
+
+if [ -f "${TMP_DOCKER_CFG}" ]; then 
+  rm -f "${TMP_DOCKER_CFG}"
+fi
 
 docker run --rm -v CFG:/A busybox cat /A/docker.cfg > ${TMP_DOCKER_CFG}
 
@@ -71,4 +74,4 @@ export DOCKER_HOST=${SAVE_DOCKER_HOST}
 
 echo "CMD: exec docker run --rm [$DOCKER_RUN_OPTIONS $DOCKER_ADDR $COMPOSE_OPTIONS $VOLUMES $DOCKER_COMPOSE_IMAGE $@]"
 
-exec docker -D run --rm $DOCKER_RUN_OPTIONS $DOCKER_ADDR $COMPOSE_OPTIONS $VOLUMES $DOCKER_COMPOSE_IMAGE $@
+exec docker run --rm $DOCKER_RUN_OPTIONS $DOCKER_ADDR $COMPOSE_OPTIONS $VOLUMES $DOCKER_COMPOSE_IMAGE $@
