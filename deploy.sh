@@ -53,12 +53,19 @@ done
 
 $SSH "${TARGET_HOST_NAME}"  "mkdir -p ~/.config/dockapp/bak"
 
-$SSH "${TARGET_HOST_NAME}"  "test -d ~/.config/dockapp"
-
+$SSH "${TARGET_HOST_NAME}"  "test -d ~/.config/dockapp" >/dev/null 2>&1
    if [ $? -ne 0 ]; then
       echo "ERROR: Cannot access '~/.config/dockapp' on station '${TARGET_HOST_NAME}'!"
       exit 1
    fi
+
+SUDO=""
+
+   $SSH "${TARGET_HOST_NAME}"  "test -w ~/.config/dockapp" >/dev/null 2>&1
+   if [ $? -ne 0 ]; then
+      SUDO="sudo"
+   fi
+
 
 
 TMP=`$SSH "${TARGET_HOST_NAME}" "mktemp -d"`
@@ -76,7 +83,7 @@ for f in $LIST ; do
    fi
 
    # Make sure all new files are present
-   $SSH "${TARGET_HOST_NAME}"  "test -f '$TMP/$f'"
+   $SSH "${TARGET_HOST_NAME}"  "test -f '$TMP/$f'"  >/dev/null 2>&1
    if [ $? -ne 0 ]; then
       echo "ERROR: Could not download '$f' into [$TMP] on station '${TARGET_HOST_NAME}'!"
       exit 1
@@ -91,7 +98,12 @@ for f in $LIST ; do
         fi
      ;;
    esac
-   
+
+   $SSH "${TARGET_HOST_NAME}"  "test -w ~/.config/dockapp/$f"  >/dev/null 2>&1
+   if [ $? -ne 0 ]; then
+      SUDO="sudo"
+   fi
+
 done
 
 
@@ -99,10 +111,10 @@ done
 $SSH "${TARGET_HOST_NAME}"  "cd ~/.config/dockapp/ && cp -f $LIST ~/.config/dockapp/bak/ 1>/dev/null 2>&1 || echo 'Failed backup...'"
 
 #### TODO: proper atomic update?!
-$SSH "${TARGET_HOST_NAME}"  "cd $TMP && cp -f $LIST ~/.config/dockapp/ && ls -ltX ~/.config/dockapp/"
+$SSH "${TARGET_HOST_NAME}"  "cd $TMP && $SUDO cp -f $LIST ~/.config/dockapp/ && ls -ltX ~/.config/dockapp/"
 
    if [ $? -ne 0 ]; then
-      echo "ERROR: Could not place new configs [$LIST] into [~/.config/dockapp/] on station '${TARGET_HOST_NAME}'!"
+      echo "ERROR: Could not ($SUDO) copy new configs [$LIST] from '$TMP' to '~/.config/dockapp/' on station '${TARGET_HOST_NAME}'!"
       exit 1
    fi
 

@@ -16,6 +16,7 @@
 #SELFDIR=`cd "$SELFDIR" && pwd`
 
 ## set -e
+docker pull busybox
 
 TMP_DOCKER_CFG=`mktemp`
 ## /tmp/.docker.cfg
@@ -24,7 +25,6 @@ if [ -f "${TMP_DOCKER_CFG}" ]; then
   rm -f "${TMP_DOCKER_CFG}" || sudo rm -f "${TMP_DOCKER_CFG}" || exit 1
 fi
 
-docker pull busybox
 docker run --rm -v CFG:/A busybox cat /A/docker.cfg > ${TMP_DOCKER_CFG}
 
 SAVE_NO_PROXY=${NO_PROXY}
@@ -33,9 +33,11 @@ SAVE_DOCKER_HOST=${DOCKER_HOST}
 unset NO_PROXY
 unset DOCKER_HOST
 
-### cat ${TMP_DOCKER_CFG}
 source ${TMP_DOCKER_CFG}
-### rm -f ${TMP_DOCKER_CFG}
+
+if [ -f "${TMP_DOCKER_CFG}" ]; then 
+  rm -f "${TMP_DOCKER_CFG}" || sudo rm -f "${TMP_DOCKER_CFG}"
+fi
 
 #VERSION="1.6.2"
 if [ -z "$DOCKER_COMPOSE_IMAGE" ]; then
