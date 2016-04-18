@@ -3,7 +3,7 @@
 SELFDIR=`dirname "$0"`
 SELFDIR=`cd "$SELFDIR" && pwd`
 
-set -e
+## set -e
 
 if [ -z "$CFG_DIR" ]; then
     export CFG_DIR="$PWD" 
@@ -17,29 +17,26 @@ cd $CFG_DIR
 # shift
 
 CMD=$(basename "$0" '.sh')
-
-echo "Command: '$CMD'"
+CMD="~/.config/dockapp/$CMD.sh"
 
 TARGET_HOST_NAME="$1"
 shift
 ### station id
+ARGS=$@
 
-TARGET_CFG_DIR="$CFG_DIR/STATIONS/${TARGET_HOST_NAME}"
-
-if [ ! -d "$TARGET_CFG_DIR" ]; then
-   echo "ERROR: no configuration directory for station '${TARGET_HOST_NAME}': $TARGET_CFG_DIR!"
-   exit 1
-fi 
-
-if [ ! -x "$TARGET_CFG_DIR/$CMD.sh" ]; then
-   echo "ERROR: no command '$CMD.sh' for station '${TARGET_HOST_NAME}' in '$TARGET_CFG_DIR'!"
-   exit 1
-fi
 
 DM=${DM:-}
 SSH=${SSH:-${DM} ssh}
 
-"$CFG_DIR/deploy.sh" "${TARGET_HOST_NAME}"
+# "$CFG_DIR/deploy.sh" "${TARGET_HOST_NAME}"
 
-D='~/.config/dockapp/'
-$SSH "${TARGET_HOST_NAME}" "$D/$CMD.sh" $@
+   $SSH "${TARGET_HOST_NAME}" "test -x $CMD && exit 0 || exit 1"
+   if [ $? -ne 0 ]; then
+      echo "ERROR: no executable shell script '$CMD' on station '${TARGET_HOST_NAME}'!"
+      exit 1
+   fi
+
+D="$CMD $ARGS"
+
+echo "Running custom management command: '$D' to run on station '${TARGET_HOST_NAME}': "
+$SSH "${TARGET_HOST_NAME}" "$D"

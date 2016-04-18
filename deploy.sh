@@ -1,42 +1,116 @@
 #!/bin/sh
 
-SELFDIR=`dirname "$0"`
-SELFDIR=`cd "$SELFDIR" && pwd`
+#SELFDIR=`dirname "$0"`
+#SELFDIR=`cd "$SELFDIR" && pwd`
 
-set -e
+## set -e
 
-if [ -z "$CFG_DIR" ]; then
-    export CFG_DIR="$PWD" 
-    # HOME/.config/dockapp"
-fi
+#if [ -z "$CFG_DIR" ]; then
+#    export CFG_DIR="$PWD" 
+#    # HOME/.config/dockapp"
+#fi
 
-cd $CFG_DIR
+# cd $CFG_DIR
+
+CONFIG_PORT="${CONFIG_PORT:-8080}"
+CONFIG_HOST="${CONFIG_HOST:-`hostname -i | sed 's| ||g'`}"
+URL="http://${CONFIG_HOST}:${CONFIG_PORT}"
+
+CONFIG_BASE_URL=${CONFIG_BASE_URL:-"${URL}"}
 
 ### station id:
 TARGET_HOST_NAME="$1"
 shift
 
-TARGET_CFG_DIR="$CFG_DIR/STATIONS/${TARGET_HOST_NAME}"
+#TARGET_CFG_DIR="$CFG_DIR/STATIONS/${TARGET_HOST_NAME}"
+CONFIG_URL="${CONFIG_BASE_URL}/${TARGET_HOST_NAME}"
 
 DM=${DM:-}
-
 SSH=${SSH:-${DM} ssh}
-SCP=${SCP:-${DM} scp}
+# SCP=${SCP:-${DM} scp}
 
-if [ ! -d "$TARGET_CFG_DIR" ]; then
-   echo "ERROR: no configuration directory for station '${TARGET_HOST_NAME}': $TARGET_CFG_DIR!"
+echo "Pulling '${CONFIG_URL}' on station '${TARGET_HOST_NAME}' into '~/.config/dockapp/', via: ${SSH}..."
+
+$SSH "${TARGET_HOST_NAME}" "wget -q --spider '${CONFIG_URL}/list'"
+if [ $? -ne 0 ]; then
+   echo "ERROR: no configuration accessible at '${CONFIG_URL}' from station '${TARGET_HOST_NAME}'!"
    exit 1
-fi 
+fi
 
-echo "Deploying '$TARGET_HOST_NAME' to station '${TARGET_HOST_NAME}' into '~/.config/dockapp/', via: ${SSH} & ${SCP}:"
-# cd -
+LIST=`$SSH "${TARGET_HOST_NAME}" "wget -q -O - '${CONFIG_URL}/list'" | xargs`
 
-cd "${TARGET_CFG_DIR}/"
-$SSH "${TARGET_HOST_NAME}" mkdir -p '~/.config/_dockapp/'
-$SCP -r . "${TARGET_HOST_NAME}:.config/_dockapp/"
-cd -
+echo "List of configuration files: [$LIST]"
 
-$SSH "${TARGET_HOST_NAME}" rm -fR '~/.config/dockapp'
-$SSH "${TARGET_HOST_NAME}" mv -f '~/.config/_dockapp' '~/.config/dockapp'
+for f in $LIST ; do 
+   $SSH "${TARGET_HOST_NAME}" "wget -q --spider '${CONFIG_URL}/$f'"
+   if [ $? -ne 0 ]; then
+      echo "ERROR: configuration file '$f' is inaccessible via '${CONFIG_URL}/$f' from station '${TARGET_HOST_NAME}'!"
+      exit 1
+   fi
+done
 
-cd -
+#### $SSH "${TARGET_HOST_NAME}"  "rm -Rf ~/.config"
+
+$SSH "${TARGET_HOST_NAME}"  "mkdir -p ~/.config/dockapp/bak"
+
+$SSH "${TARGET_HOST_NAME}"  "test -d ~/.config/dockapp"
+
+   if [ $? -ne 0 ]; then
+      echo "ERROR: Cannot access '~/.config/dockapp' on station '${TARGET_HOST_NAME}'!"
+      exit 1
+   fi
+
+
+TMP=`$SSH "${TARGET_HOST_NAME}" "mktemp -d"`
+
+# echo "Temp directory: [$TMP]"
+#### $SSH "${TARGET_HOST_NAME}"  "chmod 0777 $TMP"
+# $SSH "${TARGET_HOST_NAME}"  "ls -laR /tmp/"
+
+
+for f in $LIST ; do 
+   $SSH "${TARGET_HOST_NAME}" "wget -q -O '$TMP/$f' '${CONFIG_URL}/$f'"
+   if [ $? -ne 0 ]; then
+      echo "ERROR: configuration file '$f' is inaccessible via '${CONFIG_URL}/$f' from station '${TARGET_HOST_NAME}'!"
+      exit 1
+   fi
+
+   # Make sure all new files are present
+   $SSH "${TARGET_HOST_NAME}"  "test -f '$TMP/$f'"
+   if [ $? -ne 0 ]; then
+      echo "ERROR: Could not download '$f' into [$TMP] on station '${TARGET_HOST_NAME}'!"
+      exit 1
+   fi
+  
+   case "$f" in 
+     *.sh) 
+        $SSH "${TARGET_HOST_NAME}" "chmod a+x '$TMP/$f'"
+        if [ $? -ne 0 ]; then
+           echo "ERROR: Could not add executable permission bit for '$TMP/$f' on station '${TARGET_HOST_NAME}'!"
+           exit 1
+        fi
+     ;;
+   esac
+   
+done
+
+
+# 1 level (previous state) backup (if necessary/possible)
+$SSH "${TARGET_HOST_NAME}"  "cd ~/.config/dockapp/ && cp -f $LIST ~/.config/dockapp/bak/ 1>/dev/null 2>&1 || echo 'Failed backup...'"
+
+#### TODO: proper atomic update?!
+$SSH "${TARGET_HOST_NAME}"  "cd $TMP && cp -f $LIST ~/.config/dockapp/ && ls -ltX ~/.config/dockapp/"
+
+   if [ $? -ne 0 ]; then
+      echo "ERROR: Could not place new configs [$LIST] into [~/.config/dockapp/] on station '${TARGET_HOST_NAME}'!"
+      exit 1
+   fi
+
+# Cleanup only if no errors were detected... 
+$SSH "${TARGET_HOST_NAME}"  "rm -Rf $TMP" 
+
+# && ls -la ~/.config/dockapp && export A=\$(mktemp -d -p ~/.config) && chmod 0777 \"\$TMP\" && cp -r ~/.config/dockapp/* \"\$TMP/\" && \
+#for f in \$L ; do wget -O \"\$TMP/\$f\" \"${CONFIG_URL}/\$f\" || exit 1; done && \
+#mv -f ~/.config/dockapp ~/.config/dockapp.bak && mv -f \"\$TMP\" ~/.config/dockapp && ls -la ~/.config/dockapp"
+
+exit 0
