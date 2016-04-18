@@ -15,13 +15,15 @@
 #SELFDIR=`dirname "$0"`
 #SELFDIR=`cd "$SELFDIR" && pwd`
 
-set -e
+## set -e
 
-TMP_DOCKER_CFG=/tmp/.docker.cfg
+TMP_DOCKER_CFG=`mktemp`
+## /tmp/.docker.cfg
 
 if [ -f "${TMP_DOCKER_CFG}" ]; then 
-  rm -f "${TMP_DOCKER_CFG}"
+  rm -f "${TMP_DOCKER_CFG}" || sudo rm -f "${TMP_DOCKER_CFG}" || exit 1
 fi
+
 docker pull busybox
 docker run --rm -v CFG:/A busybox cat /A/docker.cfg > ${TMP_DOCKER_CFG}
 
