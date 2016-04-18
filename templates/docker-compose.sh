@@ -22,7 +22,7 @@ TMP_DOCKER_CFG=/tmp/.docker.cfg
 if [ -f "${TMP_DOCKER_CFG}" ]; then 
   rm -f "${TMP_DOCKER_CFG}"
 fi
-
+docker pull busybox
 docker run --rm -v CFG:/A busybox cat /A/docker.cfg > ${TMP_DOCKER_CFG}
 
 SAVE_NO_PROXY=${NO_PROXY}
@@ -72,6 +72,7 @@ unset DOCKER_HOST
 export NO_PROXY=${SAVE_NO_PROXY}
 export DOCKER_HOST=${SAVE_DOCKER_HOST}
 
-echo "CMD: exec docker run --rm [$DOCKER_RUN_OPTIONS $DOCKER_ADDR $COMPOSE_OPTIONS $VOLUMES $DOCKER_COMPOSE_IMAGE $@]"
+docker pull "$DOCKER_COMPOSE_IMAGE"
 
+echo "CMD: exec docker run --rm [$DOCKER_RUN_OPTIONS $DOCKER_ADDR $COMPOSE_OPTIONS $VOLUMES $DOCKER_COMPOSE_IMAGE $@]"
 exec docker run --rm $DOCKER_RUN_OPTIONS $DOCKER_ADDR $COMPOSE_OPTIONS $VOLUMES $DOCKER_COMPOSE_IMAGE $@

@@ -1,4 +1,4 @@
-FROM docker/compose:1.6.2
+FROM docker/compose:1.7.0
 
 MAINTAINER Oleksandr Motsak <malex984@googlemail.com>
 
