@@ -46,19 +46,51 @@ mkdir -p "${TARGET_CONFG_DIR}/"
 
 cd "$CFG_DIR/templates/"
 
-cp -f *.sh "${TARGET_CONFG_DIR}/"
+### TODO: update to newer compose version if necessary!...
+DOCKER_COMPOSE_LINUX64_URL="https://github.com/docker/compose/releases/download/1.7.0/docker-compose-Linux-x86_64"
 
-for d in *.cfg ; 
-do
-  sed -e "s#[\$]station_id#$TARGET_HOST_NAME#g"  -e "s#[\$]station_type#$station_type#g" "$d" > "${TARGET_CONFG_DIR}/_$d"
-  mv -f "${TARGET_CONFG_DIR}/_$d" "${TARGET_CONFG_DIR}/$d"
-done
+if [[ ! -f ./compose ]];
+then
 
-for d in *.yml ; 
+ if hash curl 2>/dev/null; then
+   curl -L "${DOCKER_COMPOSE_LINUX64_URL}"  > ./compose && chmod +x ./compose
+ elif hash wget 2>/dev/null; then
+   wget -q -O - "${DOCKER_COMPOSE_LINUX64_URL}" > ./compose && chmod +x ./compose
+ fi
+
+fi 
+
+if [[ ! -x ./compose ]];
+then 
+   echo "Warning: could not get docker-compose via '${DOCKER_COMPOSE_LINUX64_URL}'! 
+         Please download it as '$CFG_DIR/templates/compose' and make it executable!"
+fi
+
+
+for f in $(ls -1 | grep -vE '~$') ; 
 do
-  grep -v -E '   build: \w+/' "$d" > "${TARGET_CONFG_DIR}/_$d"
-  mv -f "${TARGET_CONFG_DIR}/_$d" "${TARGET_CONFG_DIR}/$d"
-done
+   case "$f" in 
+     *.cfg)  
+          sed -e "s#[\$]station_id#$TARGET_HOST_NAME#g"  -e "s#[\$]station_type#$station_type#g" "$f" > "${TARGET_CONFG_DIR}/_$f" && \
+          mv -f "${TARGET_CONFG_DIR}/_$f" "${TARGET_CONFG_DIR}/$f"
+     ;;
+     *.yml)
+          grep -v -E '   build: \w+/' "$f" > "${TARGET_CONFG_DIR}/_$f"
+          mv -f "${TARGET_CONFG_DIR}/_$f" "${TARGET_CONFG_DIR}/$f"
+     ;;    
+     *.sh)  
+          cp -fp "$f" "${TARGET_CONFG_DIR}/" 
+	  chmod a+x "${TARGET_CONFG_DIR}/$f"
+     ;;
+     *)  
+          cp -fp "$f" "${TARGET_CONFG_DIR}/" 
+     ;;
+   esac
+   
+   chmod a+r "${TARGET_CONFG_DIR}/$f" ||  echo "Warning: something went wrong during initialization of '${TARGET_CONFG_DIR}/$f' out of '$CFG_DIR/templates/$f'!"
+done 
+
+
 
 cd -
 

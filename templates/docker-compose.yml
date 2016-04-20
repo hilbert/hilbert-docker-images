@@ -4,8 +4,8 @@ services:
     image: malex984/dockapp:base
     build: base/
     volumes:
-     - /tmp/:/tmp/:rw
-     - CFG:/DOCKAPP
+     - /tmp:/tmp:rw
+     - ${CFG_DIR}:/DOCKAPP
      - /etc/localtime:/etc/localtime:ro 
     labels:
      - "is_top_app=0"
@@ -105,7 +105,7 @@ services:
     extends:
       service: consul_base
     volumes:
-     - KV:/data
+     - $CFG_DIR/KV:/data
     command: 
      - "-server"
      - "-bootstrap"
@@ -254,7 +254,7 @@ services:
     tty: false
     restart: always
     volumes:
-     - OMD:/omd/sites
+     - $CFG_DIR/OMD:/omd/sites
     entrypoint: 
      - /sbin/my_init
      - --skip-startup-files
@@ -430,11 +430,5 @@ services:
      - "/dev/input:/dev/input"
 
 volumes:
-  CFG:
-    external: true
-  OMD:
-    external: true
-  KV:
-    external: true
   supernova:
     driver: local

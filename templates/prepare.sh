@@ -18,18 +18,17 @@ cd $CFG_DIR
 
 ## cd ./tmp/
 ### TODO: add the plugin for global installation?
-curl -fsSL https://github.com/CWSpear/local-persist/releases/download/v1.1.0/local-persist-linux-amd64 > ./local-persist-linux-amd64
-chmod +x ./local-persist-linux-amd64
-sudo ./local-persist-linux-amd64 1>./local-persist-linux-amd64.log 2>&1 &
+#curl -fsSL https://github.com/CWSpear/local-persist/releases/download/v1.1.0/local-persist-linux-amd64 > ./local-persist-linux-amd64
+#chmod +x ./local-persist-linux-amd64
+#sudo ./local-persist-linux-amd64 1>./local-persist-linux-amd64.log 2>&1 &
 
 ### add me to all the necessary groups etc ...
-if [ ! -L "$CFG_DIR/CFG" ]; then
-   ln -sf "$CFG_DIR" "$CFG_DIR/CFG"
-fi
+#if [ ! -L "$CFG_DIR/CFG" ]; then
+#   ln -sf "$CFG_DIR" "$CFG_DIR/CFG"
+#fi
 
-docker volume create -d local-persist -o mountpoint="$CFG_DIR/KV" --name=KV
-docker volume create -d local-persist -o mountpoint="$CFG_DIR/OMD" --name=OMD
-docker volume create -d local-persist -o mountpoint="$CFG_DIR/CFG" --name=CFG
-
+#docker volume create -d local-persist -o mountpoint="$CFG_DIR/KV" --name=KV
+#docker volume create -d local-persist -o mountpoint="$CFG_DIR/OMD" --name=OMD
+#docker volume create -d local-persist -o mountpoint="$CFG_DIR/CFG" --name=CFG
 
 cd -
