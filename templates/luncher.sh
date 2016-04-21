@@ -64,4 +64,5 @@ then
          Please download it as '$CFG_DIR/compose' and make it executable!"
 fi
 
+# --no-build --no-color 
 exec ./compose "$@"

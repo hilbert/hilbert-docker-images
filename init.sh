@@ -79,11 +79,13 @@ do
           mv -f "${TARGET_CONFG_DIR}/_$f" "${TARGET_CONFG_DIR}/$f"
      ;;    
      *.sh)  
-          cp -fp "$f" "${TARGET_CONFG_DIR}/" 
-	  chmod a+x "${TARGET_CONFG_DIR}/$f"
+#          cp -fp "$f" "${TARGET_CONFG_DIR}/" 
+#	   chmod a+x "${TARGET_CONFG_DIR}/$f"
+          ln -sf "$PWD/$f" "${TARGET_CONFG_DIR}/"
      ;;
      *)  
-          cp -fp "$f" "${TARGET_CONFG_DIR}/" 
+#          cp -fp "$f" "${TARGET_CONFG_DIR}/" 
+          ln -sf "$PWD/$f" "${TARGET_CONFG_DIR}/"
      ;;
    esac
    

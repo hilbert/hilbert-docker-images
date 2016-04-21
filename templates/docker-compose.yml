@@ -23,7 +23,7 @@ services:
     labels:
      - "is_top_app=0"
     volumes:
-     - $NO_PROXY:$NO_PROXY
+     - ${NO_PROXY}:${NO_PROXY}
     environment:
      - NO_PROXY
     entrypoint: 
@@ -78,7 +78,7 @@ services:
     extends:
       service: consul_base
     volumes:
-     - $CFG_DIR/KV:/data
+     - "${CFG_DIR}/KV:/data"
     command: 
      - "-server"
      - "-bootstrap"
@@ -201,7 +201,7 @@ services:
     tty: false
     restart: always
     command:
-     - "${CFG_DIR}/ptmx.sh"
+     - "$${CFG_DIR}/ptmx.sh"
 
   reboot:
     extends: 
@@ -227,7 +227,7 @@ services:
     tty: false
     restart: always
     volumes:
-     - $CFG_DIR/OMD:/omd/sites
+     - "${CFG_DIR}/OMD:/omd/sites"
     entrypoint: 
      - /sbin/my_init
      - --skip-startup-files
