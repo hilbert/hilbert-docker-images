@@ -31,30 +31,37 @@ cd $CFG_DIR
 
 # ls -la 
 
-if [ -r "$CFG_DIR/station.cfg" ]; then
-    . "$CFG_DIR/station.cfg"
+if [ -r "./station.cfg" ]; then
+    . "./station.cfg"
 fi
 
-if [ -r "$CFG_DIR/startup.cfg" ]; then
-    . "$CFG_DIR/startup.cfg"
+if [ -r "./startup.cfg" ]; then
+    . "./startup.cfg"
 fi
 
-if [ -r "$CFG_DIR/lastapp.cfg" ]; then
-    . "$CFG_DIR/lastapp.cfg"
+if [ -r "./lastapp.cfg" ]; then
+    . "./lastapp.cfg"
 fi
 
-if [ -r "$CFG_DIR/docker.cfg" ]; then
-    . "$CFG_DIR/docker.cfg"
+if [ -r "./docker.cfg" ]; then
+    . "./docker.cfg"
 fi
 
-if [ -r "$CFG_DIR/compose.cfg" ]; then
-    . "$CFG_DIR/compose.cfg"
+if [ -r "./compose.cfg" ]; then
+    . "./compose.cfg"
 fi
 
-#if [ -r "$CFG_DIR/lastapp.cfg" ]; then
-#    . "$CFG_DIR/lastapp.cfg"
+#if [ -r "./lastapp.cfg" ]; then
+#    . "./lastapp.cfg"
 #fi
 
 # export 
 
-exec "$CFG_DIR/compose" "$@"
+if [[ ! -x ./compose ]];
+then
+   chmod a+x ./compose || \
+   echo "Warning: could not make docker-compose '! 
+         Please download it as '$CFG_DIR/compose' and make it executable!"
+fi
+
+exec ./compose "$@"

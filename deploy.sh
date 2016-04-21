@@ -63,6 +63,8 @@ SUDO=""
 
    $SSH "${TARGET_HOST_NAME}"  "test -w ~/.config/dockapp" >/dev/null 2>&1
    if [ $? -ne 0 ]; then
+      echo "Warning: directory '~/.config/dockapp' is not writable: "
+      $SSH "${TARGET_HOST_NAME}"  "ls -la ~/.config/dockapp"
       SUDO="sudo"
    fi
 
@@ -89,8 +91,8 @@ for f in $LIST ; do
       exit 1
    fi
   
-   case "$f" in 
-     *.sh) 
+   case "$f" in
+     compose|*.sh)
         $SSH "${TARGET_HOST_NAME}" "chmod a+x '$TMP/$f'"
         if [ $? -ne 0 ]; then
            echo "ERROR: Could not add executable permission bit for '$TMP/$f' on station '${TARGET_HOST_NAME}'!"
@@ -99,10 +101,15 @@ for f in $LIST ; do
      ;;
    esac
 
-   $SSH "${TARGET_HOST_NAME}"  "test -w ~/.config/dockapp/$f"  >/dev/null 2>&1
-   if [ $? -ne 0 ]; then
-      SUDO="sudo"
-   fi
+   $SSH "${TARGET_HOST_NAME}"  "test -f ~/.config/dockapp/$f"  >/dev/null 2>&1
+   if [ ! $? -ne 0 ]; then
+      $SSH "${TARGET_HOST_NAME}"  "test -w ~/.config/dockapp/$f"  >/dev/null 2>&1
+      if [ $? -ne 0 ]; then
+         echo "Warning: existing file '~/.config/dockapp/$f' is not writable: "
+         $SSH "${TARGET_HOST_NAME}"  "ls -la ~/.config/dockapp/$f"
+         SUDO="sudo"
+      fi
+   fi      
 
 done
 
@@ -110,11 +117,15 @@ done
 # 1 level (previous state) backup (if necessary/possible)
 $SSH "${TARGET_HOST_NAME}"  "cd ~/.config/dockapp/ && cp -f $LIST ~/.config/dockapp/bak/ 1>/dev/null 2>&1 || echo 'Failed backup...'"
 
+if [ ! -z "$SUDO" ]; then
+  echo "Warning: sudo cp may be required for copying [$LIST] from '$TMP' into '~/.config/dockapp/'..."
+fi
+
 #### TODO: proper atomic update?!
-$SSH "${TARGET_HOST_NAME}"  "cd $TMP && $SUDO cp -f $LIST ~/.config/dockapp/ && ls -ltX ~/.config/dockapp/"
+$SSH "${TARGET_HOST_NAME}"  "cd $TMP && cp -f $LIST ~/.config/dockapp/ && ls -ltX ~/.config/dockapp/"
 
    if [ $? -ne 0 ]; then
-      echo "ERROR: Could not ($SUDO) copy new configs [$LIST] from '$TMP' to '~/.config/dockapp/' on station '${TARGET_HOST_NAME}'!"
+      echo "ERROR: Could not copy new configs [$LIST] from '$TMP' to '~/.config/dockapp/' on station '${TARGET_HOST_NAME}'!"
       exit 1
    fi
 

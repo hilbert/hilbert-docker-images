@@ -24,38 +24,11 @@ services:
      - "is_top_app=0"
     volumes:
      - $NO_PROXY:$NO_PROXY
-     - $DOCKER_PLUGINS:$DOCKER_PLUGINS
     environment:
-     - DOCKER_HOST
      - NO_PROXY
     entrypoint: 
      - /bin/sh
-
-  luncher:
-    extends: 
-      service: ddd
-    labels:
-     - "is_top_app=0"
-    entrypoint: 
-     - luncher.sh
-     
-  finishall:
-    extends: 
-      service: ddd
-    labels:
-     - "is_top_app=0"
-    entrypoint: 
-     - finishall.sh
-
-  topswitch:
-    extends: 
-      service: ddd
-    labels:
-     - "is_top_app=0"
-    entrypoint: 
-     - topswitch.sh
-
-     
+   
   admin:
     extends: 
       service: ddd
@@ -228,7 +201,7 @@ services:
     tty: false
     restart: always
     command:
-     - ptmx/ptmx.sh
+     - "${CFG_DIR}/ptmx.sh"
 
   reboot:
     extends: 

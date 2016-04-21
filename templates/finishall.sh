@@ -1,4 +1,4 @@
-#!/bin/bash
+#! /bin/sh
 
 SELFDIR=`dirname "$0"`
 SELFDIR=`cd "$SELFDIR" && pwd`
@@ -32,9 +32,9 @@ fi
 
 
 for d in ${background_services}; do
-  "$CFG_DIR/docker-compose.sh" stop "$d"
-  "$CFG_DIR/docker-compose.sh" kill "$d"
-  "$CFG_DIR/docker-compose.sh" rm -f "$d"
+  "$CFG_DIR/luncher.sh" stop "$d"
+  "$CFG_DIR/luncher.sh" kill "$d"
+  "$CFG_DIR/luncher.sh" rm -f "$d"
 done
 
 # echo "--->>>> '$current_app'"
@@ -46,16 +46,16 @@ if [ -r "$CFG_DIR/lastapp.cfg" ]; then
     
     d="${current_app}"
  
-    "$CFG_DIR/docker-compose.sh" stop "$d"
-    "$CFG_DIR/docker-compose.sh" kill "$d"
-    "$CFG_DIR/docker-compose.sh" rm -f "$d"
+    "$CFG_DIR/luncher.sh" stop "$d"
+    "$CFG_DIR/luncher.sh" kill "$d"
+    "$CFG_DIR/luncher.sh" rm -f "$d"
     
 else
 
     d="${default_app}"
  
-    "$CFG_DIR/docker-compose.sh" stop "$d"
-    "$CFG_DIR/docker-compose.sh" kill "$d"
-    "$CFG_DIR/docker-compose.sh" rm -f "$d"
+    "$CFG_DIR/luncher.sh" stop "$d"
+    "$CFG_DIR/luncher.sh" kill "$d"
+    "$CFG_DIR/luncher.sh" rm -f "$d"
     
 fi

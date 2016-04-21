@@ -47,10 +47,10 @@ else
 fi
 
 for d in ${background_services}; do
-  "$CFG_DIR/docker-compose.sh" up -d "$d"
+  "$CFG_DIR/luncher.sh" up -d "$d"
 done
 
 # echo "--->>>> '$current_app'"
 
 ### TODO: run in a loop?
-"$CFG_DIR/docker-compose.sh" up -d "$current_app"
+"$CFG_DIR/luncher.sh" up -d "$current_app"
