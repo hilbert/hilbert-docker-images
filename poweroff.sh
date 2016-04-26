@@ -12,7 +12,7 @@ fi
 
 cd $CFG_DIR
 
-CMD="docker"
+CMD="/usr/sbin/poweroff"
 
 ### station id
 TARGET_HOST_NAME="$1"
@@ -20,4 +20,4 @@ shift
 
 ARGS=$@
 
-exec "$CFG_DIR/remote.sh" "${TARGET_HOST_NAME}" "${CMD} ${ARGS}"
+exec "$CFG_DIR/remote.sh" "${TARGET_HOST_NAME}" "sudo -n -P ${CMD} ${ARGS}"
