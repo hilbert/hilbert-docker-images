@@ -51,18 +51,32 @@ if [ -r "./compose.cfg" ]; then
     . "./compose.cfg"
 fi
 
-#if [ -r "./lastapp.cfg" ]; then
-#    . "./lastapp.cfg"
-#fi
-
-# export 
-
-if [[ ! -x ./compose ]];
+if [[ -f ./compose ]];
 then
-   chmod a+x ./compose || \
-   echo "Warning: could not make docker-compose '! 
-         Please download it as '$CFG_DIR/compose' and make it executable!"
+  if [[ ! -x ./compose ]];
+  then
+     chmod -f a+x ./compose
+  fi
+  
+  if [[ ! -x ./compose ]];
+  then
+     sudo -n -P chmod -f a+x ./compose
+  fi
+
+  if [[ -x ./compose ]];
+  then
+     # --no-build --no-color 
+     exec ./compose "$@"
+  else
+     echo "Warning: could not make '${CFG_DIR}/compose' into an executable: "
+     ls -la ${CFG_DIR}/compose
+  fi
 fi
 
-# --no-build --no-color 
-exec ./compose "$@"
+if hash docker-compose 2>/dev/null; 
+then
+  exec docker-compose "$@"
+fi
+
+echo "ERROR: Sorry no executable '${CFG_DIR}/compose' or global docker-compose on the system!"
+exit 1

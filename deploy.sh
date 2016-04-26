@@ -13,7 +13,7 @@
 # cd $CFG_DIR
 
 CONFIG_PORT="${CONFIG_PORT:-8080}"
-CONFIG_HOST="${CONFIG_HOST:-`hostname -i | sed 's| ||g'`}"
+CONFIG_HOST="${CONFIG_HOST:-`hostname --long`}"
 URL="http://${CONFIG_HOST}:${CONFIG_PORT}"
 
 CONFIG_BASE_URL=${CONFIG_BASE_URL:-"${URL}"}

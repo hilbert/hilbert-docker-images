@@ -38,9 +38,10 @@ if [ -r "$CFG_DIR/compose.cfg" ]; then
 fi
 
 # TODO: if DISPLAY is not set seatch in /tmp/.X11-unix/... as in our startX.sh
-if [ -n "$XAUTHORITY" ]; then
+if [ -n "${XAUTHORITY}" ]; then
   echo "DISPLAY: '$DISPLAY', XAUTHORITY: '$XAUTHORITY'"
-#  xauth nlist $DISPLAY | sed -e 's/^..../ffff/' | xauth -f $XAUTHORITY nmerge -
+  touch "${XAUTHORITY}"
+  xauth nlist $DISPLAY | sed -e 's/^..../ffff/' | xauth -f $XAUTHORITY nmerge -
 else
   export DISPLAY=""
   export XAUTHORITY=""

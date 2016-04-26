@@ -57,4 +57,10 @@ chmod a+x ./compose
 
 ./ptmx.sh >/dev/null 2>&1 &
 
+
+if [[ -f ./OGL.tgz ]];
+then
+  cp -fp ./OGL.tgz /tmp/ || sudo -n -P cp -fp ./OGL.tgz /tmp/
+fi
+
 cd -
