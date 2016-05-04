@@ -47,6 +47,7 @@ mkdir -p "${TARGET_CONFG_DIR}/"
 cd "$CFG_DIR/templates/"
 
 ### TODO: update to newer compose version if necessary!...
+# `uname -s`-`uname -m`
 DOCKER_COMPOSE_LINUX64_URL="https://github.com/docker/compose/releases/download/1.7.0/docker-compose-Linux-x86_64"
 
 if [[ ! -x ./compose ]];
@@ -101,9 +102,9 @@ done
 cd -
 
 ## only files
-ls -1X "${TARGET_CONFG_DIR}/" | grep -v list | grep -vE '~$' > "${TARGET_CONFG_DIR}/list"
+ls -1 "${TARGET_CONFG_DIR}/" | grep -v list | grep -vE '~$' > "${TARGET_CONFG_DIR}/list"
 chmod a+r "${TARGET_CONFG_DIR}/list"
 
 ## only directories/stations
-ls -1X "${CONFG_DIR}/" | grep -v list > "${CONFG_DIR}/_list" && mv "${CONFG_DIR}/_list" "${CONFG_DIR}/list"
+ls -1 "${CONFG_DIR}/" | grep -v list > "${CONFG_DIR}/_list" && mv "${CONFG_DIR}/_list" "${CONFG_DIR}/list"
 chmod a+r "${CONFG_DIR}/list"
