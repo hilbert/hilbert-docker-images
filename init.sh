@@ -71,7 +71,11 @@ for f in $(ls -1 | grep -vE '~$') ;
 do
    case "$f" in 
      *.cfg)  
-          sed -e "s#[\$]station_id#$TARGET_HOST_NAME#g"  -e "s#[\$]station_type#$station_type#g" "$f" > "${TARGET_CONFG_DIR}/_$f" && \
+          sed \
+	     -e "s#[\$]DM#$DM#g" \
+	     -e "s#[\$]station_id#$TARGET_HOST_NAME#g" \
+	     -e "s#[\$]station_type#$station_type#g" \
+	       "$f" > "${TARGET_CONFG_DIR}/_$f" && \
           mv -f "${TARGET_CONFG_DIR}/_$f" "${TARGET_CONFG_DIR}/$f"
      ;;
      *.yml)
