@@ -16,6 +16,7 @@ cd $CFG_DIR
 ### start, stop, 
 # shift
 
+### TODO: read the following default cache location from station.cfg!
 CMD=$(basename "$0" '.sh')
 CMD="~/.config/dockapp/$CMD.sh"
 

@@ -7,6 +7,7 @@ TARGET_HOST_NAME="$1"
 shift
 ARGS=$@
 
-CMD="/usr/sbin/shutdown"
+CMD=$(basename "$0" '.sh')
+CMD="/usr/sbin/$CMD"
 
 exec "${SELFDIR}/remote.sh" "${TARGET_HOST_NAME}" "sudo -n -P ${CMD} ${ARGS}"

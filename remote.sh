@@ -10,7 +10,7 @@ cd $SELFDIR
 TARGET_HOST_NAME="$1"
 
    if [ -z "${TARGET_HOST_NAME}" ]; then
-      echo "ERROR: no station (1st) argument given to this script $0: [$@]!"
+      echo "ERROR: no station argument was specified to this script [$0]! (other arguments were: '$@')"
       exit 1
    fi
 
