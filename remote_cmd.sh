@@ -31,26 +31,17 @@ shift
 ### station id
 ARGS=$@
 
-
-DM=${DM:-}
-SSH=${SSH:-${DM} ssh}
-
-   $SSH "${TARGET_HOST_NAME}" "exit 0"
+   ./remote.sh "${TARGET_HOST_NAME}" "exit 0" &> /dev/null
    if [ $? -ne 0 ]; then
-      echo "ERROR: no $DM ssh access to station '${TARGET_HOST_NAME}'!"
+      echo "ERROR: no access to station '${TARGET_HOST_NAME}'!"
       exit 1
    fi
 
-
-# "$CFG_DIR/deploy.sh" "${TARGET_HOST_NAME}"
-
-   $SSH "${TARGET_HOST_NAME}" "test -x $CMD && exit 0 || exit 1"
+   ./remote.sh "${TARGET_HOST_NAME}" "test -x $CMD && exit 0 || exit 1" &> /dev/null
    if [ $? -ne 0 ]; then
       echo "ERROR: no executable shell script '$CMD' on station '${TARGET_HOST_NAME}'!"
       exit 1
    fi
 
-D="$CMD $ARGS"
-
-echo "Running custom management command: '$D' to run on station '${TARGET_HOST_NAME}': "
-$SSH "${TARGET_HOST_NAME}" "$D"
+echo "Running custom management command: '$CMD $ARGS' on station '${TARGET_HOST_NAME}'... "
+exec ./remote.sh "${TARGET_HOST_NAME}" $CMD $ARGS

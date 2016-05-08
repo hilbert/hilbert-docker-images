@@ -3,26 +3,34 @@
 SELFDIR=`dirname "$0"`
 SELFDIR=`cd "$SELFDIR" && pwd`
 
+cd $SELFDIR
+
 # set -e
 
-if [ -z "$CFG_DIR" ]; then
-    export CFG_DIR="${HOME}/.config/dockapp"
-fi
-
-cd $CFG_DIR
-
-### station id
 TARGET_HOST_NAME="$1"
-shift
 
+   if [ -z "${TARGET_HOST_NAME}" ]; then
+      echo "ERROR: no station (1st) argument given to this script $0: [$@]!"
+      exit 1
+   fi
+
+shift
 CMD_ARGS=$@
 
-echo "Command: '${CMD_ARGS}' to run on station '${TARGET_HOST_NAME}'"
+export station_id="${TARGET_HOST_NAME}"
 
-DM=${DM:-}
-SSH=${SSH:-${DM} ssh}
+export BASE_DIR="${BASE_DIR:-$PWD/STATIONS}"
+TARGET_CONFG_DIR="${BASE_DIR}/${station_id}"
 
-# "$CFG_DIR/deploy.sh" "${TARGET_HOST_NAME}"
+if [[ ! -d "${TARGET_CONFG_DIR}/" ]];
+then 
+   echo "Error: missing configuration directory [${TARGET_CONFG_DIR}] for station '$station_id'!"
+   exit 1
+fi
 
-# D='~/.config/dockapp/'
-$SSH "${TARGET_HOST_NAME}" ${CMD_ARGS}
+cd "${TARGET_CONFG_DIR}/"
+source ./station.cfg
+cd -
+
+echo "Running command: '${CMD_ARGS}' on station '${TARGET_HOST_NAME}' via '${SSH}'..."
+${SSH} ${CMD_ARGS}

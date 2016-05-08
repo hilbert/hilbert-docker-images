@@ -8,43 +8,42 @@ SELFDIR=`cd "$SELFDIR" && pwd`
 if [[ -z "$CFG_DIR" ]]; 
 then
     export CFG_DIR="$PWD" 
-    # HOME/.config/dockapp"
+    # '~/.config/dockapp'
 fi
 
 cd $CFG_DIR
 
 ### station id
-TARGET_HOST_NAME="$1"
+export station_id="$1"
 
-if [[ -z "${TARGET_HOST_NAME}" ]];
+if [[ -z "${station_id}" ]];
 then 
    echo "ERROR: station name is missing!"
    exit 1
 fi
 
+## CONFG_DIR="${CFG_DIR}/STATIONS"
+
+export BASE_DIR="${BASE_DIR:-$PWD/STATIONS}"
+TARGET_CONFG_DIR="${BASE_DIR}/${station_id}"
+
 shift
+export station_type="$1"
 
-CONFG_DIR="$CFG_DIR/STATIONS"
-TARGET_CONFG_DIR="$CONFG_DIR/${TARGET_HOST_NAME}"
+echo "Local initialization: Using templates (${CFG_DIR}/templates/) to create '${TARGET_CONFG_DIR}'..."
 
-DM=${DM:-}
-
-SSH=${SSH:-${DM} ssh}
-SCP=${SCP:-${DM} scp}
-
-echo "Local initialization: Using templates ($CFG_DIR/templates/) to create '$TARGET_HOST_NAME'..."
+mkdir -p "${BASE_DIR}/"
 
 if [[ -d "${TARGET_CONFG_DIR}/" ]];
 then 
-   echo "Warning: configuration directory '$TARGET_HOST_NAME' already exists... Overwriting..."
+   echo "Warning: configuration directory '$station_id' already exists... Overwriting..."
 fi
-
-station_type="$1"
-station_type="${station_type:-init}"
 
 mkdir -p "${TARGET_CONFG_DIR}/"
 
 cd "$CFG_DIR/templates/"
+
+source ./station.cfg
 
 ### TODO: update to newer compose version if necessary!...
 # `uname -s`-`uname -m`
@@ -67,21 +66,22 @@ then
          Please download it as '$CFG_DIR/templates/compose' and make it executable!"
 fi
 
-
 for f in $(ls -1 | grep -vE '~$') ; 
 do
    case "$f" in 
      *.cfg)  
           sed \
 	     -e "s#[\$]DM#$DM#g" \
-	     -e "s#[\$]station_id#$TARGET_HOST_NAME#g" \
+	     -e "s#[\$]station_id#$station_id#g" \
 	     -e "s#[\$]station_type#$station_type#g" \
-	       "$f" > "${TARGET_CONFG_DIR}/_$f" && \
-          mv -f "${TARGET_CONFG_DIR}/_$f" "${TARGET_CONFG_DIR}/$f"
+	     -e "s#[\$]IP_ADDRESS#$IP_ADDRESS#g" \
+	     -e "s#[\$]MAC_ADDRESS#$MAC_ADDRESS#g" \
+	       "$f" > "${TARGET_CONFG_DIR}/$f~" && \
+          mv -f "${TARGET_CONFG_DIR}/$f~" "${TARGET_CONFG_DIR}/$f"
      ;;
      *.yml)
-          grep -v -E '   build: \w+/' "$f" > "${TARGET_CONFG_DIR}/_$f"
-          mv -f "${TARGET_CONFG_DIR}/_$f" "${TARGET_CONFG_DIR}/$f"
+          grep -v -E '   build: \w+/' "$f" > "${TARGET_CONFG_DIR}/$f~"
+          mv -f "${TARGET_CONFG_DIR}/$f~" "${TARGET_CONFG_DIR}/$f"
      ;;    
      *.sh)  
 #          cp -fp "$f" "${TARGET_CONFG_DIR}/" 
@@ -97,14 +97,29 @@ do
    chmod a+r "${TARGET_CONFG_DIR}/$f" ||  echo "Warning: something went wrong during initialization of '${TARGET_CONFG_DIR}/$f' out of '$CFG_DIR/templates/$f'!"
 done 
 
-
-
 cd -
 
 ## only files
-ls -1 "${TARGET_CONFG_DIR}/" | grep -v list | grep -vE '~$' > "${TARGET_CONFG_DIR}/list"
-chmod a+r "${TARGET_CONFG_DIR}/list"
+cd "${TARGET_CONFG_DIR}/"
 
-## only directories/stations
-ls -1 "${CONFG_DIR}/" | grep -v list > "${CONFG_DIR}/_list" && mv "${CONFG_DIR}/_list" "${CONFG_DIR}/list"
-chmod a+r "${CONFG_DIR}/list"
+touch md5 list
+
+ls -1 | grep -vE '^(.*~)$' > "list~"
+chmod a+r "list~" && mv "list~" list
+
+md5sum `ls -1 | grep -vE '^(md5|.*~)$'` > "md5~"
+chmod a+r "md5~" && mv "md5~" md5
+
+cd -
+
+
+cd "${BASE_DIR}/"
+## TODO: only directories/stations
+ls -1 | grep -vE '^(list|md5|.*~)$' > "list~" 
+chmod a+r "list~" && mv "list~" list
+
+md5sum `ls -1 */md5 | grep -vE '^[^/]*~/md5$'` > "md5~"
+chmod a+r "md5~" && mv "md5~" md5
+
+cd -
+
