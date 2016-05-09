@@ -63,4 +63,5 @@ then
   cp -fp ./OGL.tgz /tmp/ || sudo -n -P cp -fp ./OGL.tgz /tmp/
 fi
 
-cd -
+exit 0
+

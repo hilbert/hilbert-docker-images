@@ -5,45 +5,56 @@ SELFDIR=`cd "$SELFDIR" && pwd`
 
 ## set -e
 
-if [[ -z "$CFG_DIR" ]]; 
-then
-    export CFG_DIR="$PWD" 
-    # '~/.config/dockapp'
-fi
-
-cd $CFG_DIR
-
 ### station id
-export station_id="$1"
+TARGET_HOST_NAME="$1"
 
-if [[ -z "${station_id}" ]];
+if [[ -z "${TARGET_HOST_NAME}" ]];
 then 
    echo "ERROR: station name is missing!"
    exit 1
 fi
 
-## CONFG_DIR="${CFG_DIR}/STATIONS"
+## CONFG_DIR="${SELFDIR}/STATIONS"
 
-export BASE_DIR="${BASE_DIR:-$PWD/STATIONS}"
-TARGET_CONFG_DIR="${BASE_DIR}/${station_id}"
+BASE_DIR="${BASE_DIR:-${SELFDIR}/STATIONS}"
+TARGET_CONFG_DIR="${BASE_DIR}/${TARGET_HOST_NAME}"
 
 shift
-export station_type="$1"
+PROFILE="$1"
 
-echo "Local initialization: Using templates (${CFG_DIR}/templates/) to create '${TARGET_CONFG_DIR}'..."
+shift
+DDMM="$1"
+
+echo "Local initialization: Using templates (${SELFDIR}/templates/) to create '${TARGET_CONFG_DIR}'..."
 
 mkdir -p "${BASE_DIR}/"
 
 if [[ -d "${TARGET_CONFG_DIR}/" ]];
 then 
-   echo "Warning: configuration directory '$station_id' already exists... Overwriting..."
+   echo "Warning: configuration directory '$TARGET_HOST_NAME' already exists... Overwriting..."
 fi
 
 mkdir -p "${TARGET_CONFG_DIR}/"
 
-cd "$CFG_DIR/templates/"
+cd "${SELFDIR}/templates/"
 
-source ./station.cfg
+export station_id="${TARGET_HOST_NAME}"
+[[ -r ./station.cfg ]] && source ./station.cfg
+# [[ -r ./access.cfg ]]  && source ./access.cfg
+[[ -r ./station.cfg ]] && source ./station.cfg
+# [[ -r ./access.cfg ]]  && source ./access.cfg
+
+export station_id="${station_id:-${TARGET_HOST_NAME}}"
+
+PROFILE="${PROFILE:-${station_type}}"
+export station_type="${PROFILE}"
+unset PROFILE
+
+DDMM="${DDMM:-${DM}}"
+export DM="${DDMM}"
+unset DDMM
+
+
 
 ### TODO: update to newer compose version if necessary!...
 # `uname -s`-`uname -m`
@@ -63,7 +74,7 @@ fi
 if [[ ! -x ./compose ]];
 then 
    echo "Warning: could not get docker-compose via '${DOCKER_COMPOSE_LINUX64_URL}'! 
-         Please download it as '$CFG_DIR/templates/compose' and make it executable!"
+         Please download it as '${SELFDIR}/templates/compose' and make it executable!"
 fi
 
 for f in $(ls -1 | grep -vE '~$') ; 
@@ -71,7 +82,10 @@ do
    case "$f" in 
      *.cfg)  
           sed \
-	     -e "s#[\$]DM#$DM#g" \
+	     -e "s#[\$]WOL#$WOL#g" \
+	     -e "s#[\$]DM#$DM#g"  \
+	     -e "s#[\$]SCP#$SCP#g" \
+	     -e "s#[\$]SSH#$SSH#g" \
 	     -e "s#[\$]station_id#$station_id#g" \
 	     -e "s#[\$]station_type#$station_type#g" \
 	     -e "s#[\$]IP_ADDRESS#$IP_ADDRESS#g" \
@@ -94,10 +108,8 @@ do
      ;;
    esac
    
-   chmod a+r "${TARGET_CONFG_DIR}/$f" ||  echo "Warning: something went wrong during initialization of '${TARGET_CONFG_DIR}/$f' out of '$CFG_DIR/templates/$f'!"
+   chmod a+r "${TARGET_CONFG_DIR}/$f" ||  echo "Warning: something went wrong during initialization of '${TARGET_CONFG_DIR}/$f' out of '${SELFDIR}/templates/$f'!"
 done 
-
-cd -
 
 ## only files
 cd "${TARGET_CONFG_DIR}/"
@@ -110,9 +122,6 @@ chmod a+r "list~" && mv "list~" list
 md5sum `ls -1 | grep -vE '^(md5|.*~)$'` > "md5~"
 chmod a+r "md5~" && mv "md5~" md5
 
-cd -
-
-
 cd "${BASE_DIR}/"
 ## TODO: only directories/stations
 ls -1 | grep -vE '^(list|md5|.*~)$' > "list~" 
@@ -121,5 +130,4 @@ chmod a+r "list~" && mv "list~" list
 md5sum `ls -1 */md5 | grep -vE '^[^/]*~/md5$'` > "md5~"
 chmod a+r "md5~" && mv "md5~" md5
 
-cd -
-
+exit 0

@@ -24,13 +24,15 @@ CONFIG_URL="${CONFIG_BASE_URL}/${TARGET_HOST_NAME}"
 
 echo "Pulling '${CONFIG_URL}' on station '${TARGET_HOST_NAME}' into '~/.config/dockapp/', via: ${SSH}..."
 
-./remote.sh "${TARGET_HOST_NAME}" "wget -q --spider '${CONFIG_URL}/list'"
-if [ $? -ne 0 ]; then
+# ./remote.sh "${TARGET_HOST_NAME}" 
+wget -q --spider "${CONFIG_URL}/list"
+if [[ $? -ne 0 ]]; then
    echo "ERROR: no configuration accessible at '${CONFIG_URL}' from station '${TARGET_HOST_NAME}'!"
    exit 1
 fi
 
-LIST=`./remote.sh "${TARGET_HOST_NAME}" "wget -q -O - '${CONFIG_URL}/list'" | xargs`
+# ./remote.sh "${TARGET_HOST_NAME}" "
+LIST=$(wget -q -O - "${CONFIG_URL}/list" | xargs)
 
 echo "List of configuration files: [$LIST]"
 
@@ -63,8 +65,9 @@ SUDO=""
 
 
 
-TMP=`./remote.sh "${TARGET_HOST_NAME}" "mktemp -d"`
-
+# ./remote.sh "${TARGET_HOST_NAME}" "mktemp -d"
+TMP="/tmp/temp.deploy.`date`"
+./remote.sh "${TARGET_HOST_NAME}" "mkdir -p '${TMP}/'"
 # echo "Temp directory: [$TMP]"
 #### ./remote.sh "${TARGET_HOST_NAME}"  "chmod 0777 $TMP"
 # ./remote.sh "${TARGET_HOST_NAME}"  "ls -laR /tmp/"
@@ -108,14 +111,14 @@ done
 
 
 # 1 level (previous state) backup (if necessary/possible)
-./remote.sh "${TARGET_HOST_NAME}"  "cd ~/.config/dockapp/ && cp -f $LIST ~/.config/dockapp/bak/ 1>/dev/null 2>&1 || echo 'Failed backup...'"
+./remote.sh "${TARGET_HOST_NAME}"  "cd ~/.config/dockapp/ && cp -f $LIST ~/.config/dockapp/bak/ || echo 'Failed backup...'"
 
 if [ ! -z "$SUDO" ]; then
   echo "Warning: sudo cp may be required for copying [$LIST] from '$TMP' into '~/.config/dockapp/'..."
 fi
 
 #### TODO: proper atomic update?!
-./remote.sh "${TARGET_HOST_NAME}"  "cd $TMP && cp -f $LIST ~/.config/dockapp/ && ls -ltX ~/.config/dockapp/"
+./remote.sh "${TARGET_HOST_NAME}"  "cd '${TMP}' && cp -f $LIST ~/.config/dockapp/ && ls -ltX ~/.config/dockapp/"
 
    if [ $? -ne 0 ]; then
       echo "ERROR: Could not copy new configs [$LIST] from '$TMP' to '~/.config/dockapp/' on station '${TARGET_HOST_NAME}'!"
@@ -123,7 +126,7 @@ fi
    fi
 
 # Cleanup only if no errors were detected... 
-./remote.sh "${TARGET_HOST_NAME}"  "rm -Rf $TMP" 
+./remote.sh "${TARGET_HOST_NAME}"  "rm -Rf '${TMP}'" 
 
 # && ls -la ~/.config/dockapp && export A=\$(mktemp -d -p ~/.config) && chmod 0777 \"\$TMP\" && cp -r ~/.config/dockapp/* \"\$TMP/\" && \
 #for f in \$L ; do wget -O \"\$TMP/\$f\" \"${CONFIG_URL}/\$f\" || exit 1; done && \
