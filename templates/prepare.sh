@@ -5,6 +5,8 @@
 SELFDIR=`dirname "$0"`
 SELFDIR=`cd "$SELFDIR" && pwd`
 
+unset DISPLAY
+
 ### set -e
 
 if [ -z "$CFG_DIR" ]; then

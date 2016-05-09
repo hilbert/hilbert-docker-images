@@ -13,6 +13,7 @@
 #
 
 ## set -e
+unset DISPLAY
 
 # echo $PWD
 

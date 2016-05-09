@@ -1,4 +1,5 @@
 #! /bin/sh
+unset DISPLAY
 
 while : 
 do

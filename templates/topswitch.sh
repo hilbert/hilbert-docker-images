@@ -4,6 +4,8 @@ SELFDIR=`dirname "$0"`
 SELFDIR=`cd "$SELFDIR" && pwd`
 
 ## set -e
+unset DISPLAY
+
 
 if [ -z "$CFG_DIR" ]; then
     export CFG_DIR="$HOME/.config/dockapp"

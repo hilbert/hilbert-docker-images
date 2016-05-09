@@ -6,7 +6,7 @@ cd "${SELFDIR}/"
 
 
 CONFIG_PORT="${CONFIG_PORT:-8080}"
-CONFIG_HOST="${CONFIG_HOST:-`hostname --long`}"
+CONFIG_HOST="${CONFIG_HOST:-`hostname -f`}"
 URL="http://${CONFIG_HOST}:${CONFIG_PORT}"
 
 CONFIG_BASE_URL=${CONFIG_BASE_URL:-"${URL}"}
