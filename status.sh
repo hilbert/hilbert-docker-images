@@ -7,10 +7,10 @@ SELFDIR=`cd "$SELFDIR" && pwd`
 
 TARGET_HOST_NAME="$1"
 
-   if [ -z "${TARGET_HOST_NAME}" ]; then
-      echo "ERROR: no station argument was specified to this script [$0]! (other arguments were: '$@')"
-      exit 1
-   fi
+if [ -z "${TARGET_HOST_NAME}" ]; then
+  echo "ERROR: no station argument was specified to this script [$0]! (other arguments were: '$@')"
+  exit 2
+fi
 
 shift
 CMD_ARGS=$@
@@ -22,8 +22,8 @@ TARGET_CONFG_DIR="${BASE_DIR}/${TARGET_HOST_NAME}"
 
 if [[ ! -d "${TARGET_CONFG_DIR}/" ]];
 then 
-   echo "ERROR: missing configuration directory [${TARGET_CONFG_DIR}] for station '${TARGET_HOST_NAME}'!"
-   exit 1
+  echo "ERROR: missing configuration directory [${TARGET_CONFG_DIR}] for station '${TARGET_HOST_NAME}'!"
+  exit 2
 fi
 
 cd "${TARGET_CONFG_DIR}/"
@@ -34,7 +34,7 @@ cd "${TARGET_CONFG_DIR}/"
 cd "${SELFDIR}/"
 
 
-echo "Checking the status for station '${TARGET_HOST_NAME}' (DM: '${DM}', ID: '${station_id}'): "
+# echo "Checking the status for station '${TARGET_HOST_NAME}' (DM: '${DM}', ID: '${station_id}'): "
 
 if [[ "${DM}" = "docker-machine" ]]; then
   st=`LANG=C ${DM} status "${station_id}"`
