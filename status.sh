@@ -22,7 +22,7 @@ TARGET_CONFG_DIR="${BASE_DIR}/${TARGET_HOST_NAME}"
 
 if [[ ! -d "${TARGET_CONFG_DIR}/" ]];
 then 
-   echo "Error: missing configuration directory [${TARGET_CONFG_DIR}] for station '${TARGET_HOST_NAME}'!"
+   echo "ERROR: missing configuration directory [${TARGET_CONFG_DIR}] for station '${TARGET_HOST_NAME}'!"
    exit 1
 fi
 
@@ -34,14 +34,45 @@ cd "${TARGET_CONFG_DIR}/"
 cd "${SELFDIR}/"
 
 
+echo "Checking the status for station '${TARGET_HOST_NAME}' (DM: '${DM}', ID: '${station_id}'): "
+
 if [[ "${DM}" = "docker-machine" ]]; then
-  st=`${DM} status "${station_id}"`
-  [[ "${st}" = "Stopped" ]] && exit 1
+  st=`LANG=C ${DM} status "${station_id}"`
+  if [[ $? -ne 0 ]]; then
+    echo "ERROR: unknown Virtual Station: '${station_id}' (${TARGET_HOST_NAME})!"
+    exit 2
+  fi
+  
+  if [[ ! "${st}" = "Running" ]]; then
+    echo "NOTE: Virtual Station '${station_id}' (${TARGET_HOST_NAME}) is not running!"
+    exit 1
+  fi
+
+  # note ip may change for virtual stations
+  unset IP_ADDRESS 
+
+  [[ -z "${IP_ADDRESS}" ]] && export IP_ADDRESS=`LANG=C ${DM} ip "${station_id}"`
 fi
 
-# echo "Checking the status for station '${TARGET_HOST_NAME}' via '${SSH}': "
+if [[ -z "${IP_ADDRESS}" ]]; then
+  echo "ERROR: unknown IP ADDRESS for '${station_id}' (${TARGET_HOST_NAME})!"
+  exit 2
+fi
+
+LANG=C ping -c2 -t2 "${IP_ADDRESS}" &> /dev/null
+
+if [[ $? -ne 0 ]]; then
+  echo "NOTE: cannot ping '${station_id}' (${TARGET_HOST_NAME}) via network!"
+  exit 1
+fi
 
 ./remote.sh "${TARGET_HOST_NAME}" "exit 0" &> /dev/null
-[[ $? -ne 0 ]] && exit 1
+if [[ $? -ne 0 ]]; then
+  echo "NOTE: cannot access '${station_id}' (${TARGET_HOST_NAME}) via ssh!"
+  exit 1
+fi
 
-exit 0 # Up and running!
+echo "NOTE: ${TARGET_HOST_NAME} is UP, RUNNING and ACCESSIBLE!"
+exit 0
+# Up, running and accessible!
+
