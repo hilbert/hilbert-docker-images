@@ -33,6 +33,6 @@ cd "${TARGET_CONFG_DIR}/"
 
 cd "${SELFDIR}/"
 
-echo "Starting station '${TARGET_HOST_NAME}' via '${WOL}': "
-exec ${WOL}
+echo "Starting station '${TARGET_HOST_NAME}' via '${WOL} ${CMD_ARGS}': "
+exec ${WOL} ${CMD_ARGS}
 
