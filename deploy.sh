@@ -4,47 +4,57 @@ SELFDIR=`dirname "$0"`
 SELFDIR=`cd "$SELFDIR" && pwd`
 cd "${SELFDIR}/"
 
+### CONFIG_PORT="${CONFIG_PORT:-8080}"
+### CONFIG_HOST="${CONFIG_HOST:-`hostname -f`}"
+### URL="http://${CONFIG_HOST}:${CONFIG_PORT}"
 
-CONFIG_PORT="${CONFIG_PORT:-8080}"
-CONFIG_HOST="${CONFIG_HOST:-`hostname -f`}"
-URL="http://${CONFIG_HOST}:${CONFIG_PORT}"
-
-CONFIG_BASE_URL=${CONFIG_BASE_URL:-"${URL}"}
+## CONFIG_BASE_URL=${CONFIG_BASE_URL:-"${URL}"}
 
 ### station id:
 TARGET_HOST_NAME="$1"
 shift
 
+if [[ -z "${TARGET_HOST_NAME}" ]];
+then 
+   echo "ERROR: station name is missing!"
+   exit 1
+fi
+
+## CONFG_DIR="${SELFDIR}/STATIONS"
+
+# NOTE: 1st synchronize with upstream CMS???
+./sync.sh "${TARGET_HOST_NAME}" || exit $?
+
+BASE_DIR="${BASE_DIR:-${SELFDIR}/STATIONS}"
+TARGET_CONFG_DIR="${BASE_DIR}/${TARGET_HOST_NAME}"
+
+if [[ ! -d "${TARGET_CONFG_DIR}/" ]];
+then 
+   echo "Error: missing configuration directory [${TARGET_CONFG_DIR}] for station '$TARGET_HOST_NAME'!"
+   exit 1
+fi
+
+cd "${TARGET_CONFG_DIR}/"
+
+[[ -r ./station.cfg ]] && source ./station.cfg
+[[ -r ./access.cfg ]]  && source ./access.cfg
+
+LIST=$(cat "./list" | xargs)
+
+cd "${SELFDIR}/"
+
 #TARGET_CFG_DIR="$CFG_DIR/STATIONS/${TARGET_HOST_NAME}"
-CONFIG_URL="${CONFIG_BASE_URL}/${TARGET_HOST_NAME}"
+#CONFIG_URL="${CONFIG_BASE_URL}/${TARGET_HOST_NAME}"
 
 #### TODO: sync local cache with remote CONFIG HTTP server
 #### TODO: switch to using SCP from current server cache!
 #### TODO: sync lastapp.cfg with the remote station
 
-echo "Pulling '${CONFIG_URL}' on station '${TARGET_HOST_NAME}' into '~/.config/dockapp/', via: ${SSH}..."
-
-# ./remote.sh "${TARGET_HOST_NAME}" 
-wget -q --spider "${CONFIG_URL}/list"
-if [[ $? -ne 0 ]]; then
-   echo "ERROR: no configuration accessible at '${CONFIG_URL}' from station '${TARGET_HOST_NAME}'!"
-   exit 1
-fi
+echo "Pushing configs for station '${TARGET_HOST_NAME}' (into '${CFG_DIR}'), using '${SCP}' and '${SSH}'..."
 
 # ./remote.sh "${TARGET_HOST_NAME}" "
-LIST=$(wget -q -O - "${CONFIG_URL}/list" | xargs)
 
 echo "List of configuration files: [$LIST]"
-
-for f in $LIST ; do 
-   ./remote.sh "${TARGET_HOST_NAME}" "wget -q --spider '${CONFIG_URL}/$f'"
-   if [ $? -ne 0 ]; then
-      echo "ERROR: configuration file '$f' is inaccessible via '${CONFIG_URL}/$f' from station '${TARGET_HOST_NAME}'!"
-      exit 1
-   fi
-done
-
-#### ./remote.sh "${TARGET_HOST_NAME}"  "rm -Rf ~/.config"
 
 ./remote.sh "${TARGET_HOST_NAME}"  "mkdir -p ~/.config/dockapp/bak"
 
@@ -72,11 +82,14 @@ TMP="/tmp/temp.deploy.`date`"
 #### ./remote.sh "${TARGET_HOST_NAME}"  "chmod 0777 $TMP"
 # ./remote.sh "${TARGET_HOST_NAME}"  "ls -laR /tmp/"
 
+# TODO: use rsync, e.g. rsync -urltv --delete -e ssh /src.dir othermachine:/src.dir
 
 for f in $LIST ; do 
-   ./remote.sh "${TARGET_HOST_NAME}" "wget -q -O '$TMP/$f' '${CONFIG_URL}/$f'"
+   g="${TARGET_CONFG_DIR}/$f"
+
+   ${SCP} "$g" "${station_id}:'$TMP/$f'"
    if [ $? -ne 0 ]; then
-      echo "ERROR: configuration file '$f' is inaccessible via '${CONFIG_URL}/$f' from station '${TARGET_HOST_NAME}'!"
+      echo "ERROR: could not copy the configuration file '$g' (with '${SCP}') into '$TMP/$f' at '${station_id}' (for '${TARGET_HOST_NAME}')!"
       exit 1
    fi
 
@@ -87,15 +100,13 @@ for f in $LIST ; do
       exit 1
    fi
   
-   case "$f" in
-     compose|*.sh)
+   if [[ -x "$g" ]]; then
         ./remote.sh "${TARGET_HOST_NAME}" "chmod a+x '$TMP/$f'"
         if [ $? -ne 0 ]; then
            echo "ERROR: Could not add executable permission bit for '$TMP/$f' on station '${TARGET_HOST_NAME}'!"
            exit 1
         fi
-     ;;
-   esac
+    fi
 
    ./remote.sh "${TARGET_HOST_NAME}"  "test -f ~/.config/dockapp/$f"  >/dev/null 2>&1
    if [ ! $? -ne 0 ]; then

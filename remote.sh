@@ -34,4 +34,4 @@ cd "${TARGET_CONFG_DIR}/"
 cd "$SELFDIR/"
 
 echo "Running command: '${CMD_ARGS}' on station '${TARGET_HOST_NAME}' via '${SSH}'..." 1>&2
-exec ${SSH} ${CMD_ARGS}
+exec ${SSH} "${station_id}" ${CMD_ARGS}
