@@ -1,37 +1,82 @@
-#!/bin/sh
+#!/bin/bash
 
 SELFDIR=`dirname "$0"`
 SELFDIR=`cd "${SELFDIR}" && pwd`
-cd "${SELFDIR}"
+
+# cd "${SELFDIR}"
 
 # set -e
+# there should be ssh passwordless access configured (e.g. via ~/.ssh/config and key IDs)
 
-CMS_HOST="${CMS_HOST:-dilbert}"
+#CMS_HOST="${CMS_HOST:-dilbert}"
+CMS_HOST="${CMS_HOST:-mbp}"
 
-CMS="${CMS_HOST}"
+### ssh:
+# CMS="${CMS_HOST}" # test sftp for now
 
 ### sftp:
 CMS_URL="${CMS:-sftp://${CMS_HOST}}"
 CMS_CONFIG_DIR="${CMS_CONFIG_DIR:-.config/dockapp/STATIONS}"
 
+### local cache path:
 CACHE_DIR="${CACHE_DIR:-${SELFDIR}/STATIONS}"
-# mkdir -p "${CACHE_DIR}"
+
+mkdir -p "${CACHE_DIR}"
 
 DIR="$1"
-[[ ! -z "${DIR}" ]] && DIR="/${DIR}"
+if [ ! -z "${DIR}" ]; then 
+#   DIR="/${DIR}/"
+   CMS_CONFIG_DIR="${CMS_CONFIG_DIR}/${DIR}"
+   CACHE_DIR="${CACHE_DIR}/${DIR}"
+   echo "Synchronizing a single config dir of local cache ('${CACHE_DIR}') with remote CMS ('${CMS_URL}:${CMS_CONFIG_DIR}'): "
+else
+   echo "Synchronizing the whole local cache ('${CACHE_DIR}') with remote CMS ('${CMS_URL}:${CMS_CONFIG_DIR}'): "
+fi
 
-## http://serverfault.com/questions/135618/is-it-possible-to-use-rsync-over-sftp-without-an-ssh-shell
+if [ -z "${CMS}" ]; then
+   # sftp: get newest from CMS only:
+   # --dry-run 
+   lftp -e "mirror --loop -v --scan-all-first --depth-first -c -L -x '~$' '${CMS_CONFIG_DIR}' '${CACHE_DIR}'; bye" "${CMS_URL}"
+else
+   # ssh/scp/rsync: sync both CMS and local cache!
+   # -n 
+   rsync -crtbviuzpP -e "ssh -o StrictHostKeyChecking=no -o UserKnownHostsFile=/dev/null"  "${CACHE_DIR}/" "${CMS_URL}:${CMS_CONFIG_DIR}/"
+fi
+
+if [ $? -ne 0 ]; then
+   echo "ERROR: cannot synchronize local cache ('${CACHE_DIR}') with CMS ('${CMS_URL}:${CMS_CONFIG_DIR}')..."
+   exit 1
+fi
+
+### TODO: update/check the local result of sync?
+#cmp CMS/md5 STATIONS/md5 || rsync -curltv CMS STATIONS/
+exit 0
+
+
+
+
+
+#########################################################################################################
+## References:
+
+#### sftp related links:
+
+# http://serverfault.com/questions/135618/is-it-possible-to-use-rsync-over-sftp-without-an-ssh-shell
+
+## sftp:
+# http://www.computerhope.com/unix/sftp.htm
 
 # NOTE: requires lftp for file synchronization over sftp:
 # http://lftp.yar.ru/lftp-man.html
 # https://smyl.es/using-lftp-ftp-to-mirrortransfer-files-from-one-server-to-another/
 # http://allanmcrae.com/2011/07/syncing-files-across-sftp-with-lftp/
 
-#lftp -e "mirror -v --dry-run --scan-all-first -R -c -L '${CMS_CONFIG_DIR}${DIR}/' '${CACHE_DIR}${DIR}/'; bye" "${CMS_URL}"
+#########################################################################################################
 
+#### rsync MAN:
+# http://linux.die.net/man/1/rsync
+# -c, --checksum
 # -n  dry-run!
-rsync -rtbviuzP -e "ssh -o StrictHostKeyChecking=no -o UserKnownHostsFile=/dev/null"  "${CACHE_DIR}${DIR}/" "${CMS_URL}:${CMS_CONFIG_DIR}${DIR}/"
-
 # -a, --archive               archive mode; equals -rlptgoD (no -H,-A,-X)
 #  -r, --recursive             recurse into directories
 #  -l, --links                 copy symlinks as symlinks   ##### TODO: FIXME!
@@ -51,15 +96,4 @@ rsync -rtbviuzP -e "ssh -o StrictHostKeyChecking=no -o UserKnownHostsFile=/dev/n
 #  --partial makes rsync keep partially transferred files if the transfer is interrupted
 #  --progress shows a progress bar for each transfer, useful if you transfer big files
 
-if [ $? -ne 0 ]; then
-   echo "ERROR: cannot synchronize local cache ('${CACHE_DIR}${DIR}/') with CMS ('${CMS_URL}:${CMS_CONFIG_DIR}${DIR}/')..."
-   exit 1
-fi
-
-#cmp CMS/md5 STATIONS/md5 || rsync -curltv CMS STATIONS/
-exit 0
-
-
-
-
-
+# -p, --perms
