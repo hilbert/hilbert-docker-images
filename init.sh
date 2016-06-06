@@ -17,7 +17,7 @@ fi
 ## CONFG_DIR="${SELFDIR}/STATIONS"
 
 BASE_DIR="${BASE_DIR:-${SELFDIR}/STATIONS}"
-TARGET_CONFG_DIR="${BASE_DIR}/${TARGET_HOST_NAME}"
+TARGET_CONFIG_DIR="${BASE_DIR}/${TARGET_HOST_NAME}"
 
 shift
 PROFILE="$1"
@@ -25,16 +25,16 @@ PROFILE="$1"
 shift
 DDMM="$1"
 
-echo "Local initialization: Using templates (${SELFDIR}/templates/) to create '${TARGET_CONFG_DIR}'..."
+echo "Local initialization: Using templates (${SELFDIR}/templates/) to create '${TARGET_CONFIG_DIR}'..."
 
 mkdir -p "${BASE_DIR}/"
 
-if [[ -d "${TARGET_CONFG_DIR}/" ]];
+if [[ -d "${TARGET_CONFIG_DIR}/" ]];
 then 
    echo "Warning: configuration directory '$TARGET_HOST_NAME' already exists... Overwriting..."
 fi
 
-mkdir -p "${TARGET_CONFG_DIR}/"
+mkdir -p "${TARGET_CONFIG_DIR}/~/"
 
 cd "${SELFDIR}/templates/"
 
@@ -71,16 +71,18 @@ then
 
 fi 
 
-if [[ ! -x ./compose ]];
-then 
-   echo "Warning: could not get docker-compose via '${DOCKER_COMPOSE_LINUX64_URL}'! 
-         Please download it as '${SELFDIR}/templates/compose' and make it executable!"
+if [[ ! -x ./compose ]]; 
+then
+   echo \
+"Warning: could not get docker-compose via '${DOCKER_COMPOSE_LINUX64_URL}'! 
+Please download it as '${SELFDIR}/templates/compose' and make it executable!"
+
 fi
 
 for f in $(ls -1 | grep -vE '~$') ; 
 do
    case "$f" in 
-     *.cfg)  
+     station.cfg)  
           sed \
 	     -e "s#[\$]WOL#$WOL#g" \
 	     -e "s#[\$]DM#$DM#g"  \
@@ -90,29 +92,27 @@ do
 	     -e "s#[\$]station_type#$station_type#g" \
 	     -e "s#[\$]IP_ADDRESS#$IP_ADDRESS#g" \
 	     -e "s#[\$]MAC_ADDRESS#$MAC_ADDRESS#g" \
-	       "$f" > "${TARGET_CONFG_DIR}/$f~" && \
-          mv -f "${TARGET_CONFG_DIR}/$f~" "${TARGET_CONFG_DIR}/$f"
+	       "$f" > "${TARGET_CONFIG_DIR}/~/$f"
      ;;
      *.yml)
-          grep -v -E '   build: \w+/' "$f" > "${TARGET_CONFG_DIR}/$f~"
-          mv -f "${TARGET_CONFG_DIR}/$f~" "${TARGET_CONFG_DIR}/$f"
+          grep -v -E '   build: \w+/' "$f" > "${TARGET_CONFIG_DIR}/~/$f"
      ;;    
-     *.sh)  
-#          cp -fp "$f" "${TARGET_CONFG_DIR}/" 
-#	   chmod a+x "${TARGET_CONFG_DIR}/$f"
-          ln -sf "$PWD/$f" "${TARGET_CONFG_DIR}/"
-     ;;
+#     *.sh)  
+#          cp -fp "$f" "${TARGET_CONFIG_DIR}/" 
+#	   chmod a+x "${TARGET_CONFIG_DIR}/$f"
+#          ln -sf "$PWD/$f" "${TARGET_CONFIG_DIR}/"
+#     ;;
      *)  
-#          cp -fp "$f" "${TARGET_CONFG_DIR}/" 
-          ln -sf "$PWD/$f" "${TARGET_CONFG_DIR}/"
+#          cp -fp "$f" "${TARGET_CONFIG_DIR}/" 
+          ln -sf "$PWD/$f" "${TARGET_CONFIG_DIR}/~/"
      ;;
    esac
    
-   chmod a+r "${TARGET_CONFG_DIR}/$f" ||  echo "Warning: something went wrong during initialization of '${TARGET_CONFG_DIR}/$f' out of '${SELFDIR}/templates/$f'!"
+   chmod a+r "${TARGET_CONFIG_DIR}/~/$f" ||  echo "Warning: something went wrong during initialization of '${TARGET_CONFIG_DIR}/~/$f' out of '${SELFDIR}/templates/$f'!"
 done 
 
 ## only files
-cd "${TARGET_CONFG_DIR}/"
+cd "${TARGET_CONFIG_DIR}/~/"
 
 touch md5 list
 
@@ -121,6 +121,11 @@ chmod a+r "list~" && mv "list~" list
 
 md5sum `ls -1 | grep -vE '^(md5|.*~)$'` > "md5~"
 chmod a+r "md5~" && mv "md5~" md5
+
+mv --backup=numbered -f -- ./* ../
+
+cd .. && rmdir ./~/
+
 
 cd "${BASE_DIR}/"
 ## TODO: only directories/stations
