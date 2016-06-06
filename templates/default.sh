@@ -4,55 +4,47 @@ SELFDIR=`dirname "$0"`
 SELFDIR=`cd "$SELFDIR" && pwd`
 
 ### set -e
-unset DISPLAY
+## unset DISPLAY
 
 if [ -z "$CFG_DIR" ]; then
-    export CFG_DIR="$HOME/.config/dockapp"
+    export CFG_DIR="${SELFDIR}"
 fi
 
-cd $CFG_DIR
+cd "${CFG_DIR}"
 
-if [ -r "$CFG_DIR/station.cfg" ]; then
-    . "$CFG_DIR/station.cfg"
+if [ -r "./station.cfg" ]; then
+    . "./station.cfg"
 fi
 
-if [ -r "$CFG_DIR/startup.cfg" ]; then
-    . "$CFG_DIR/startup.cfg"
+if [ -r "./startup.cfg" ]; then
+    . "./startup.cfg"
 fi
 
-if [ -r "$CFG_DIR/lastapp.cfg" ]; then
-    . "$CFG_DIR/lastapp.cfg"
+if [ -r "./lastapp.cfg" ]; then
+    . "./lastapp.cfg"
 else
     export current_app="${default_app}"
-    echo "export current_app='${current_app}'" > "$CFG_DIR/lastapp.cfg"
 fi
 
-
 ### TODO: detect docker settings
-if [ -r "$CFG_DIR/docker.cfg" ]; then
-    . "$CFG_DIR/docker.cfg"
+if [ -r "./docker.cfg" ]; then
+    . "./docker.cfg"
 fi
 
 ### TODO: detect audio/video settings
-if [ -r "$CFG_DIR/compose.cfg" ]; then
-    . "$CFG_DIR/compose.cfg"
-fi
-
-# TODO: if DISPLAY is not set seatch in /tmp/.X11-unix/... as in our startX.sh
-if [ -n "${XAUTHORITY}" ]; then
-  echo "DISPLAY: '$DISPLAY', XAUTHORITY: '$XAUTHORITY'"
-  touch "${XAUTHORITY}"
-  xauth nlist $DISPLAY | sed -e 's/^..../ffff/' | xauth -f $XAUTHORITY nmerge -
-else
-  export DISPLAY=""
-  export XAUTHORITY=""
+if [ -r "./compose.cfg" ]; then
+    . "./compose.cfg"
 fi
 
 for d in ${background_services}; do
-  "$CFG_DIR/luncher.sh" up -d "$d"
+  echo "Starting Background Service: '${d}'..."
+  "./luncher.sh" up -d "${d}"
 done
 
-# echo "--->>>> '$current_app'"
+echo "Front GUI Application: '${current_app}'..."
 
-### TODO: run in a loop?
-"$CFG_DIR/luncher.sh" up -d "$current_app"
+if [ -n "${current_app}" ]; then
+  echo "export current_app='${current_app}'" > "./lastapp.cfg.new~"
+  "./luncher.sh" up -d "${current_app}"
+  mv "./lastapp.cfg.new~" "./lastapp.cfg"
+fi

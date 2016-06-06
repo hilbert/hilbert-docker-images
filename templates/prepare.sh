@@ -5,12 +5,12 @@
 SELFDIR=`dirname "$0"`
 SELFDIR=`cd "$SELFDIR" && pwd`
 
-unset DISPLAY
+## unset DISPLAY
 
 ### set -e
 
 if [ -z "$CFG_DIR" ]; then
-    export CFG_DIR="$HOME/.config/dockapp"
+    export CFG_DIR="${SELFDIR}"
 fi
 
 #### TODO: needs some safety check to avoid multiple runs...
@@ -18,12 +18,12 @@ fi
 ## install Docker Volume 'local-persist' plugin following https://github.com/CWSpear/local-persist
 ##curl -fsSL https://raw.githubusercontent.com/CWSpear/local-persist/master/scripts/install.sh | sudo bash
 
-cd $CFG_DIR
+cd "${CFG_DIR}"
 
 ### TODO: update to newer compose version if necessary!...
 DOCKER_COMPOSE_LINUX64_URL="https://github.com/docker/compose/releases/download/1.7.0/docker-compose-Linux-x86_64"
 
-if [[ ! -f ./compose ]];
+if [ ! -f ./compose ];
 then
 
  if hash curl 2>/dev/null; then
@@ -34,7 +34,7 @@ then
 
 fi 
 
-if [[ ! -f ./compose ]];
+if [ ! -f ./compose ];
 then 
    echo "Warning: could not get docker-compose via '${DOCKER_COMPOSE_LINUX64_URL}'! 
          Please download it as '$CFG_DIR/compose' and make it executable!"
@@ -60,7 +60,7 @@ chmod a+x ./compose
 ./ptmx.sh >/dev/null 2>&1 &
 
 
-if [[ -f ./OGL.tgz ]];
+if [ -f ./OGL.tgz ];
 then
   cp -fp ./OGL.tgz /tmp/ || sudo -n -P cp -fp ./OGL.tgz /tmp/
 fi

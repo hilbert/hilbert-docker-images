@@ -13,7 +13,7 @@
 #
 
 ## set -e
-unset DISPLAY
+## unset DISPLAY
 
 # echo $PWD
 
@@ -25,12 +25,10 @@ unset DISPLAY
 # export 
 
 if [ -z "$CFG_DIR" ]; then
-    export CFG_DIR="$HOME/.config/dockapp"
+    export CFG_DIR="${SELFDIR}"
 fi
 
-cd $CFG_DIR
-
-# ls -la 
+cd "${CFG_DIR}"
 
 if [ -r "./station.cfg" ]; then
     . "./station.cfg"
@@ -52,20 +50,19 @@ if [ -r "./compose.cfg" ]; then
     . "./compose.cfg"
 fi
 
-if [[ -f ./compose ]];
+if [ -f ./compose ];
 then
-  if [[ ! -x ./compose ]];
+  if [ ! -x ./compose ];
   then
      chmod -f a+x ./compose
   fi
   
-  if [[ ! -x ./compose ]];
+  if [ ! -x ./compose ];
   then
      sudo -n -P chmod -f a+x ./compose
   fi
 
-  if [[ -x ./compose ]];
-  then
+  if [ -x ./compose ]; then
      # --no-build --no-color 
      exec ./compose "$@"
   else
@@ -74,8 +71,7 @@ then
   fi
 fi
 
-if hash docker-compose 2>/dev/null; 
-then
+if hash docker-compose 2>/dev/null; then
   exec docker-compose "$@"
 fi
 
