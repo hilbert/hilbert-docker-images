@@ -8,8 +8,8 @@ SELFDIR=`cd "${SELFDIR}" && pwd`
 # set -e
 # there should be ssh passwordless access configured (e.g. via ~/.ssh/config and key IDs)
 
-#CMS_HOST="${CMS_HOST:-dilbert}"
-CMS_HOST="${CMS_HOST:-mbp}"
+CMS_HOST="${CMS_HOST:-dilbert}"
+#CMS_HOST="${CMS_HOST:-mbp}"
 
 ### ssh:
 # CMS="${CMS_HOST}" # test sftp for now

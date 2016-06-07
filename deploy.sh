@@ -22,8 +22,8 @@ fi
 
 ## CONFG_DIR="${SELFDIR}/STATIONS"
 
-# NOTE: 1st synchronize with upstream CMS???
-./sync.sh "${TARGET_HOST_NAME}" || exit $?
+##### TODO: FIXME: 1st synchronize with upstream CMS????????????????????
+#./sync.sh "${TARGET_HOST_NAME}" || exit $?
 
 BASE_DIR="${BASE_DIR:-${SELFDIR}/STATIONS}"
 TARGET_CONFG_DIR="${BASE_DIR}/${TARGET_HOST_NAME}"

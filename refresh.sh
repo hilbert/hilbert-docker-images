@@ -27,6 +27,7 @@ fi
 
 cd "${TARGET_CONFG_DIR}/"
 
+## Keep previous configuration data: 
 [[ -r ./station.cfg ]] && source ./station.cfg
 [[ -r ./access.cfg ]]  && source ./access.cfg
 ## TODO: lastapp.cfg?

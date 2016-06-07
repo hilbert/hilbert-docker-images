@@ -38,14 +38,25 @@ mkdir -p "${TARGET_CONFIG_DIR}/~/"
 
 cd "${SELFDIR}/templates/"
 
+#! NOTE: there maybe some env. vars. already set from outside!
+
 export station_id="${TARGET_HOST_NAME}"
 [[ -r ./station.cfg ]] && source ./station.cfg
-# [[ -r ./access.cfg ]]  && source ./access.cfg
-[[ -r ./station.cfg ]] && source ./station.cfg
-# [[ -r ./access.cfg ]]  && source ./access.cfg
+[[ -r ./startup.cfg ]] && source ./startup.cfg
+[[ -r ./access.cfg ]]  && source ./access.cfg
 
+[[ -r ./station.cfg ]] && source ./station.cfg
+[[ -r ./startup.cfg ]] && source ./startup.cfg
+[[ -r ./access.cfg ]]  && source ./access.cfg
+
+#! Some defaults: 
 export station_id="${station_id:-${TARGET_HOST_NAME}}"
 
+if [ -z "${CFG_DIR}" ]; then
+  export CFG_DIR=".config/dockapp"
+fi
+
+## TODO: FIXME: document where do we need the following?
 PROFILE="${PROFILE:-${station_type}}"
 export station_type="${PROFILE}"
 unset PROFILE
@@ -54,7 +65,13 @@ DDMM="${DDMM:-${DM}}"
 export DM="${DDMM}"
 unset DDMM
 
+if [ -z "${station_default_app}" ]; then
+  export station_default_app="$default_app"
+fi
 
+if [ -z "${station_descr}" ]; then
+  export station_descr="Station '${station_id}'"
+fi
 
 ### TODO: update to newer compose version if necessary!...
 # `uname -s`-`uname -m`
@@ -90,6 +107,9 @@ do
 	     -e "s#[\$]SSH#$SSH#g" \
 	     -e "s#[\$]station_id#$station_id#g" \
 	     -e "s#[\$]station_type#$station_type#g" \
+	     -e "s#[\$]station_default_app#$station_default_app#g" \
+	     -e "s#[\$]station_descr#$station_descr#g" \
+	     -e "s#[\$]CFG_DIR#$CFG_DIR#g" \
 	     -e "s#[\$]IP_ADDRESS#$IP_ADDRESS#g" \
 	     -e "s#[\$]MAC_ADDRESS#$MAC_ADDRESS#g" \
 	       "$f" > "${TARGET_CONFIG_DIR}/~/$f"
