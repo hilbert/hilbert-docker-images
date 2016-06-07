@@ -16,10 +16,12 @@ if [ -r "./startup.cfg" ]; then
     . "./startup.cfg"
 fi
 
+station_default_app="${station_default_app:-$default_app}"
+
 if [ -r "./lastapp.cfg" ]; then
     . "./lastapp.cfg"
 else
-    export current_app="${default_app}"
+    export current_app="${station_default_app}"
 fi
 
 ### TODO: detect docker settings
