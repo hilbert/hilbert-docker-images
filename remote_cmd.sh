@@ -5,12 +5,7 @@ SELFDIR=`cd "$SELFDIR" && pwd`
 
 ## set -e
 
-if [ -z "$CFG_DIR" ]; then
-    export CFG_DIR="$PWD" 
-    # HOME/.config/dockapp"
-fi
-
-cd $CFG_DIR
+cd "$SELFDIR/"
 
 # ACTION="$1"
 ### start, stop, 
@@ -18,7 +13,6 @@ cd $CFG_DIR
 
 ### TODO: read the following default cache location from station.cfg!
 CMD=$(basename "$0" '.sh')
-CMD="~/.config/dockapp/$CMD.sh"
 
 TARGET_HOST_NAME="$1"
 
@@ -31,6 +25,7 @@ shift
 
 ### station id
 ARGS=$@
+CMD="~/.config/dockapp/$CMD.sh"
 
    ./remote.sh "${TARGET_HOST_NAME}" "exit 0" &> /dev/null
    if [ $? -ne 0 ]; then

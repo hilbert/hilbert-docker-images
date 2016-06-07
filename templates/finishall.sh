@@ -2,15 +2,10 @@
 
 SELFDIR=`dirname "$0"`
 SELFDIR=`cd "$SELFDIR" && pwd`
+cd "${SELFDIR}/"
 
 ## set -e
 # unset DISPLAY
-
-if [ -z "$CFG_DIR" ]; then
-    export CFG_DIR="${SELFDIR}"
-fi
-
-cd "${CFG_DIR}"
 
 if [ -r "./station.cfg" ]; then
     . "./station.cfg"

@@ -8,17 +8,12 @@ SELFDIR=`cd "$SELFDIR" && pwd`
 ## unset DISPLAY
 
 ### set -e
-
-if [ -z "$CFG_DIR" ]; then
-    export CFG_DIR="${SELFDIR}"
-fi
+cd "${SELFDIR}/"
 
 #### TODO: needs some safety check to avoid multiple runs...
 
 ## install Docker Volume 'local-persist' plugin following https://github.com/CWSpear/local-persist
 ##curl -fsSL https://raw.githubusercontent.com/CWSpear/local-persist/master/scripts/install.sh | sudo bash
-
-cd "${CFG_DIR}"
 
 ### TODO: update to newer compose version if necessary!...
 DOCKER_COMPOSE_LINUX64_URL="https://github.com/docker/compose/releases/download/1.7.0/docker-compose-Linux-x86_64"
@@ -37,7 +32,7 @@ fi
 if [ ! -f ./compose ];
 then 
    echo "Warning: could not get docker-compose via '${DOCKER_COMPOSE_LINUX64_URL}'! 
-         Please download it as '$CFG_DIR/compose' and make it executable!"
+         Please download it as '$PWD/compose' and make it executable!"
 fi
 
 chmod a+x ./compose

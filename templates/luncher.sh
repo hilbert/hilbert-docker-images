@@ -23,12 +23,7 @@
 # echo "]"
 
 # export 
-
-if [ -z "$CFG_DIR" ]; then
-    export CFG_DIR="${SELFDIR}"
-fi
-
-cd "${CFG_DIR}"
+cd "${SELFDIR}/"
 
 if [ -r "./station.cfg" ]; then
     . "./station.cfg"
@@ -66,8 +61,8 @@ then
      # --no-build --no-color 
      exec ./compose "$@"
   else
-     echo "Warning: could not make '${CFG_DIR}/compose' into an executable: "
-     ls -la ${CFG_DIR}/compose
+     echo "Warning: could not make '$PWD/compose' into an executable: "
+     ls -la $PWD/compose
   fi
 fi
 
@@ -75,5 +70,5 @@ if hash docker-compose 2>/dev/null; then
   exec docker-compose "$@"
 fi
 
-echo "ERROR: Sorry no executable '${CFG_DIR}/compose' or global docker-compose on the system!"
+echo "ERROR: Sorry no executable '$PWD/compose' or global docker-compose on the system!"
 exit 1
