@@ -267,7 +267,7 @@ services:
     environment:
      - QT_X11_NO_MITSHM=1
      - XLIB_SKIP_ARGB_VISUALS=1
-     - XAUTHORITY
+     - XAUTHORITY="${XAUTH}"
      - DISPLAY
     stdin_open: false
     tty: false
