@@ -5,7 +5,7 @@ services:
     build: base/
     volumes:
      - /tmp:/tmp:rw
-     - ${CFG_DIR}:/DOCKAPP
+     - ${PWD}:/DOCKAPP
      - /etc/localtime:/etc/localtime:ro 
     labels:
      - "is_top_app=0"
@@ -83,7 +83,7 @@ services:
     extends:
       service: consul_base
     volumes:
-     - "${CFG_DIR}/KV:/data"
+     - "${PWD}/KV:/data"
     command: 
      - "-server"
      - "-bootstrap"
@@ -216,7 +216,7 @@ services:
     command:
      - reboot
 
-  omd:
+  omd_anew:
     extends: 
       service: admin
     image: malex984/dockapp:omd
@@ -225,9 +225,9 @@ services:
      - "80"
      - "514"
      - "5667"
-     - "5000"     
+     - "5000"
     labels:
-     - "is_top_app=1"
+     - "is_top_app=0"
     stdin_open: false
     tty: false
     restart: always
@@ -243,9 +243,13 @@ services:
 
   omd_persistent:
     extends: 
-      service: omd
+      service: omd_anew
     volumes:
-     - "${CFG_DIR}/OMD:/omd/sites"
+     - "${PWD}/OMD:/omd/sites"
+
+  omd:
+    extends:
+      service: omd_anew
 
   pa:
     extends: 
@@ -465,6 +469,21 @@ services:
      - "/dev/snd:/dev/snd"
      - "/dev/shm:/dev/shm"
      - "/dev/input:/dev/input"
+
+  x11_xclock:
+    extends: 
+      service: admin
+    image: alpine:3.4
+    stdin_open: false
+    tty: false
+    restart: always
+    labels:
+     - "is_top_app=1"
+    entrypoint: 
+     - /bin/sh
+     - -c
+    command:
+     - 'apk update && apk add xorg-server xf86-video-vesa xf86-input-evdev xf86-input-mouse xf86-input-keyboard udev && echo "exec xclock">>~/.xinitrc && apk add xclock  --update-cache --repository "http://dl-cdn.alpinelinux.org/alpine/edge/testing" && startx'
 
 volumes:
   supernova:

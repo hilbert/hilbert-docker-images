@@ -8,6 +8,6 @@ shift
 ARGS=$@
 
 CMD=$(basename "$0" '.sh')
-CMD="/usr/sbin/$CMD"
+CMD="/sbin/$CMD"
 
 exec "${SELFDIR}/remote.sh" "${TARGET_HOST_NAME}" "sudo -n -P ${CMD} ${ARGS}"
