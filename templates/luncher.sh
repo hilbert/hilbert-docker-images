@@ -12,6 +12,10 @@
 # the $COMPOSE_OPTIONS environment variable.
 #
 
+SELFDIR=`dirname "$0"`
+SELFDIR=`cd "$SELFDIR" && pwd`
+cd "${SELFDIR}/"
+
 ## set -e
 ## unset DISPLAY
 
@@ -23,7 +27,6 @@
 # echo "]"
 
 # export 
-cd "${SELFDIR}/"
 
 if [ -r "./station.cfg" ]; then
     . "./station.cfg"

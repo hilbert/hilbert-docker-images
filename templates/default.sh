@@ -2,11 +2,11 @@
 
 SELFDIR=`dirname "$0"`
 SELFDIR=`cd "$SELFDIR" && pwd`
+cd "${SELFDIR}/"
 
 ### set -e
 ## unset DISPLAY
 
-cd "${SELFDIR}/"
 
 if [ -r "./station.cfg" ]; then
     . "./station.cfg"
