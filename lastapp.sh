@@ -41,7 +41,7 @@ cd "${TARGET_CONFG_DIR}/"
 f="lastapp.cfg"
 
 mkdir -p "./~/"
-${SCP} -q "${station_id}:.config/dockapp/$f" "./~/$f"
+${SCP} "${station_id}:.config/dockapp/$f" "./~/$f"
 if [[ $? -ne 0 ]]; then
   echo "ERROR: could not get '${station_id}:.config/dockapp/$f'!"
   exit 1
