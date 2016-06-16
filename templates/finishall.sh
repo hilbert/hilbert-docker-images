@@ -27,15 +27,6 @@ fi
 #   export current_app="${default_app}"
 #   echo "export current_app='${current_app}'" > "./lastapp.cfg.new~"
 
-
-for d in ${background_services}; do
-    echo "Stop/kill/rm BG Service: '$d'..."
-
-    "./luncher.sh" stop "$d"
-    "./luncher.sh" kill "$d"
-    "./luncher.sh" rm -f "$d"
-done
-
 if [ -r "./lastapp.cfg" ]; then
     . "./lastapp.cfg"
     
@@ -54,3 +45,11 @@ if [ -n "$d" ]; then
     "./luncher.sh" rm -f "$d"
 fi
 
+## TODO: FIXME: in reversed order!?
+for d in ${background_services}; do
+    echo "Stop/kill/rm BG Service: '$d'..."
+
+    "./luncher.sh" stop "$d"
+    "./luncher.sh" kill "$d"
+    "./luncher.sh" rm -f "$d"
+done
