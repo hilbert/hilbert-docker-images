@@ -247,10 +247,6 @@ services:
     volumes:
      - "${PWD}/OMD:/omd/sites"
 
-  omd:
-    extends:
-      service: omd_anew
-
   pa:
     extends: 
       service: admin
