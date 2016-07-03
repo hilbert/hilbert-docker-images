@@ -76,7 +76,7 @@ SUDO=""
 
 
 # ./remote.sh "${TARGET_HOST_NAME}" "mktemp -d"
-TMP="/tmp/temp.deploy.`date`"
+TMP="/tmp/temp_deploy_`date +"%s_%N"`"
 ./remote.sh "${TARGET_HOST_NAME}" "mkdir -p '${TMP}/'"
 # echo "Temp directory: [$TMP]"
 #### ./remote.sh "${TARGET_HOST_NAME}"  "chmod 0777 $TMP"
@@ -87,6 +87,7 @@ TMP="/tmp/temp.deploy.`date`"
 for f in $LIST ; do 
    g="${TARGET_CONFG_DIR}/$f"
 
+:   echo "Running: '${SCP} \"$g\" \"${station_id}:'$TMP/$f'\"':"
    ${SCP} "$g" "${station_id}:'$TMP/$f'"
    if [ $? -ne 0 ]; then
       echo "ERROR: could not copy the configuration file '$g' (with '${SCP}') into '$TMP/$f' at '${station_id}' (for '${TARGET_HOST_NAME}')!"
