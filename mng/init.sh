@@ -8,7 +8,7 @@ SELFDIR=`cd "$SELFDIR" && pwd`
 ### station id
 TARGET_HOST_NAME="$1"
 
-if [[ -z "${TARGET_HOST_NAME}" ]];
+if [ -z "${TARGET_HOST_NAME}" ];
 then 
    echo "ERROR: station name is missing!"
    exit 1
@@ -29,7 +29,7 @@ echo "Local initialization: Using templates (${SELFDIR}/templates/) to create '$
 
 mkdir -p "${BASE_DIR}/"
 
-if [[ -d "${TARGET_CONFIG_DIR}/" ]];
+if [ -d "${TARGET_CONFIG_DIR}/" ];
 then 
    echo "Warning: configuration directory '$TARGET_HOST_NAME' already exists... Overwriting..."
 fi
@@ -41,13 +41,13 @@ cd "${SELFDIR}/templates/"
 #! NOTE: there maybe some env. vars. already set from outside!
 
 export station_id="${TARGET_HOST_NAME}"
-[[ -r ./station.cfg ]] && source ./station.cfg
-[[ -r ./startup.cfg ]] && source ./startup.cfg
-[[ -r ./access.cfg ]]  && source ./access.cfg
+[ -r ./station.cfg ] && source ./station.cfg
+[ -r ./startup.cfg ] && source ./startup.cfg
+[ -r ./access.cfg  ] && source ./access.cfg
 
-[[ -r ./station.cfg ]] && source ./station.cfg
-[[ -r ./startup.cfg ]] && source ./startup.cfg
-[[ -r ./access.cfg ]]  && source ./access.cfg
+[ -r ./station.cfg ] && source ./station.cfg
+[ -r ./startup.cfg ] && source ./startup.cfg
+[ -r ./access.cfg  ] && source ./access.cfg
 
 #! Some defaults: 
 export station_id="${station_id:-${TARGET_HOST_NAME}}"
@@ -77,7 +77,7 @@ fi
 # `uname -s`-`uname -m`
 DOCKER_COMPOSE_LINUX64_URL="https://github.com/docker/compose/releases/download/1.7.0/docker-compose-Linux-x86_64"
 
-if [[ ! -x ./compose ]];
+if [ ! -x ./compose ];
 then
 
  if hash curl 2>/dev/null; then
@@ -88,7 +88,7 @@ then
 
 fi 
 
-if [[ ! -x ./compose ]]; 
+if [ ! -x ./compose ];
 then
    echo \
 "Warning: could not get docker-compose via '${DOCKER_COMPOSE_LINUX64_URL}'! 
@@ -101,17 +101,18 @@ do
    case "$f" in 
      station.cfg)  
           sed \
-	     -e "s#[\$]WOL#$WOL#g" \
-	     -e "s#[\$]DM#$DM#g"  \
-	     -e "s#[\$]SCP#$SCP#g" \
-	     -e "s#[\$]SSH#$SSH#g" \
-	     -e "s#[\$]station_id#$station_id#g" \
-	     -e "s#[\$]station_type#$station_type#g" \
-	     -e "s#[\$]station_default_app#$station_default_app#g" \
-	     -e "s#[\$]station_descr#$station_descr#g" \
-	     -e "s#[\$]CFG_DIR#$CFG_DIR#g" \
-	     -e "s#[\$]IP_ADDRESS#$IP_ADDRESS#g" \
-	     -e "s#[\$]MAC_ADDRESS#$MAC_ADDRESS#g" \
+	     -e "s#[\$]station_id#${station_id}#g" \
+	     -e "s#[\$]station_type#${station_type}#g" \
+	     -e "s#[\$]station_default_app#${station_default_app}#g" \
+	     -e "s#[\$]station_descr#${station_descr}#g" \
+	     -e "s#[\$]CFG_DIR#${CFG_DIR}#g" \
+	     -e "s#[\$]IP_ADDRESS#${IP_ADDRESS}#g" \
+	     -e "s#[\$]MAC_ADDRESS#${MAC_ADDRESS}#g" \
+	     -e "s#[\$]SSH_OPTS#${SSH_OPTS}#g" \
+	     -e "s#[\$]SCP#${SCP}#g" \
+	     -e "s#[\$]SSH#${SSH}#g" \
+	     -e "s#[\$]WOL#${WOL}#g" \
+	     -e "s#[\$]DM#${DM}#g"  \
 	       "$f" > "${TARGET_CONFIG_DIR}/~/$f"
      ;;
      *.yml)
@@ -134,7 +135,15 @@ done
 ## only files
 cd "${TARGET_CONFIG_DIR}/~/"
 
-touch md5 list
+touch md5 list descriptions
+
+grep -Ei '^  ([a-z].*:| *- *"description *=.*")' ./docker-compose.yml | \
+  grep -Ei -B1 'description *=' | \
+    grep -vE '^--$' | \
+      sed -e 's@^ *@@g' -e 's@^ *\([^ ]*\) *: *$@export \1_\\@g' -e 's@^ *- "\(description\) *=\(.*\)"@\1="\2"@g' > \
+        "descriptions~"
+chmod a+r "descriptions~" && mv "descriptions~" descriptions
+
 
 ls -1 | grep -vE '^(.*~)$' > "list~"
 chmod a+r "list~" && mv "list~" list

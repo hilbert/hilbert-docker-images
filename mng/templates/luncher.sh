@@ -62,7 +62,7 @@ then
 
   if [ -x ./compose ]; then
      # --no-build --no-color 
-     exec ./compose "$@"
+     exec ./compose --skip-hostname-check "$@"
   else
      echo "Warning: could not make '$PWD/compose' into an executable: "
      ls -la $PWD/compose
@@ -70,7 +70,7 @@ then
 fi
 
 if hash docker-compose 2>/dev/null; then
-  exec docker-compose "$@"
+  exec docker-compose --skip-hostname-check "$@"
 fi
 
 echo "ERROR: Sorry no executable '$PWD/compose' or global docker-compose on the system!"
