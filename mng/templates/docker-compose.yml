@@ -343,10 +343,26 @@ services:
      - --no-kill-all-on-exit 
      - -- 
      - launch.sh
-    command: 
      - browser.sh
      - -l
+    command: 
+     - "${WEBGL_APPS}/"
+     
+  IB:
+    extends: 
+      service: kiosk
+    labels:
+     - "description=Image Blend"
+    command: 
      - "${WEBGL_APPS}/WebGL_ImageBlend_New/fade_08_new_05.html"
+
+  HZ:
+    extends: 
+      service: kiosk
+    labels:
+     - "description=Habitable Zone"
+    command: 
+     - "${WEBGL_APPS}/WebGL_Habitable_New/gravity_habitable_new_04b.html"
 
   chrome:
     extends: 
@@ -365,9 +381,9 @@ services:
      - --no-kill-all-on-exit 
      - -- 
      - launch.sh
-    command: 
      - browser.sh
-     - "${WEBGL_APPS}/WebGL_Habitable_New/gravity_habitable_new_04b.html"
+    command: 
+     - "${WEBGL_APPS}/"
 
   opera:
     extends: 
