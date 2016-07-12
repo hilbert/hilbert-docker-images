@@ -36,14 +36,16 @@ cd "${SELFDIR}/"
 
 # echo "Checking the status for station '${TARGET_HOST_NAME}' (DM: '${DM}', ID: '${station_id}'): "
 
-if [[ "${DM}" = "docker-machine" ]]; then
+if [ "x${DM}" = "xdocker-machine" ]; then
+ if hash "${DM}" 2>/dev/null; then 
+
   st=`LANG=C ${DM} status "${station_id}"`
   if [[ $? -ne 0 ]]; then
     echo "ERROR: unknown Virtual Station: '${station_id}' (${TARGET_HOST_NAME})!"
     exit 2
   fi
   
-  if [[ ! "${st}" = "Running" ]]; then
+  if [ ! "x${st}" = "xRunning" ]; then
     echo "NOTE: Virtual Station '${station_id}' (${TARGET_HOST_NAME}) is not running!"
     exit 1
   fi
@@ -52,6 +54,10 @@ if [[ "${DM}" = "docker-machine" ]]; then
   unset IP_ADDRESS 
 
   [[ -z "${IP_ADDRESS}" ]] && export IP_ADDRESS=`LANG=C ${DM} ip "${station_id}"`
+# else
+#   echo "ERROR: missing '${DM}'!"
+#   exit 2
+ fi
 fi
 
 if [[ -z "${IP_ADDRESS}" ]]; then

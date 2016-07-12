@@ -50,7 +50,7 @@ function bashjoin
 }
 
 
-#TOP=$(docker ps -a -q --filter "label=is_top_app=1" --filter "status=running" 2>/dev/null)
+#TOP=$(docker ps -a -q --filter "label=is_top_app=1" --filter "label=com.docker.compose.project=dockapp" --filter "status=running" 2>/dev/null)
 # --format="{{.ID}};{{.Image}};Status: {{.Status}}, Created: {{.CreatedAt}}, Running: {{.RunningFor}}"
 # | sed 's!malex984/dockapp:!!g'
 
@@ -79,10 +79,12 @@ function res_usage
 function check_dockapp_top1
 {
 MSG=($(docker ps -a -q \
- --filter "label=is_top_app=1" \
- --filter "status=running" \
- --format="{{.Image}}@[Status:{{.Status}},Created:{{.CreatedAt}}]&{{.ID}}" \
- 2>/dev/null | sed -e 's!^malex984/dockapp:!!g' -e 's![ ]!_!g'))
+ --filter "label=is_top_app=1" --filter "label=com.docker.compose.project=dockapp" \
+ 2>/dev/null \
+ | xargs -n 1 -I '{}' docker inspect --format='{{index .Config.Labels "com.docker.compose.service" }}@[{{json .State}}]&{{.Id}}' '{}' 2>/dev/null))
+#  --format="{{.Image}}@[Status:{{.Status}},Created:{{.CreatedAt}}]&{{.ID}}" \
+## | sed -e 's!^malex984/dockapp:!!g' -e 's![ ]!_!g'
+### --filter "status=running" 
 
 if [ $? -ne 0 ]; then
   CRITICAL "cannot determine TOP app's info"
@@ -128,10 +130,11 @@ OK "TOP: $M|t=$N;;;0; $U"
 function check_dockapp_exited
 {
 MSG=($(docker ps -a -q \
- --filter "label=is_top_app" \
- --filter "status=exited" \
- --format="{{.Image}}@[Status:{{.Status}},Created:{{.CreatedAt}}]&{{.ID}}" \
- 2>/dev/null | sed -e 's!^malex984/dockapp:!!g' -e 's![ ]!_!g'))
+ --filter "label=is_top_app" --filter "label=com.docker.compose.project=dockapp" \
+ --filter "status=exited" 2>/dev/null \
+ | xargs -n 1 -I '{}' docker inspect --format='{{index .Config.Labels "com.docker.compose.service" }}@[{{json .State}}]&{{.Id}}' '{}' 2>/dev/null))
+#  --format="{{.Image}}@[Status:{{.Status}},Created:{{.CreatedAt}}]&{{.ID}}" \
+##  | sed -e 's!^malex984/dockapp:!!g' -e 's![ ]!_!g'
 
 if [ $? -ne 0 ]; then
   CRITICAL "cannot determine docker ps info"
@@ -164,23 +167,22 @@ fi
 M=$(bashjoin '&' ${MSG[@]/&*/})
 U=$(res_usage ${MSG[@]/*&/})
 
-WARNING "$N exited apps/services: $M|e=$N;;;0; $U"
+## WARNING 
+CRITICAL "$N exited apps/services: $M|e=$N;;;0; $U"
 #  echo "UNKNOWN - not a single running TOP app!"
 #  exit 3
 #fi
-
 }
-
-
 
 
 function check_dockapp_back
 {
 MSG=($(docker ps -a -q \
- --filter "label=is_top_app=0" \
- --filter "status=running" \
- --format="{{.Image}}@[Status:{{.Status}},Created:{{.CreatedAt}}]&{{.ID}}" \
- 2>/dev/null | sed -e 's!^malex984/dockapp:!!g' -e 's![ ]!_!g'))
+ --filter "label=is_top_app=0" --filter "label=com.docker.compose.project=dockapp" 2>/dev/null \
+ | xargs -n 1 -I '{}' docker inspect --format='{{index .Config.Labels "com.docker.compose.service" }}@[{{json .State}}]&{{.Id}}' '{}' 2>/dev/null))
+#  --filter "status=running" \
+#  --format="{{.Image}}@[Status:{{.Status}},Created:{{.CreatedAt}}]&{{.ID}}" \
+## | sed -e 's!^malex984/dockapp:!!g' -e 's![ ]!_!g'
 
 if [ $? -ne 0 ]; then
   CRITICAL "cannot determine docker ps info"
@@ -230,14 +232,17 @@ function check_dockapp_foreign
 tmpdir=$(mktemp -d)
 trap 'rm -rf "$tmpdir"' EXIT INT TERM HUP
 
+## TODO: avoid using files...!?
+
 # --format="{{.Image}} @ [Status: {{.Status}}, Created: {{.CreatedAt}}]" 
 docker ps -a -q                               2>/dev/null | sort > "$tmpdir/all"
 if [ $? -ne 0 ]; then
   CRITICAL "cannot determine docker ps info"
 fi
 
+#! NOTE: all our containers bear is_top_app label + are to be started via docker composer!
 # --format="{{.Image}} @ [Status: {{.Status}}, Created: {{.CreatedAt}}]" 
-docker ps -a -q --filter "label=is_top_app"   2>/dev/null | sort > "$tmpdir/my"
+docker ps -a -q --filter "label=is_top_app"  --filter "label=com.docker.compose.project=dockapp" 2>/dev/null | sort > "$tmpdir/my"
 if [ $? -ne 0 ]; then
   CRITICAL "cannot determine docker ps info"
 fi
@@ -280,7 +285,9 @@ U=$(res_usage ${MSG[*]})
 for ind in ${!MSG[*]}
 do
 #  echo "$ind : ${MSG[$ind]}"
-  MSG[$ind]=$(docker ps -a -q --filter "id=${MSG[$ind]}" --format="{{.Image}}@[Status:{{.Status}},Created:{{.CreatedAt}}]" 2>/dev/null | sed -e 's![ ]!_!g')
+  ## TODO: xargs docker inspect --format='{{...!...}}' ${MSG[$ind]} 2>/dev/null
+  ### TODO: same in all of the above...!?
+  MSG[$ind]=$(docker ps -a -q --filter "id=${MSG[$ind]}" --format="{{.Names}}_{{.Image}}_{{.Labels}}@[Status:{{.Status}},Created:{{.CreatedAt}},RunningFor:{{.RunningFor}},CMD:{{.Command}}]" 2>/dev/null | sed -e 's![ ]!_!g')
   if [ $? -ne 0 ]; then
     CRITICAL "cannot determine docker ps info"
   fi

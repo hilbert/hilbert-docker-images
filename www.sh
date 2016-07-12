@@ -6,4 +6,4 @@ WORKDIR="$PWD"
 #SELFDIR=`cd "$SELFDIR" && pwd`
 #cd $SELFDIR
 
-python2.7 -c 'import SimpleHTTPServer,BaseHTTPServer; BaseHTTPServer.HTTPServer(("", 8080), SimpleHTTPServer.SimpleHTTPRequestHandler).serve_forever()' 
+python2.7 -c 'import SimpleHTTPServer,BaseHTTPServer; BaseHTTPServer.HTTPServer(("", 7070), SimpleHTTPServer.SimpleHTTPRequestHandler).serve_forever()' 

@@ -32,7 +32,7 @@ fi
 echo "Running command: '${CMD} ${ARGS}' on ... "
 echo
 
-for f in $(cat "${BASE_DIR}/list") ; do
+for f in $(cat "${BASE_DIR}/list" | grep -v -E '^ *(#.*)? *$' ) ; do
   echo "... station '$f': "
   echo 
   
