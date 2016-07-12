@@ -109,6 +109,9 @@ do
 	     -e "s#[\$]IP_ADDRESS#${IP_ADDRESS}#g" \
 	     -e "s#[\$]MAC_ADDRESS#${MAC_ADDRESS}#g" \
 	     -e "s#[\$]SSH_OPTS#${SSH_OPTS}#g" \
+	     -e "s#[\$]SSH_USER#${SSH_USER}#g" \
+	     -e "s#[\$]SSH_PORT#${SSH_PORT}#g" \
+	     -e "s#[\$]SSH_KEY#${SSH_KEY}#g" \
 	     -e "s#[\$]SCP#${SCP}#g" \
 	     -e "s#[\$]SSH#${SSH}#g" \
 	     -e "s#[\$]WOL#${WOL}#g" \
@@ -143,6 +146,36 @@ grep -Ei '^  ([a-z].*:| *- *"description *=.*")' ./docker-compose.yml | \
       sed -e 's@^ *@@g' -e 's@^ *\([^ ]*\) *: *$@export \1_\\@g' -e 's@^ *- "\(description\) *=\(.*\)"@\1="\2"@g' > \
         "descriptions~"
 chmod a+r "descriptions~" && mv "descriptions~" descriptions
+
+if [ -r "${SSH_KEY}" ];
+then
+
+  ln -sf  "${SSH_KEY}" .
+
+  cat >"ssh_config~" <<EOF
+Host ${station_id}
+  ForwardX11=no 
+  StrictHostKeyChecking=no 
+  BatchMode=yes 
+  PasswordAuthentication=no 
+  UserKnownHostsFile=/dev/null 
+  LogLevel=quiet 
+  ConnectionAttempts=3 
+  ConnectTimeout=10 
+  ControlMaster=no 
+  ControlPath=none 
+  IdentitiesOnly=yes 
+  Compression yes
+  HostName ${IP_ADDRESS}
+  Port=${SSH_PORT}
+  IdentityFile=`basename "${SSH_KEY}"`
+# ${SSH_KEY}
+  User=${SSH_USER}
+EOF
+
+  chmod go-rwx "ssh_config~" && mv "ssh_config~" ssh_config
+
+fi
 
 
 ls -1 | grep -vE '^(.*~)$' > "list~"

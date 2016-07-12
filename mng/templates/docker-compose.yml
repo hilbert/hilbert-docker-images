@@ -348,19 +348,19 @@ services:
     command: 
      - "${WEBGL_APPS}/"
      
-  IB:
+  IB_kiosk:
     extends: 
       service: kiosk
     labels:
-     - "description=Image Blend"
+     - "description=Image Blend under Kiosk"
     command: 
      - "${WEBGL_APPS}/WebGL_ImageBlend_New/fade_08_new_05.html"
 
-  HZ:
+  HZ_kiosk:
     extends: 
       service: kiosk
     labels:
-     - "description=Habitable Zone"
+     - "description=Habitable Zone under Kiosk"
     command: 
      - "${WEBGL_APPS}/WebGL_Habitable_New/gravity_habitable_new_04b.html"
 
@@ -384,6 +384,22 @@ services:
      - browser.sh
     command: 
      - "${WEBGL_APPS}/"
+
+  IB_chrome:
+    extends: 
+      service: chrome
+    labels:
+     - "description=Image Blend under Chrome"
+    command: 
+     - "${WEBGL_APPS}/WebGL_ImageBlend_New/fade_08_new_05.html"
+
+  HZ_chrome:
+    extends: 
+      service: chrome 
+    labels:
+     - "description=Habitable Zone under Chrome"
+    command: 
+     - "${WEBGL_APPS}/WebGL_Habitable_New/gravity_habitable_new_04b.html"
 
   opera:
     extends: 

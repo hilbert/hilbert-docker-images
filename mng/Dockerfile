@@ -5,7 +5,7 @@ MAINTAINER Christian Stussak <stussak@mfo.de>
 
 # install dependencies
 RUN update.sh && \
-    install.sh --no-install-recommends nginx && \
+    install.sh --no-install-recommends nginx socat && \
     clean.sh
 
 #RUN DEBIAN_FRONTEND=noninteractive curl -sL https://deb.nodesource.com/setup_4.x | sudo -E bash - \
@@ -26,8 +26,8 @@ RUN cd /usr/local/dockapp_dashboard/ && npm install \
     
 # mkdir -p /usr/local && cd /usr/local/ && curl -0L https://github.com/IMAGINARY/dockapp_dashboard/archive/master.tar.gz | tar -zx && mv dockapp_dashboard-master dockapp_dashboard \
 
-RUN curl -L https://github.com/docker/machine/releases/download/v0.8.0-rc1/docker-machine-`uname -s`-`uname -m` >/usr/local/bin/docker-machine \
-&& chmod +x /usr/local/bin/docker-machine
+#RUN curl -L https://github.com/docker/machine/releases/download/v0.8.0-rc1/docker-machine-`uname -s`-`uname -m` >/usr/local/bin/docker-machine \
+#&& chmod +x /usr/local/bin/docker-machine
 
 
 #RUN echo '\
