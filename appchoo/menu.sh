@@ -20,9 +20,9 @@ ARGS="$@"
 # echo $N 
 
 ### HB: SET VARS...
-export HB_HOST=${HB_HOST:-localhost}
-export HB_PORT=${HB_PORT:-8888}
-export HB_URL="http://${HB_HOST}:${HB_PORT}"
+export HB_HOST="${HB_HOST:-localhost}"
+export HB_PORT="${HB_PORT:-8888}"
+export HB_URL="${HB_URL:-http://${HB_HOST}:${HB_PORT}}"
 
 HB() {
   CMD="$1"
@@ -31,7 +31,7 @@ HB() {
   TIME="$1"
 #  shift
 
-  ./hb.sh "${CMD}" "${TIME}"
+  /usr/local/bin/hb.sh "${CMD}" "${TIME}"
 #  curl -s -L -XGET -- "${HB_URL}/${CMD}?${TIME}&appid=${APP_ID}"
 }
 
@@ -39,7 +39,7 @@ HB() {
 
 if [ -z "${DISPLAY}" ]; then 
 
-  export APP_ID="test_client_select_menu%`shuf -i '99999999-9999999999' -n '1'`"
+  export APP_ID="${APP_ID:-appchoo}" # test_client_select_menu%`shuf -i '99999999-9999999999' -n '1'`"
 
   ### HB: 
   INIT_TIME=5
@@ -93,19 +93,21 @@ if [ -z "${DISPLAY}" ]; then
        exit $(($B + REPLY))
     }
 
-  if [ -n ${APP_ID} ]; then
-    ps -o pid | grep -q "^[[:space:]]*"$PID"[[:space:]]*$" >/dev/null 2>&1 || {
-      hb_pings &
-      PID=$!
-    }
-  fi
+    if [ -n "${APP_ID}" ]; 
+    then
+      ps -o pid | grep -q "^[[:space:]]*"$PID"[[:space:]]*$" >/dev/null 2>&1 || {
+        hb_pings &
+        PID=$!
+      }
+    fi
 
     
   done
 
 else
 
-export APP_ID="test_client_GUI_menu%`shuf -i '99999999-9999999999' -n '1'`"
+  export APP_ID="${APP_ID:-appchoo}"
+#  export APP_ID="test_client_GUI_menu%`shuf -i '99999999-9999999999' -n '1'`"
 
   ### HB: 
   INIT_TIME=5

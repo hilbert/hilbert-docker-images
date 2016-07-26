@@ -21,6 +21,9 @@ PORT_NUMBER   = int(os.getenv('HB_PORT', 8888))
 HOST_NAME     = os.getenv('HB_HOST', '127.0.0.1')
 HB_SERVER_URL = os.getenv('HB_URL' , "http://" + HOST_NAME + ":" + str(PORT_NUMBER))
 
+# For the HB test client:
+APP_ID        = os.getenv('APP_ID', 'heartbeat2')
+
 # localhost:8888/hb_init?48&appid=test_client_python =>
 #         /hb_init
 #         [*] 
@@ -142,7 +145,7 @@ class MyHandler(BaseHTTPRequestHandler):
             overdue = visits[ID][3]
 #            if (ts - lastts) > lastt: # Sorry Sir, but you are too late :-(
 #                overdue += 1
-             
+
             if overdue > 3:
                 print("overdue!") # TODO: early detection of overdue clients!!???
                 s.wfile.write("dead") # ?
@@ -171,7 +174,7 @@ def test_server(HandlerClass = MyHandler, ServerClass = HTTPServer, protocol="HT
 
 def test_client():
     t = randint(2, 5)
-    APP_ID = "test_client_python%" + str(randint(99999999, 9999999999)) # TODO: get unique ID from server?
+#    APP_ID =  # + str(randint(99999999, 9999999999)) # TODO: get unique ID from server?
 
     print "List HB apps: " + urlopen(HB_SERVER_URL + "/list" ).read()
     print "APP HB Status: " + urlopen(HB_SERVER_URL + "/status" ).read()

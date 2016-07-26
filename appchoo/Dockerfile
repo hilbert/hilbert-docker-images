@@ -18,6 +18,6 @@ RUN DEBIAN_FRONTEND=noninteractive apt-get -y update && \
 #### building requires installing more packages: build-essential & *-dev (& imagemagic?)
 #RUN cd /usr/src/appchoo && make && cp appchoo /usr/local/bin/ && make clean
 
-### Oh, well. Blobs for now
-COPY appchoo hb.sh menu.sh txt2jpg.sh FreeMonoBold.ttf /usr/local/bin/
+### Oh, well... Blobs for now
+COPY appchoo menu.sh txt2jpg.sh FreeMonoBold.ttf /usr/local/bin/
 
