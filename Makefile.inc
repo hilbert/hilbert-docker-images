@@ -8,6 +8,7 @@ GREP   ?= grep
 SED    ?= sed
 MAKE   ?= make
 DOCKER ?= docker
+TR     ?= tr
 
 # Makefile.inc is expected to be on the top level!
 top_dir       :=$(dir $(abspath $(lastword $(MAKEFILE_LIST))))
@@ -21,7 +22,7 @@ U    ?= malex984
 I    ?= dockapp
 REPO ?= ${U}/${I}
 
-APP  ?= ${current_dir}
+APP  ?= $(shell $(ECHO) "${current_dir}" | $(SED) -e 's@[\-]@_@g' | $(TR) '[:upper:]' '[:lower:]')
 IMG  ?= ${REPO}:${APP}
 TAG  ?= imaginary.mfo.de:5000/${U}/${APP}
 
@@ -68,16 +69,16 @@ DOCKER_BUILD_OPTS=--pull=false --force-rm=true --rm=true
 # ${TS} ${SS} 
 build: ${DF} ${ACOPYFILES} ${ACOPYFILES2}
 	$(RM) -f ${TS}
-	cd ${mkfile_dir} && $(DOCKER) build ${DOCKER_BUILD_OPTS} -t ${IMG} ${mkfile_dir}
+	cd ${mkfile_dir} && $(DOCKER) -D build ${DOCKER_BUILD_OPTS} -t "${IMG}" -f "${DF}" "${mkfile_dir}"
 	$(DOCKER) tag "${IMG}" "${TAG}"
 	$(MAKE) -C ${mkfile_dir}/ ${TS}
 
 ${SS}:
 	cd ${top_dir}/${BASETEG}/ && $(MAKE) -C ${top_dir}/${BASETEG}/
 
-${top_dir}/phusion_baseimage_0.9.16.timestamp:
-	$(DOCKER) pull 'phusion/baseimage:0.9.16'
-	$(DOCKER) images | $(GREP) -E 'phusion[\/]baseimage *0[\.]9[\.]16 ' > $@
+${top_dir}/phusion_baseimage_0.9.18.timestamp:
+	$(DOCKER) pull 'phusion/baseimage:0.9.18'
+	$(DOCKER) images | $(GREP) -E 'phusion[\/]baseimage *0[\.]9[\.]18 ' > $@
 
 ${top_dir}/docker_compose_1.6.2.timestamp:
 	$(DOCKER) pull 'docker/compose:1.6.2'

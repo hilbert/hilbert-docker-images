@@ -2,11 +2,12 @@ digraph deps{ graph [label="an arrow means that its source is based on the arrow
 ":alsa" -> ":base" ;
 ":appa" -> ":base" ;
 ":appchoo" -> ":base" ;
-":base" -> "phusion/baseimage:0.9.16" ;
+":base" -> "phusion/baseimage:0.9.18" ;
 ":cc" -> ":base" ;
 ":chrome" -> ":webbase" ;
 ":cups" -> ":base" ;
 ":dd" -> ":base" ;
+":ddd" -> "docker/compose:1.7.0" ;
 ":demo" -> ":main" ;
 ":dummy" -> ":x11" ;
 ":gui" -> ":xeyes" ;
@@ -14,6 +15,8 @@ digraph deps{ graph [label="an arrow means that its source is based on the arrow
 ":kiosk" -> ":webbase" ;
 ":kivy" -> ":test" ;
 ":main" -> ":dd" ;
+":mng" -> ":nodejs" ;
+":nodejs" -> ":base" ;
 ":omd" -> ":base" ;
 ":omd_agent" -> ":dd" ;
 ":play" -> ":gui" ;

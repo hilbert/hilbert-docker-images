@@ -18,7 +18,7 @@ fi
 U=malex984
 I=dockapp
 
-docker pull phusion/baseimage:0.9.16
+docker pull phusion/baseimage:0.9.18
 
 docker images -a
 docker ps -a
