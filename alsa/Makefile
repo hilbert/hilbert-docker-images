@@ -1,5 +1,5 @@
 mkfile_path := $(abspath $(lastword $(MAKEFILE_LIST)))
-COPYFILES   := soundtest.sh .asoundrc
+COPYFILES   := 
 include ../Makefile.inc
 
 RUNTERM=-it -a stdin -a stdout -a stderr --privileged

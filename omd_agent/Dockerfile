@@ -2,7 +2,8 @@ FROM malex984/dockapp:dd
 
 MAINTAINER Oleksandr Motsak <malex984@googlemail.com>
 
-RUN update.sh && install.sh --no-install-recommends xinetd python2.7 && clean.sh
+RUN update.sh && install.sh --no-install-recommends xinetd python2.7 ethtool && clean.sh
+
 ADD check-mk-agent_1.2.6p12-1_all.deb /tmp/check-mk-agent.deb
 RUN update.sh && dpkg -i /tmp/check-mk-agent.deb && install.sh -fy && clean.sh
 

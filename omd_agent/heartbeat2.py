@@ -21,6 +21,9 @@ PORT_NUMBER   = int(os.getenv('HB_PORT', 8888))
 HOST_NAME     = os.getenv('HB_HOST', '127.0.0.1')
 HB_SERVER_URL = os.getenv('HB_URL' , "http://" + HOST_NAME + ":" + str(PORT_NUMBER))
 
+# For the HB test client:
+APP_ID        = os.getenv('APP_ID', 'heartbeat2')
+
 # localhost:8888/hb_init?48&appid=test_client_python =>
 #         /hb_init
 #         [*] 
@@ -118,23 +121,22 @@ class MyHandler(BaseHTTPRequestHandler):
             print "PREVIOUS STATE", visits[ID]
             visits[ID][2].cancel() # !
             
-        ts = time() 
-
-        
-        if path == "/hb_init":
+        ts = time()        
+       
+        if (((path == "/hb_init") or (path=="/hb_ping")) and (ID not in visits)):
             # Hello little brother! Big Brother is watching you!
             print "Creation from scratch : ", ID, " at ", ts 
             T = T + 1 #max(10, (T*17)/16)
             visits[ID] = (ts, T, Timer(T, toolate, [ID]), 0)
             s.wfile.write(T) # ?
-            visits[ID][2].start()            
+            visits[ID][2].start()
 
-        if path == "/hb_done":
+        elif ((path == "/hb_done") and (ID in visits)):
             print "Destruction: ", ID, " at ", ts
             del visits[ID]
             s.wfile.write("So Long, and Thanks for All the Fish!")
-	
-        if path == "/hb_ping": #
+
+        elif (((path == "/hb_ping") or (path == "/hb_init")) and (ID in visits)): #
             # TODO: make sure visits[ID] exists!
             print "HEART-BEAT for: ", ID, " at ", ts  # Here i come again... 
             lastts = visits[ID][0]
@@ -142,7 +144,7 @@ class MyHandler(BaseHTTPRequestHandler):
             overdue = visits[ID][3]
 #            if (ts - lastts) > lastt: # Sorry Sir, but you are too late :-(
 #                overdue += 1
-             
+
             if overdue > 3:
                 print("overdue!") # TODO: early detection of overdue clients!!???
                 s.wfile.write("dead") # ?
@@ -171,7 +173,7 @@ def test_server(HandlerClass = MyHandler, ServerClass = HTTPServer, protocol="HT
 
 def test_client():
     t = randint(2, 5)
-    APP_ID = "test_client_python%" + str(randint(99999999, 9999999999)) # TODO: get unique ID from server?
+#    APP_ID =  # + str(randint(99999999, 9999999999)) # TODO: get unique ID from server?
 
     print "List HB apps: " + urlopen(HB_SERVER_URL + "/list" ).read()
     print "APP HB Status: " + urlopen(HB_SERVER_URL + "/status" ).read()

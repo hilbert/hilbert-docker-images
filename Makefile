@@ -30,11 +30,11 @@ skype
 
 all: build
 
-build: phusion_baseimage_0.9.16.timestamp docker_compose_1.6.2.timestamp
+build: phusion_baseimage_0.9.18.timestamp docker_compose_1.6.2.timestamp
 
-phusion_baseimage_0.9.16.timestamp: 
-	docker pull 'phusion/baseimage:0.9.16'
-	docker images | grep -E 'phusion[\/]baseimage *0[\.]9[\.]16 ' > $@
+phusion_baseimage_0.9.18.timestamp: 
+	docker pull 'phusion/baseimage:0.9.18'
+	docker images | grep -E 'phusion[\/]baseimage *0[\.]9[\.]18 ' > $@
 
 
 docker_compose_1.6.2.timestamp:

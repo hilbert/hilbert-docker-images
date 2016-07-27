@@ -25,10 +25,10 @@ fi
 
 
 #   export current_app="${default_app}"
-#   echo "export current_app='${current_app}'" > "./lastapp.cfg.new~"
+#   echo "export current_app='${current_app}'" > "/tmp/lastapp.cfg.new~"
 
-if [ -r "./lastapp.cfg" ]; then
-    . "./lastapp.cfg"
+if [ -r "/tmp/lastapp.cfg" ]; then
+    . "/tmp/lastapp.cfg"
     
     d="${current_app}"
     :
@@ -40,8 +40,9 @@ fi
 if [ -n "$d" ]; then
     echo "Stop/kill/rm FG GUI App: '$d'..."
 
-    "./luncher.sh" stop "$d"
-    "./luncher.sh" kill "$d"
+    "./luncher.sh" stop -t 10 "$d"
+    "./luncher.sh" kill -s SIGTERM "$d"
+    "./luncher.sh" kill -s SIGKILL "$d"
     "./luncher.sh" rm -f "$d"
 fi
 
@@ -49,7 +50,8 @@ fi
 for d in ${background_services}; do
     echo "Stop/kill/rm BG Service: '$d'..."
 
-    "./luncher.sh" stop "$d"
-    "./luncher.sh" kill "$d"
+    "./luncher.sh" stop -t 10 "$d"
+    "./luncher.sh" kill -s SIGTERM "$d"
+    "./luncher.sh" kill -s SIGKILL "$d"
     "./luncher.sh" rm -f "$d"
 done

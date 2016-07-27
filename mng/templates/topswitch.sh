@@ -15,21 +15,22 @@ if [ -r "./startup.cfg" ]; then
     source "./startup.cfg"
 fi
 
-if [ -r "./lastapp.cfg" ]; then
-    source "./lastapp.cfg"
+if [ -r "/tmp/lastapp.cfg" ]; then
+    source "/tmp/lastapp.cfg"
     old="${current_app}"
     unset current_app
-    mv -f "./lastapp.cfg" "./lastapp.cfg.bak"
+    mv -f "/tmp/lastapp.cfg" "/tmp/lastapp.cfg.bak"
 else
     old="${default_app}"
 fi
 
-"./luncher.sh" stop  "${old}"
-"./luncher.sh" kill  "${old}"
+"./luncher.sh" stop -t 10 "${old}"
+"./luncher.sh" kill -s SIGTERM  "${old}"
+"./luncher.sh" kill -s SIGKILL  "${old}"
 "./luncher.sh" rm -f "${old}"
 unset old
 
 #### ARGUMENT!!!
 export current_app="$@"
-echo "export current_app='${current_app}'" > "./lastapp.cfg.new~"
-"./luncher.sh" up -d "$current_app" && mv -f "./lastapp.cfg.new~" "./lastapp.cfg"
+echo "export current_app='${current_app}'" > "/tmp/lastapp.cfg.new~"
+"./luncher.sh" up -d "$current_app" && mv -f "/tmp/lastapp.cfg.new~" "/tmp/lastapp.cfg"

@@ -1,9 +1,6 @@
-FROM phusion/baseimage:0.9.16
+FROM phusion/baseimage:0.9.18
 
 MAINTAINER Oleksandr Motsak <malex984@googlemail.com>
-
-# Use baseimage-docker's init system.
-ENTRYPOINT ["/sbin/my_init"]
 
 COPY update.sh install.sh upgrade.sh clean.sh /usr/local/bin/
 
@@ -25,14 +22,16 @@ RUN upgrade.sh && update.sh && install.sh --no-install-recommends \
 ### VOLUME $HOME # ?
 # WORKDIR $HOME
 
-# Use baseimage-docker's init system.
-# CMD ["/sbin/my_init"]
-
-COPY setup_ogl.sh  /usr/local/bin/
-COPY config_cups.sh /usr/local/bin/
+COPY setup_ogl.sh hb.sh hb_wrapper.sh config_cups.sh /usr/local/bin/
 #RUN chmod +x /usr/local/bin/config_cups.sh
 
-RUN locale-gen en_US.utf8 
-RUN locale-gen de_DE.utf8 
-RUN locale-gen ru_RU.utf8
+RUN locale-gen en_US.utf8 && locale-gen de_DE.utf8 && locale-gen ru_RU.utf8
+
+ADD https://raw.githubusercontent.com/phusion/baseimage-docker/master/image/bin/my_init /sbin/my_init
+RUN chmod +x /sbin/my_init
+
+# Use baseimage-docker's init system.
+# CMD ["/sbin/my_init"]
+ENTRYPOINT ["/sbin/my_init"]
+
 

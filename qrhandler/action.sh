@@ -2,8 +2,8 @@
 
 unset current_app
 
-if [ -r "$CFG_DIR/lastapp.cfg" ]; then
-    source "$CFG_DIR/lastapp.cfg"
+if [ -r "/tmp/lastapp.cfg" ]; then
+    source "/tmp/lastapp.cfg"
 fi
 
 APP="${current_app:-UNKNOWN_APPLICATION}"

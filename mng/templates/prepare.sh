@@ -60,5 +60,17 @@ then
   cp -fp ./OGL.tgz /tmp/ || sudo -n -P cp -fp ./OGL.tgz /tmp/
 fi
 
+if hash ethtool 2>/dev/null; then
+  sudo ethtool -s "${NET_IF}" wol g
+fi
+
+
+if [ -w "/tmp/lastapp.cfg" ]; then
+    rm -f "/tmp/lastapp.cfg"
+elif [ -e "/tmp/lastapp.cfg" ]; then
+    sudo rm -f "/tmp/lastapp.cfg"
+fi
+
+
 exit 0
 

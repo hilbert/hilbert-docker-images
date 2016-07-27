@@ -100,7 +100,7 @@ Vagrant.configure(2) do |config|
 # xserver-xephyr 
 
   config.vm.provision "docker" do |d|
-      d.pull_images "phusion/baseimage:0.9.16"
+      d.pull_images "phusion/baseimage:0.9.18"
 #      d.pull_images "malex984/dockapp:base"
 #      d.pull_images "malex984/dockapp:dummy"
 #      d.pull_images "malex984/dockapp:main"
