@@ -40,8 +40,9 @@ fi
 if [ -n "$d" ]; then
     echo "Stop/kill/rm FG GUI App: '$d'..."
 
-    "./luncher.sh" stop "$d"
-    "./luncher.sh" kill "$d"
+    "./luncher.sh" stop -t 10 "$d"
+    "./luncher.sh" kill -s SIGTERM "$d"
+    "./luncher.sh" kill -s SIGKILL "$d"
     "./luncher.sh" rm -f "$d"
 fi
 
@@ -49,7 +50,8 @@ fi
 for d in ${background_services}; do
     echo "Stop/kill/rm BG Service: '$d'..."
 
-    "./luncher.sh" stop "$d"
-    "./luncher.sh" kill "$d"
+    "./luncher.sh" stop -t 10 "$d"
+    "./luncher.sh" kill -s SIGTERM "$d"
+    "./luncher.sh" kill -s SIGKILL "$d"
     "./luncher.sh" rm -f "$d"
 done

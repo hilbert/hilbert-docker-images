@@ -66,7 +66,7 @@ export DM="${DDMM}"
 unset DDMM
 
 if [ -z "${station_default_app}" ]; then
-  export station_default_app="$default_app"
+  export station_default_app="${default_app}"
 fi
 
 if [ -z "${station_descr}" ]; then
@@ -96,7 +96,7 @@ Please download it as '${SELFDIR}/templates/compose' and make it executable!"
 
 fi
 
-for f in $(ls -1 | grep -vE '~$') ; 
+for f in $(cat list | grep -vE '~$') ; 
 do
    case "$f" in 
      station.cfg)  
@@ -119,13 +119,16 @@ do
 	       "$f" > "${TARGET_CONFIG_DIR}/~/$f"
      ;;
      *.yml)
-          grep -v -E '   build: \w+/' "$f" > "${TARGET_CONFIG_DIR}/~/$f"
+          grep -v -E '^ *build: .*\w+/? *$' "$f" > "${TARGET_CONFIG_DIR}/~/$f"
      ;;    
 #     *.sh)  
 #          cp -fp "$f" "${TARGET_CONFIG_DIR}/" 
 #	   chmod a+x "${TARGET_CONFIG_DIR}/$f"
 #          ln -sf "$PWD/$f" "${TARGET_CONFIG_DIR}/"
 #     ;;
+     Dockerfile)
+          cp -fp "$f" "${TARGET_CONFIG_DIR}/" 
+     ;;
      *)  
 #          cp -fp "$f" "${TARGET_CONFIG_DIR}/" 
           ln -sf "$PWD/$f" "${TARGET_CONFIG_DIR}/~/"
@@ -151,6 +154,7 @@ if [ -r "${SSH_KEY}" ];
 then
 
   ln -sf  "${SSH_KEY}" .
+  cp -L --preserve=all "${SSH_KEY}.pub" ./id_rsa.pub
 
   cat >"ssh_config~" <<EOF
 Host ${station_id}
@@ -175,16 +179,38 @@ EOF
 
   chmod go-rwx "ssh_config~" && mv "ssh_config~" ssh_config
 
+  cat >"ssh_config~" <<EOF
+Host ${station_id}
+  ForwardX11=no 
+  StrictHostKeyChecking=no 
+  BatchMode=yes 
+  PasswordAuthentication=no 
+  UserKnownHostsFile=/dev/null 
+  LogLevel=quiet 
+  ConnectionAttempts=3 
+  ConnectTimeout=10 
+  ControlMaster=no 
+  ControlPath=none 
+  IdentitiesOnly=yes 
+  Compression yes
+  HostName ${IP_ADDRESS}
+  Port=20
+#  ${SSH_PORT}
+  IdentityFile=`basename "${SSH_KEY}"`
+  User=root
+EOF
+
+  chmod go-rwx "ssh_config~" && mv "ssh_config~" ssh_config.mng
+
 fi
 
-
-ls -1 | grep -vE '^(.*~)$' > "list~"
+ls -1 | grep -vE '^(.*~|list)$' > "list~"
 chmod a+r "list~" && mv "list~" list
 
 md5sum `ls -1 | grep -vE '^(md5|.*~)$'` > "md5~"
 chmod a+r "md5~" && mv "md5~" md5
 
-mv --backup=numbered -f -- ./* ../
+mv --backup=existing -f -- ./* ../
 
 cd .. && rmdir ./~/
 

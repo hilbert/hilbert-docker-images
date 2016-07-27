@@ -2,7 +2,7 @@ version: '2'
 services:
   base:
     image: malex984/dockapp:base
-    build: base/
+    build: ../../base/
     volumes:
      - /tmp:/tmp:rw
      - ${PWD}:/DOCKAPP
@@ -18,14 +18,14 @@ services:
      - LANGUAGE
      - MOUSE_CURSOR
      - CUSTOMIZATION
-    entrypoint: 
+    entrypoint:
      - /bin/sh
 
   ddd:
     extends: 
       service: base
     image: ${DOCKER_COMPOSE_IMAGE}
-    build: ddd/
+    build: ../../ddd/
     labels:
      - "is_top_app=0"
      - "description=Docker CLI + Compose"
@@ -47,7 +47,7 @@ services:
      - /var/run/dbus/system_bus_socket:/var/run/dbus/system_bus_socket
     labels:
      - "is_top_app=0"
-    privileged: true
+    privileged: false
     ipc: host
     pid: "host"
     network_mode: "host"
@@ -107,16 +107,14 @@ services:
     extends:
       service: admin
     image: malex984/dockapp:dummy
-    build: dummy/
+    build: ../../dummy/
     stdin_open: false
     tty: false
     restart: always
     entrypoint: 
      - /sbin/my_init
-     - --skip-startup-files
-     - --quiet
      - --skip-runit
-     - --no-kill-all-on-exit
+     - --skip-startup-files
      - --
     command: 
      - startXephyr.sh
@@ -142,7 +140,7 @@ services:
     extends: 
       service: admin
     image: malex984/dockapp:omd_agent
-    build: omd_agent/
+    build: ../../omd_agent/
     environment:
      - HB_PORT
      - HB_HOST
@@ -157,10 +155,8 @@ services:
      - "is_top_app=0"
     entrypoint: 
      - /sbin/my_init
-     - --skip-startup-files
-     - --quiet
      - --skip-runit
-     - --no-kill-all-on-exit
+     - --skip-startup-files
      - --
     command: 
      - omd_agent_entrypoint.sh
@@ -168,14 +164,14 @@ services:
   hb_test:
     extends: 
       service: admin
+    privileged: false
     image: malex984/dockapp:omd_agent
-    build: omd_agent/
+    build: ../../omd_agent/
     environment:
      - HB_PORT
      - HB_HOST
      - HB_URL
-    ports:
-     - "${HB_PORT}"
+     - APP_ID=hb_test
     stdin_open: false
     tty: false
     restart: always
@@ -184,14 +180,58 @@ services:
      - "description=HB test in python"
     entrypoint: 
      - /sbin/my_init
-     - --skip-startup-files
-     - --quiet
      - --skip-runit
-     - --no-kill-all-on-exit
+     - --skip-startup-files
      - --
     command: 
      - python2.7 
      - /usr/local/bin/heartbeat2.py 
+
+
+  hb_test_a:
+    extends: 
+      service: admin
+    image: malex984/dockapp:appa
+    build: ../../appa/
+    environment:
+     - APP_ID=hb_test_a
+     - HB_PORT
+     - HB_HOST
+     - HB_URL
+    stdin_open: false
+    tty: false
+    restart: always
+    labels:
+     - "description=HB test in bash: A"
+     - "is_top_app=1"
+    entrypoint: 
+     - /sbin/my_init
+     - --skip-runit
+     - --skip-startup-files
+     - --
+     - /usr/local/bin/A.sh
+    command: 
+     - AHB_HelloA
+
+  hb_test_b:
+    extends: 
+      service: hb_test_a
+    environment:
+     - APP_ID=hb_test_b
+    labels:
+     - "description=HB test in bash: B"
+    command: 
+     - BHB_HelloB
+
+  hb_test_c:
+    extends: 
+      service: hb_test_a
+    environment:
+     - APP_ID=hb_test_c
+    labels:
+     - "description=HB test in bash: C"
+    command: 
+     - CHB_HelloC
 
   busybox:
     extends: 
@@ -223,7 +263,7 @@ services:
     extends: 
       service: admin
     image: malex984/dockapp:omd
-    build: omd/
+    build: ../../omd/
     ports:
      - "80"
      - "514"
@@ -236,10 +276,8 @@ services:
     restart: always
     entrypoint: 
      - /sbin/my_init
-     - --skip-startup-files
-     - --quiet
      - --skip-runit
-     - --no-kill-all-on-exit
+     - --skip-startup-files
      - --
     command: 
      - omd_entrypoint.sh
@@ -276,10 +314,8 @@ services:
     tty: false
     entrypoint: 
      - /sbin/my_init
-     - --skip-startup-files
-     - --quiet
      - --skip-runit
-     - --no-kill-all-on-exit
+     - --skip-startup-files
      - --
 
   qrhandler:
@@ -288,7 +324,7 @@ services:
     labels:
      - "is_top_app=0"
     image: malex984/dockapp:qrhandler
-    build: qrhandler/
+    build: ../../qrhandler/
     restart: always
     volumes:
      - supernova:/supernova
@@ -305,7 +341,7 @@ services:
     labels:
      - "is_top_app=0"
     image: malex984/dockapp:x11vnc
-    build: x11vnc/
+    build: ../../x11vnc/
     restart: always
     ports:
      - "127.0.0.1:5900-5910:5900-5910"
@@ -319,7 +355,7 @@ services:
     extends: 
       service: gui
     image: malex984/dockapp:xeyes
-    build: xeyes/
+    build: ../../xeyes/
     restart: always    
     labels:
      - "is_top_app=1"
@@ -330,17 +366,15 @@ services:
     extends: 
       service: gui
     image: malex984/dockapp:kiosk
-    build: kiosk/
+    build: ../../kiosk/
     restart: always
     labels:
      - "is_top_app=1"
      - "description=Kiosk Web Browser GUI app."
     entrypoint: 
      - /sbin/my_init 
-     - --skip-startup-files
-     - --quiet 
      - --skip-runit 
-     - --no-kill-all-on-exit 
+     - --skip-startup-files
      - -- 
      - launch.sh
      - browser.sh
@@ -368,17 +402,15 @@ services:
     extends: 
       service: gui
     image: malex984/dockapp:chrome
-    build: chrome/
+    build: ../../chrome/
     labels:
      - "is_top_app=1"
      - "description=Google Chrome Web Browser GUI app."
     restart: always
     entrypoint: 
      - /sbin/my_init 
-     - --skip-startup-files
-     - --quiet 
      - --skip-runit 
-     - --no-kill-all-on-exit 
+     - --skip-startup-files
      - -- 
      - launch.sh
      - browser.sh
@@ -421,16 +453,14 @@ services:
     extends: 
       service: gui
     image: malex984/dockapp:kivy
-    build: kivy/
+    build: ../../kivy/
     labels:
      - "is_top_app=1"
     restart: always
     entrypoint: 
      - /sbin/my_init 
-     - --skip-startup-files
-     - --quiet 
      - --skip-runit 
-     - --no-kill-all-on-exit 
+     - --skip-startup-files
      - -- 
      - launch.sh
     command:
@@ -447,10 +477,8 @@ services:
      - MENU_TRY="gui"
     entrypoint: 
      - /sbin/my_init 
-     - --skip-startup-files
-     - --quiet 
      - --skip-runit 
-     - --no-kill-all-on-exit 
+     - --skip-startup-files
      - -- 
      - /usr/local/bin/main.sh
 
@@ -466,10 +494,8 @@ services:
      - MENU_TRY="gui"
     entrypoint: 
      - /sbin/my_init 
-     - --skip-startup-files
-     - --quiet 
      - --skip-runit 
-     - --no-kill-all-on-exit 
+     - --skip-startup-files
      - -- 
      - /usr/local/bin/demo.sh
 
@@ -482,10 +508,8 @@ services:
     restart: always
     entrypoint: 
      - /sbin/my_init 
-     - --skip-startup-files
-     - --quiet 
      - --skip-runit 
-     - --no-kill-all-on-exit 
+     - --skip-startup-files
      - -- 
      - /usr/local/bin/x11vnc.sh     
 

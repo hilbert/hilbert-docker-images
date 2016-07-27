@@ -7,6 +7,8 @@ cd "${SELFDIR}/"
 ### set -e
 ## unset DISPLAY
 
+##! NOTE: cleanup all previously started containers:
+docker ps -aq | xargs docker rm -fv
 
 if [ -r "./station.cfg" ]; then
     . "./station.cfg"

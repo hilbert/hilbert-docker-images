@@ -24,8 +24,9 @@ else
     old="${default_app}"
 fi
 
-"./luncher.sh" stop  "${old}"
-"./luncher.sh" kill  "${old}"
+"./luncher.sh" stop -t 10 "${old}"
+"./luncher.sh" kill -s SIGTERM  "${old}"
+"./luncher.sh" kill -s SIGKILL  "${old}"
 "./luncher.sh" rm -f "${old}"
 unset old
 

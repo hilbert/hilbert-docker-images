@@ -60,5 +60,10 @@ then
   cp -fp ./OGL.tgz /tmp/ || sudo -n -P cp -fp ./OGL.tgz /tmp/
 fi
 
+if hash ethtool 2>/dev/null; then
+  sudo ethtool -s "${NET_IF}" wol g
+fi
+
+
 exit 0
 
