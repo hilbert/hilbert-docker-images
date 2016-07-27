@@ -121,23 +121,22 @@ class MyHandler(BaseHTTPRequestHandler):
             print "PREVIOUS STATE", visits[ID]
             visits[ID][2].cancel() # !
             
-        ts = time() 
-
-        
-        if path == "/hb_init":
+        ts = time()        
+       
+        if (((path == "/hb_init") or (path=="/hb_ping")) and (ID not in visits)):
             # Hello little brother! Big Brother is watching you!
             print "Creation from scratch : ", ID, " at ", ts 
             T = T + 1 #max(10, (T*17)/16)
             visits[ID] = (ts, T, Timer(T, toolate, [ID]), 0)
             s.wfile.write(T) # ?
-            visits[ID][2].start()            
+            visits[ID][2].start()
 
-        if path == "/hb_done":
+        elif ((path == "/hb_done") and (ID in visits)):
             print "Destruction: ", ID, " at ", ts
             del visits[ID]
             s.wfile.write("So Long, and Thanks for All the Fish!")
-	
-        if path == "/hb_ping": #
+
+        elif (((path == "/hb_ping") or (path == "/hb_init")) and (ID in visits)): #
             # TODO: make sure visits[ID] exists!
             print "HEART-BEAT for: ", ID, " at ", ts  # Here i come again... 
             lastts = visits[ID][0]
