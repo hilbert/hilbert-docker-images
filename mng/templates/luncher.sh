@@ -36,8 +36,8 @@ if [ -r "./startup.cfg" ]; then
     . "./startup.cfg"
 fi
 
-if [ -r "./lastapp.cfg" ]; then
-    . "./lastapp.cfg"
+if [ -r "/tmp/lastapp.cfg" ]; then
+    . "/tmp/lastapp.cfg"
 fi
 
 if [ -r "./docker.cfg" ]; then

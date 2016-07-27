@@ -20,8 +20,8 @@ fi
 
 station_default_app="${station_default_app:-$default_app}"
 
-if [ -r "./lastapp.cfg" ]; then
-    . "./lastapp.cfg"
+if [ -r "/tmp/lastapp.cfg" ]; then
+    . "/tmp/lastapp.cfg"
 else
     export current_app="${station_default_app}"
 fi
@@ -44,7 +44,7 @@ done
 echo "Front GUI Application: '${current_app}'..."
 
 if [ -n "${current_app}" ]; then
-  echo "export current_app='${current_app}'" > "./lastapp.cfg.new~"
+  echo "export current_app='${current_app}'" > "/tmp/lastapp.cfg.new~"
   "./luncher.sh" up -d "${current_app}"
-  mv "./lastapp.cfg.new~" "./lastapp.cfg"
+  mv "/tmp/lastapp.cfg.new~" "/tmp/lastapp.cfg"
 fi

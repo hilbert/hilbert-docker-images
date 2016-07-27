@@ -41,9 +41,9 @@ cd "${TARGET_CONFG_DIR}/"
 f="lastapp.cfg"
 
 mkdir -p "./~/"
-${SCP} "${station_id}:.config/dockapp/$f" "./~/$f"
+${SCP} "${station_id}:/tmp/$f" "./~/$f"
 if [[ $? -ne 0 ]]; then
-  echo "ERROR: could not get '${station_id}:.config/dockapp/$f'!"
+  echo "ERROR: could not get '${station_id}:/tmp/$f'!"
   exit 1
 fi
 
@@ -69,7 +69,7 @@ exit 0
 
 
 ${SSH} "${station_id}" \
-'cd && cd .config/dockapp && [ -r ./lastapp.cfg ] && . ./lastapp.cfg && [ -n "${current_app}" ] && echo "${current_app}"'
+'cd /tmp && [ -r ./lastapp.cfg ] && . ./lastapp.cfg && [ -n "${current_app}" ] && echo "${current_app}"'
 if [[ $? -ne 0 ]]; then
 ##  echo "ERROR: no configuration directory (${CFG_DIR}). Please deploy first!" 1>&2
   echo "${station_default_app}"

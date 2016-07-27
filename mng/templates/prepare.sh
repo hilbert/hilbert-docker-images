@@ -65,5 +65,12 @@ if hash ethtool 2>/dev/null; then
 fi
 
 
+if [ -w "/tmp/lastapp.cfg" ]; then
+    rm -f "/tmp/lastapp.cfg"
+elif [ -e "/tmp/lastapp.cfg" ]; then
+    sudo rm -f "/tmp/lastapp.cfg"
+fi
+
+
 exit 0
 

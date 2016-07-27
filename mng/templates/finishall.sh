@@ -25,10 +25,10 @@ fi
 
 
 #   export current_app="${default_app}"
-#   echo "export current_app='${current_app}'" > "./lastapp.cfg.new~"
+#   echo "export current_app='${current_app}'" > "/tmp/lastapp.cfg.new~"
 
-if [ -r "./lastapp.cfg" ]; then
-    . "./lastapp.cfg"
+if [ -r "/tmp/lastapp.cfg" ]; then
+    . "/tmp/lastapp.cfg"
     
     d="${current_app}"
     :
