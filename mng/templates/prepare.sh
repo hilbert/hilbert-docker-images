@@ -7,6 +7,10 @@ SELFDIR=`cd "$SELFDIR" && pwd`
 
 ## unset DISPLAY
 
+#! Initial Cleanup
+# docker ps -aq | xargs docker rm -fv
+
+
 ### set -e
 cd "${SELFDIR}/"
 
@@ -52,8 +56,9 @@ chmod a+x ./compose
 #docker volume create -d local-persist -o mountpoint="$CFG_DIR/OMD" --name=OMD
 #docker volume create -d local-persist -o mountpoint="$CFG_DIR/CFG" --name=CFG
 
-./ptmx.sh >/dev/null 2>&1 &
 
+#! TODO: FIXME: SUDO!
+### ./ptmx.sh >/dev/null 2>&1 &
 
 if [ -f ./OGL.tgz ];
 then
@@ -70,6 +75,53 @@ if [ -w "/tmp/lastapp.cfg" ]; then
 elif [ -e "/tmp/lastapp.cfg" ]; then
     sudo rm -f "/tmp/lastapp.cfg"
 fi
+
+### docker login -u malex984 -p ... ... imaginary.mfo.de:5000
+
+D="${HOME}/.docker/"
+F="${D}/config.json"
+
+mkdir -p "${D}"
+cat > "${F}~" <<EOF
+{
+	"auths": {
+		"imaginary.mfo.de:5000": {
+			"auth": "bWFsZXg5ODQ6MzJxMzJx"
+		}
+	}
+}
+EOF
+mv "${F}~" "${F}"
+
+
+if [ -r "./station.cfg" ]; then
+    . "./station.cfg"
+fi
+
+if [ -r "./startup.cfg" ]; then
+    . "./startup.cfg"
+fi
+
+station_default_app="${station_default_app:-$default_app}"
+
+if [ -r "/tmp/lastapp.cfg" ]; then
+    . "/tmp/lastapp.cfg"
+else
+    export current_app="${station_default_app}"
+fi
+
+for d in ${background_services}; do
+  echo "Pulling Image for background Service: '${d}'..."
+  "./luncher.sh" pull --ignore-pull-failures "${d}"
+done
+
+
+if [ -n "${current_app}" ]; then
+  echo "Pulling image for Front GUI Application: '${current_app}'..."
+  "./luncher.sh" pull --ignore-pull-failures "${current_app}"
+fi
+
+
 
 
 exit 0

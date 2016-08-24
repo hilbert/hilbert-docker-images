@@ -11,6 +11,8 @@ services:
      - "is_top_app=0"
      - "description=Base for dockapp services"
     working_dir: /DOCKAPP
+    privileged: false
+    network_mode: "host"
     environment:
      - CFG_DIR=/DOCKAPP
      - CUPS_SERVER
@@ -47,10 +49,8 @@ services:
      - /var/run/dbus/system_bus_socket:/var/run/dbus/system_bus_socket
     labels:
      - "is_top_app=0"
-    privileged: false
     ipc: host
     pid: "host"
-    network_mode: "host"
     cap_add:
      - SYS_ADMIN
      - NET_ADMIN
@@ -138,8 +138,8 @@ services:
 
   omd_agent:
     extends: 
-      service: admin
-    image: malex984/dockapp:omd_agent
+      service: ddd
+    image: imaginary.mfo.de:5000/malex984/omd_agent
     build: ../../omd_agent/
     environment:
      - HB_PORT
@@ -163,7 +163,7 @@ services:
 
   hb_test:
     extends: 
-      service: admin
+      service: base
     privileged: false
     image: malex984/dockapp:omd_agent
     build: ../../omd_agent/
@@ -190,8 +190,8 @@ services:
 
   hb_test_a:
     extends: 
-      service: admin
-    image: malex984/dockapp:appa
+      service: base
+    image: imaginary.mfo.de:5000/malex984/appa
     build: ../../appa/
     environment:
      - APP_ID=hb_test_a
@@ -261,7 +261,7 @@ services:
 
   omd_anew:
     extends: 
-      service: admin
+      service: base
     image: malex984/dockapp:omd
     build: ../../omd/
     ports:

@@ -4,7 +4,7 @@ SELFDIR=`dirname "$0"`
 SELFDIR=`cd "${SELFDIR}" && pwd`
 cd "${SELFDIR}"
 
-./mng.sh
+# ./mng.sh
 
 nginx -t
 nginx -s stop

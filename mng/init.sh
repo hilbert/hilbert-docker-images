@@ -41,37 +41,40 @@ cd "${SELFDIR}/templates/"
 #! NOTE: there maybe some env. vars. already set from outside!
 
 export station_id="${TARGET_HOST_NAME}"
-[ -r ./station.cfg ] && source ./station.cfg
+
 [ -r ./startup.cfg ] && source ./startup.cfg
-[ -r ./access.cfg  ] && source ./access.cfg
-
 [ -r ./station.cfg ] && source ./station.cfg
-[ -r ./startup.cfg ] && source ./startup.cfg
 [ -r ./access.cfg  ] && source ./access.cfg
-
-#! Some defaults: 
-export station_id="${station_id:-${TARGET_HOST_NAME}}"
-
-if [ -z "${CFG_DIR}" ]; then
-  export CFG_DIR=".config/dockapp"
-fi
 
 ## TODO: FIXME: document where do we need the following?
 PROFILE="${PROFILE:-${station_type}}"
 export station_type="${PROFILE}"
 unset PROFILE
 
+#! Some defaults:
+export station_id="${station_id:-${TARGET_HOST_NAME}}"
+
+if [ -z "${CFG_DIR}" ]; then
+  export CFG_DIR=".config/dockapp"
+fi
+
+
 DDMM="${DDMM:-${DM}}"
 export DM="${DDMM}"
 unset DDMM
 
-if [ -z "${station_default_app}" ]; then
+if [ -z "${station_default_app}" ] && [ -n "${default_app}" ]; then
   export station_default_app="${default_app}"
 fi
 
 if [ -z "${station_descr}" ]; then
-  export station_descr="Station '${station_id}'"
+  export station_descr="Station '${station_id}': ${station_type} / ${station_default_app}"
 fi
+
+# [ -r ./station.cfg ] && source ./station.cfg
+[ -r ./startup.cfg ] && source ./startup.cfg
+[ -r ./access.cfg  ] && source ./access.cfg
+
 
 ### TODO: update to newer compose version if necessary!...
 # `uname -s`-`uname -m`

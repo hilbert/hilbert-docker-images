@@ -7,8 +7,8 @@ cd "${SELFDIR}/"
 ### set -e
 ## unset DISPLAY
 
-##! NOTE: cleanup all previously started containers:
-docker ps -aq | xargs docker rm -fv
+#! NOTE: cleanup all previously started containers:
+# docker ps -aq | xargs docker rm -fv
 
 if [ -r "./station.cfg" ]; then
     . "./station.cfg"
@@ -24,16 +24,6 @@ if [ -r "/tmp/lastapp.cfg" ]; then
     . "/tmp/lastapp.cfg"
 else
     export current_app="${station_default_app}"
-fi
-
-### TODO: detect docker settings
-if [ -r "./docker.cfg" ]; then
-    . "./docker.cfg"
-fi
-
-### TODO: detect audio/video settings
-if [ -r "./compose.cfg" ]; then
-    . "./compose.cfg"
 fi
 
 for d in ${background_services}; do

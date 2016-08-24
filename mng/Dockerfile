@@ -17,13 +17,16 @@ EXPOSE 8080
 
 # configure nginx
 COPY dockapp-dashboard /etc/nginx/sites-enabled/
-  
+
+COPY dockapp_dashboard/package.json /usr/local/dockapp_dashboard/package.json
+RUN cd /usr/local/dockapp_dashboard/ && npm install
+    
+COPY dockapp_dashboard/server/package.json /usr/local/dockapp_dashboard/server/package.json
+RUN cd /usr/local/dockapp_dashboard/server && npm install
+
 # download latest development version and install node.js dependencies
 COPY dockapp_dashboard /usr/local/dockapp_dashboard
 
-RUN cd /usr/local/dockapp_dashboard/ && npm install \
-    && cd /usr/local/dockapp_dashboard/server && npm install
-    
 # mkdir -p /usr/local && cd /usr/local/ && curl -0L https://github.com/IMAGINARY/dockapp_dashboard/archive/master.tar.gz | tar -zx && mv dockapp_dashboard-master dockapp_dashboard \
 
 #RUN curl -L https://github.com/docker/machine/releases/download/v0.8.0-rc1/docker-machine-`uname -s`-`uname -m` >/usr/local/bin/docker-machine \
