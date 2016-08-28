@@ -41,12 +41,12 @@ if [ -r "./docker.cfg" ]; then
     . "./docker.cfg"
 fi
 
-if [ -n "${COMPOSE_FILE}" ]; then
-  F="plain.${COMPOSE_FILE}"
-  rm -f "$F"
-  "./luncher.sh" config > "$F"
-  export COMPOSE_FILE="$F"
-fi
+#if [ -n "${COMPOSE_FILE}" ]; then
+#  F="plain.${COMPOSE_FILE}"
+#  rm -f "$F"
+#  "./luncher.sh" config > "$F"
+#  export COMPOSE_FILE="$F"
+#fi
 
 if [ -n "$d" ]; then
     echo "Stop/kill/rm FG GUI App: '$d'..."
@@ -57,10 +57,13 @@ if [ -n "$d" ]; then
     "./luncher.sh" rm -f "$d"
 fi
 
+
+
 ## TODO: FIXME: in reversed order!?
 for d in ${background_services}; do
-    echo "Stop/kill/rm BG Service: '$d'..."
 
+    echo "Stop/kill/rm BG Service: '$d'..."
+    sleep 20
     "./luncher.sh" stop -t 10 "$d"
     "./luncher.sh" kill -s SIGTERM "$d"
     "./luncher.sh" kill -s SIGKILL "$d"
