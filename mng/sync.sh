@@ -8,11 +8,10 @@ SELFDIR=`cd "${SELFDIR}" && pwd`
 # set -e
 # there should be ssh passwordless access configured (e.g. via ~/.ssh/config and key IDs)
 
-CMS_HOST="${CMS_HOST:-dilbert}"
-#CMS_HOST="${CMS_HOST:-mbp}"
+CMS_HOST="${CMS_HOST:-supernova}"
 
-### ssh:
-# CMS="${CMS_HOST}" # test sftp for now
+### ssh:  # test sftp for now
+# CMS="${CMS_HOST}"
 
 ### sftp:
 CMS_URL="${CMS:-sftp://${CMS_HOST}}"
@@ -33,14 +32,29 @@ else
    echo "Synchronizing the whole local cache ('${CACHE_DIR}') with remote CMS ('${CMS_URL}:${CMS_CONFIG_DIR}'): "
 fi
 
+
+if [ -d "${CACHE_DIR}/${CMS_HOST}" ]; then 
+   echo "Using auth from ${CACHE_DIR}/${CMS_HOST}/*.cfg"
+   cd "${CACHE_DIR}/${CMS_HOST}"
+      [ -r ./startup.cfg ] && source ./startup.cfg
+      [ -r ./station.cfg ] && source ./station.cfg
+      [ -r ./access.cfg  ] && source ./access.cfg
+   cd -
+fi
+
+
 if [ -z "${CMS}" ]; then
    # sftp: get newest from CMS only:
    # --dry-run 
-   lftp -e "mirror --loop -v --scan-all-first --depth-first -c -L -x '~$' '${CMS_CONFIG_DIR}' '${CACHE_DIR}'; bye" "${CMS_URL}"
+   echo "Sync via 'lftp -c \"set sftp:connect-program \\\"ssh -a -F /dev/null ${SSH_OPTS}\\\"; connect ${CMS_URL}; mirror --loop -v --scan-all-first --depth-first -c -L -x '~$' '${CMS_CONFIG_DIR}' '${CACHE_DIR}'; bye\"'..."
+   lftp -c "set sftp:connect-program \"ssh -a -F /dev/null ${SSH_OPTS}\"; connect ${CMS_URL}; mirror --loop -v --depth-first -c -L -x '~$' '${CMS_CONFIG_DIR}' '${CACHE_DIR}'; bye"
+   # --scan-all-first
 else
    # ssh/scp/rsync: sync both CMS and local cache!
    # -n 
-   rsync -crtbviuzpP -e "ssh -o StrictHostKeyChecking=no -o UserKnownHostsFile=/dev/null"  "${CACHE_DIR}/" "${CMS_URL}:${CMS_CONFIG_DIR}/"
+   echo "Sync via 'rsync -crtbviuzpP -e \"ssh -a -F /dev/null ${SSH_OPTS}\"  \"${CACHE_DIR}/\" \"${CMS_URL}:${CMS_CONFIG_DIR}/\"'..."
+   rsync -crtbviuzpP -e "ssh -a -F /dev/null ${SSH_OPTS}"  "${CACHE_DIR}/" "${CMS_URL}:${CMS_CONFIG_DIR}/"
+   ### TODO: FIXME: does not work ATM (supernova) 
 fi
 
 if [ $? -ne 0 ]; then

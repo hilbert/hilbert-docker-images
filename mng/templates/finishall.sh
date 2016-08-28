@@ -37,6 +37,17 @@ else
     :
 fi
 
+if [ -r "./docker.cfg" ]; then
+    . "./docker.cfg"
+fi
+
+if [ -n "${COMPOSE_FILE}" ]; then
+  F="plain.${COMPOSE_FILE}"
+  rm -f "$F"
+  "./luncher.sh" config > "$F"
+  export COMPOSE_FILE="$F"
+fi
+
 if [ -n "$d" ]; then
     echo "Stop/kill/rm FG GUI App: '$d'..."
 

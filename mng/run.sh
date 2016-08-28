@@ -11,8 +11,13 @@ nginx -s stop
 nginx -s quit
 nginx
 
-cd /usr/local/dockapp_dashboard/server/app 
-exec node main.js
+# echo debug start
+# ls -lL /usr/local/dockapp_dashboard/server/scripts
+# echo debug end
+
+cd /usr/local/dockapp_dashboard/server
+export NODE_PATH=/usr/lib/node_modules/dockapp-dashboard-server/node_modules
+exec node app/main.js --log_level=verbose
 
 #  -s signal     : send signal to a master process: stop, quit, reopen, reload
 

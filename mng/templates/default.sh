@@ -18,6 +18,7 @@ if [ -r "./startup.cfg" ]; then
     . "./startup.cfg"
 fi
 
+
 station_default_app="${station_default_app:-$default_app}"
 
 if [ -r "/tmp/lastapp.cfg" ]; then
@@ -25,6 +26,20 @@ if [ -r "/tmp/lastapp.cfg" ]; then
 else
     export current_app="${station_default_app}"
 fi
+
+
+if [ -r "./docker.cfg" ]; then
+    . "./docker.cfg"
+fi
+
+if [ -n "${COMPOSE_FILE}" ]; then
+  F="plain.${COMPOSE_FILE}"
+  rm -f "$F"
+  "./luncher.sh" config > "$F"
+  export COMPOSE_FILE="$F"
+fi
+	
+	
 
 for d in ${background_services}; do
   echo "Starting Background Service: '${d}'..."

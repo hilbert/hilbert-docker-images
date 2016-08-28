@@ -5,7 +5,7 @@ MAINTAINER Christian Stussak <stussak@mfo.de>
 
 # install dependencies
 RUN update.sh && \
-    install.sh --no-install-recommends nginx socat && \
+    install.sh --no-install-recommends nginx socat rsync lftp && \
     clean.sh
 
 #RUN DEBIAN_FRONTEND=noninteractive curl -sL https://deb.nodesource.com/setup_4.x | sudo -E bash - \
@@ -19,10 +19,10 @@ EXPOSE 8080
 COPY dockapp-dashboard /etc/nginx/sites-enabled/
 
 COPY dockapp_dashboard/package.json /usr/local/dockapp_dashboard/package.json
-RUN cd /usr/local/dockapp_dashboard/ && npm install
+# RUN cd /usr/local/dockapp_dashboard/ && npm install
     
 COPY dockapp_dashboard/server/package.json /usr/local/dockapp_dashboard/server/package.json
-RUN cd /usr/local/dockapp_dashboard/server && npm install
+RUN cd /usr/local/dockapp_dashboard/server && npm install -g
 
 # download latest development version and install node.js dependencies
 COPY dockapp_dashboard /usr/local/dockapp_dashboard

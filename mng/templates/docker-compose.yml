@@ -68,7 +68,7 @@ services:
      - "is_top_app=0"
     stdin_open: false
     tty: false
-    restart: always
+    restart: "on-failure:5"
     entrypoint: 
      - /bin/start
 
@@ -110,7 +110,7 @@ services:
     build: ../../dummy/
     stdin_open: false
     tty: false
-    restart: always
+    restart: "on-failure:5"
     entrypoint: 
      - /sbin/my_init
      - --skip-runit
@@ -150,7 +150,7 @@ services:
      - "${HB_PORT}"
     stdin_open: false
     tty: false
-    restart: always
+    restart: "on-failure:5"
     labels:
      - "is_top_app=0"
     entrypoint: 
@@ -174,7 +174,7 @@ services:
      - APP_ID=hb_test
     stdin_open: false
     tty: false
-    restart: always
+    restart: "on-failure:5"
     labels:
      - "is_top_app=1"
      - "description=HB test in python"
@@ -200,7 +200,7 @@ services:
      - HB_URL
     stdin_open: false
     tty: false
-    restart: always
+    restart: "on-failure:5"
     labels:
      - "description=HB test in bash: A"
      - "is_top_app=1"
@@ -247,7 +247,7 @@ services:
       service: busybox
     stdin_open: false
     tty: false
-    restart: always
+    restart: "on-failure:5"
     command:
      - "./ptmx.sh"
 
@@ -273,7 +273,9 @@ services:
      - "is_top_app=0"
     stdin_open: false
     tty: false
-    restart: always
+    restart: "on-failure:5"
+    volumes:
+     - "omd_data:/OMD"
     entrypoint: 
      - /sbin/my_init
      - --skip-runit
@@ -286,7 +288,7 @@ services:
     extends: 
       service: omd_anew
     volumes:
-     - "${PWD}/OMD:/omd/sites"
+     - "omd_data:/omd/sites"
 
   pa:
     extends: 
@@ -325,7 +327,7 @@ services:
      - "is_top_app=0"
     image: malex984/dockapp:qrhandler
     build: ../../qrhandler/
-    restart: always
+    restart: "on-failure:5"
     volumes:
      - supernova:/supernova
     environment:
@@ -342,7 +344,7 @@ services:
      - "is_top_app=0"
     image: malex984/dockapp:x11vnc
     build: ../../x11vnc/
-    restart: always
+    restart: "on-failure:5"
     ports:
      - "127.0.0.1:5900-5910:5900-5910"
     environment:
@@ -356,7 +358,7 @@ services:
       service: gui
     image: malex984/dockapp:xeyes
     build: ../../xeyes/
-    restart: always    
+    restart: "on-failure:5"    
     labels:
      - "is_top_app=1"
     command: 
@@ -367,7 +369,7 @@ services:
       service: gui
     image: malex984/dockapp:kiosk
     build: ../../kiosk/
-    restart: always
+    restart: "on-failure:5"
     labels:
      - "is_top_app=1"
      - "description=Kiosk Web Browser GUI app."
@@ -406,7 +408,7 @@ services:
     labels:
      - "is_top_app=1"
      - "description=Google Chrome Web Browser GUI app."
-    restart: always
+    restart: "on-failure:5"
     entrypoint: 
      - /sbin/my_init 
      - --skip-runit 
@@ -456,7 +458,7 @@ services:
     build: ../../kivy/
     labels:
      - "is_top_app=1"
-    restart: always
+    restart: "on-failure:5"
     entrypoint: 
      - /sbin/my_init 
      - --skip-runit 
@@ -472,7 +474,7 @@ services:
     image: malex984/dockapp:main
     labels:
      - "is_top_app=1"
-    restart: always
+    restart: "on-failure:5"
     environment:
      - MENU_TRY="gui"
     entrypoint: 
@@ -489,7 +491,7 @@ services:
     labels:
      - "is_top_app=1"
      - "description=Choose demo app"
-    restart: always
+    restart: "on-failure:5"
     environment:
      - MENU_TRY="gui"
     entrypoint: 
@@ -505,7 +507,7 @@ services:
     image: malex984/dockapp:x11vnc
     labels:
      - "is_top_app=0"
-    restart: always
+    restart: "on-failure:5"
     entrypoint: 
      - /sbin/my_init 
      - --skip-runit 
@@ -521,7 +523,7 @@ services:
      - "description=Docker Private Registry"
     ports:
      - "8055:5000"
-    restart: always
+    restart: "on-failure:5"
     volumes:
      - "${PWD}/REG/DATA:/var/lib/registry"
      
@@ -565,7 +567,7 @@ services:
     image: alpine:3.4
     stdin_open: false
     tty: false
-    restart: always
+    restart: "on-failure:5"
     labels:
      - "is_top_app=1"
     entrypoint: 
@@ -576,4 +578,6 @@ services:
 
 volumes:
   supernova:
+    driver: local
+  omd_data:
     driver: local

@@ -7,10 +7,6 @@ SELFDIR=`cd "$SELFDIR" && pwd`
 
 ## unset DISPLAY
 
-#! Initial Cleanup
-# docker ps -aq | xargs docker rm -fv
-
-
 ### set -e
 cd "${SELFDIR}/"
 
@@ -20,7 +16,7 @@ cd "${SELFDIR}/"
 ##curl -fsSL https://raw.githubusercontent.com/CWSpear/local-persist/master/scripts/install.sh | sudo bash
 
 ### TODO: update to newer compose version if necessary!...
-DOCKER_COMPOSE_LINUX64_URL="https://github.com/docker/compose/releases/download/1.7.0/docker-compose-Linux-x86_64"
+DOCKER_COMPOSE_LINUX64_URL="https://github.com/docker/compose/releases/download/1.8.0/docker-compose-Linux-x86_64"
 
 if [ ! -f ./compose ];
 then
@@ -40,6 +36,13 @@ then
 fi
 
 chmod a+x ./compose
+
+#! Finish our services (possible left-overs due to some crash)
+./finishall.sh
+
+#! Clean-up the rest of containers
+## TODO: FIXME: corner case: nothing to kill - do nothing! 
+docker ps -aq | xargs docker rm -fv
 
 ## cd ./tmp/
 ### TODO: add the plugin for global installation?
@@ -69,12 +72,15 @@ if hash ethtool 2>/dev/null; then
   sudo ethtool -s "${NET_IF}" wol g
 fi
 
-
-if [ -w "/tmp/lastapp.cfg" ]; then
-    rm -f "/tmp/lastapp.cfg"
-elif [ -e "/tmp/lastapp.cfg" ]; then
-    sudo rm -f "/tmp/lastapp.cfg"
-fi
+# if [ -e "/tmp/lastapp.cfg" ]; then
+#     
+# if [ -w "/tmp/lastapp.cfg" ]; then
+#     rm -f "/tmp/lastapp.cfg"
+# else
+#     sudo rm -f "/tmp/lastapp.cfg"
+# fi
+# 
+# fi
 
 ### docker login -u malex984 -p ... ... imaginary.mfo.de:5000
 
@@ -100,6 +106,17 @@ fi
 
 if [ -r "./startup.cfg" ]; then
     . "./startup.cfg"
+fi
+
+if [ -r "./docker.cfg" ]; then
+    . "./docker.cfg"
+fi
+
+if [ -n "${COMPOSE_FILE}" ]; then
+  F="plain.${COMPOSE_FILE}"
+  rm -f "$F"
+  "./luncher.sh" config > "$F"
+  export COMPOSE_FILE="$F"
 fi
 
 station_default_app="${station_default_app:-$default_app}"

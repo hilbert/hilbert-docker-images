@@ -78,7 +78,7 @@ fi
 
 ### TODO: update to newer compose version if necessary!...
 # `uname -s`-`uname -m`
-DOCKER_COMPOSE_LINUX64_URL="https://github.com/docker/compose/releases/download/1.7.0/docker-compose-Linux-x86_64"
+DOCKER_COMPOSE_LINUX64_URL="https://github.com/docker/compose/releases/download/1.8.0/docker-compose-Linux-x86_64"
 
 if [ ! -x ./compose ];
 then

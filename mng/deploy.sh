@@ -52,7 +52,6 @@ cd "${SELFDIR}/"
 
 echo "Pushing configs for station '${TARGET_HOST_NAME}' (into '${CFG_DIR}'), using '${SCP}' and '${SSH}'..."
 
-# ./remote.sh "${TARGET_HOST_NAME}" "
 
 echo "List of configuration files: [$LIST]"
 
@@ -66,6 +65,7 @@ echo "List of configuration files: [$LIST]"
 
 SUDO=""
 
+   ./remote.sh "${TARGET_HOST_NAME}" 'sudo -n -P chown -Rf $USER ~/.config/dockapp'
    ./remote.sh "${TARGET_HOST_NAME}"  "test -w ~/.config/dockapp" >/dev/null 2>&1
    if [ $? -ne 0 ]; then
       echo "Warning: directory '~/.config/dockapp' is not writable: "
