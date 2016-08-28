@@ -41,27 +41,18 @@ share images as much as possible).
 
 ![Approximate Sequence Diagram](http://www.websequencediagrams.com/cgi-bin/cdraw?lz=dGl0bGUgRHluYW1pYyBEb2NrZXIgQXBwbGljYXRpb24KCnBhcnRpY2lwYW50IEhvc3QKbm90ZSBvdmVyAAoFOiAKSG9zdCBMaW51eCB3aXRoAD8HCmVuZCBub3RlCgoAHQUtPisAKgYuL3J1bm1lLnNoAE8OIjpNYWluIgAmCCoACQc6IHN0YXJ0IDptYWluCgoAHwctPisAFwltYWluAEkFbG9vcCB0aGUADQUgZ2x1ZSAADgVydW4gdW50aWwgUXVpdABlEWVudSIATgsqAAwHAG8KZW51CgAhBwByBgAZBm1lbnUuc2gAEgktPi0AMgl1c2VyJ3MgY2hvaWNlABcLAIFMCWNob3NlbiBBcHAvU2VydmljZSBvcgCBGgZkZXN0cm95AIERCmFsdCBQdWxsL1J1biBkZWFtb24gOgAvBwCCNBAARgciAIFDDQANCDogc3Yuc2ggADQIACUKAIJLBQAcCwCBDQYAgx8FZWxzZQB1CmFuZCBEAIEaBzpBcHBBAIM1EEFwcEEAcA4ADQU6IHJ1bi5zaCAALwUAIAcAg0EFABgHQXBwQQCCSAYAFQYAgkkFADQHZXhpdAAOCwCEEQlleGl0IGNvZGUgAIIqCwB7BgCBMQYAg2oGAIQsCACDGwYAMQoADgsAhUUGAEcJAIJ4DACFCgstPi0AhW0HZW5kCgplbmQK&s=modern-blue)
 
-## Currently we provide the following images:
+## Currently we provide the following base images:
 
 * [![](https://badge.imagelayers.io/malex984/dockapp:base.svg)](https://imagelayers.io/?images=malex984/dockapp:base'Get your own badge on imagelayers.io')
 `:base` serves as the common root for all our images. Thus it is the only image that will update & upgrade all the packages.
 * [![](https://badge.imagelayers.io/malex984/dockapp:dd.svg)](https://imagelayers.io/?images=malex984/dockapp:dd'Get your own badge on imagelayers.io')
 `:dd` contains the docker cli and thus serves as a basis for `:main` which in turn pulls and launches further images.
-* [![](https://badge.imagelayers.io/malex984/dockapp:appchoo.svg)](https://imagelayers.io/?images=malex984/dockapp:appchoo'Get your own badge on imagelayers.io')
-`:appchoo` image is a crude shell menu asking the user to choose an option and returns the choice via the return code (201, 202, 203 etc... ).
-Depending on `MENU_TRY` it can be either GUI or TEXT style.
-* [![](https://badge.imagelayers.io/malex984/dockapp:appa.svg)](https://imagelayers.io/?images=malex984/dockapp:appa'Get your own badge on imagelayers.io')
-`:appa` image run simple shell scripts saying AAA... or BBB... together with some host data.
 * [![](https://badge.imagelayers.io/malex984/dockapp:alsa.svg)](https://imagelayers.io/?images=malex984/dockapp:alsa'Get your own badge on imagelayers.io')
 `:alsa` tests your audio HW using ALSA
 * [![](https://badge.imagelayers.io/malex984/dockapp:xeyes.svg)](https://imagelayers.io/?images=malex984/dockapp:xeyes'Get your own badge on imagelayers.io')
 `:xeyes` is an image with some X11 client applications (e.g. `xeyes`).
 * [![](https://badge.imagelayers.io/malex984/dockapp:gui.svg)](https://imagelayers.io/?images=malex984/dockapp:gui'Get your own badge on imagelayers.io')
 `:gui` contains further GUI applications based on GTK and QT. 
-* [![](https://badge.imagelayers.io/malex984/dockapp:q3.svg)](https://imagelayers.io/?images=malex984/dockapp:q3'Get your own badge on imagelayers.io')
-`:q3` is a standalone (huge!) image with OpenArena (free version of Quake 3 Arena) which works but FPS was a bit low for me :( ALSA sound was good!
-* [![](https://badge.imagelayers.io/malex984/dockapp:skype.svg)](https://imagelayers.io/?images=malex984/dockapp:skype'Get your own badge on imagelayers.io')
-`:skype` propriatory 32-bit application runs using apulse (emulation of pulseaudio via ALSA), it may also be able to capture video if you are lucky with your camera, its drivers and settings... It starts fine with working sound input/output but may refuse working after a while... :(
 * [![](https://badge.imagelayers.io/malex984/dockapp:play.svg)](https://imagelayers.io/?images=malex984/dockapp:play'Get your own badge on imagelayers.io')
 `:play` contains several media players like `cmus`, `vlc`, `mplayer`, `xine`.
 * [![](https://badge.imagelayers.io/malex984/dockapp:test.svg)](https://imagelayers.io/?images=malex984/dockapp:test'Get your own badge on imagelayers.io')
@@ -72,17 +63,28 @@ Depending on `MENU_TRY` it can be either GUI or TEXT style.
 `:demo` provides a choice menu and with luncher of GUI-exhibits
 * [![](https://badge.imagelayers.io/malex984/dockapp:kivy.svg)](https://imagelayers.io/?images=malex984/dockapp:kivy'Get your own badge on imagelayers.io')
 `:kivy` serves as the common base for all kivy-related images. 
+
+### Services (applications-specific images):
+
+Some applications may need further deamons to run in background. Here is a list of server images:
+
+* [![](https://badge.imagelayers.io/malex984/dockapp:appchoo.svg)](https://imagelayers.io/?images=malex984/dockapp:appchoo'Get your own badge on imagelayers.io')
+`:appchoo` image is a crude shell menu asking the user to choose an option and returns the choice via the return code (201, 202, 203 etc... ).
+Depending on `MENU_TRY` it can be either GUI or TEXT style.
+* [![](https://badge.imagelayers.io/malex984/dockapp:appa.svg)](https://imagelayers.io/?images=malex984/dockapp:appa'Get your own badge on imagelayers.io')
+`:appa` image run simple shell scripts saying AAA... or BBB... together with some host data.
+* [![](https://badge.imagelayers.io/malex984/dockapp:q3.svg)](https://imagelayers.io/?images=malex984/dockapp:q3'Get your own badge on imagelayers.io')
+`:q3` is a standalone (huge!) image with OpenArena (free version of Quake 3 Arena) which works but FPS was a bit low for me :( ALSA sound was good!
+* [![](https://badge.imagelayers.io/malex984/dockapp:skype.svg)](https://imagelayers.io/?images=malex984/dockapp:skype'Get your own badge on imagelayers.io')
+`:skype` propriatory 32-bit application runs using apulse (emulation of pulseaudio via ALSA), it may also be able to capture video if you are lucky with your camera, its drivers and settings... It starts fine with working sound input/output but may refuse working after a while... :(
+* [![](https://badge.imagelayers.io/malex984/dockapp:kiosk.svg)](https://imagelayers.io/?images=malex984/dockapp:kiosk'Get your own badge on imagelayers.io')
+`:kiosk` Kiosk-mode web-wrowser using Electron (based on Chromium)
 * [![](https://badge.imagelayers.io/malex984/dockapp:iceweasel.svg)](https://imagelayers.io/?images=malex984/dockapp:iceweasel'Get your own badge on imagelayers.io')
 `:iceweasel` Firefox & Iceweasel
 * [![](https://badge.imagelayers.io/malex984/dockapp:chrome.svg)](https://imagelayers.io/?images=malex984/dockapp:chrome'Get your own badge on imagelayers.io')
 `:chrome` Google Chrome & Chromium & Opera
-* [![](https://badge.imagelayers.io/malex984/dockapp:kiosk.svg)](https://imagelayers.io/?images=malex984/dockapp:kiosk'Get your own badge on imagelayers.io')
-`:kiosk` Kiosk-mode web-wrowser using Electron (based on Chromium)
-
-### Services:
-
-Some applications may need further deamons to run in background. Here is a list of server images:
-
+* [![](https://badge.imagelayers.io/malex984/dockapp:nodejs.svg)](https://imagelayers.io/?images=malex984/dockapp:nodejs'Get your own badge on imagelayers.io')
+`:nodejs` Pure `Node JS 4`
 * [![](https://badge.imagelayers.io/malex984/dockapp:x11.svg)](https://imagelayers.io/?images=malex984/dockapp:x11'Get your own badge on imagelayers.io')
 `:x11` is a basis for Xorg/Xephyr service
 * [![](https://badge.imagelayers.io/malex984/dockapp:dummy.svg)](https://imagelayers.io/?images=malex984/dockapp:dummy'Get your own badge on imagelayers.io')
@@ -172,3 +174,4 @@ docker rmi -f x11 test dummy
 ```
 docker ps -aq | xargs docker rm -fv
 ```
+
