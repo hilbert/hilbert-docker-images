@@ -175,3 +175,65 @@ docker rmi -f x11 test dummy
 docker ps -aq | xargs docker rm -fv
 ```
 
+# Dockerization within this framework (cheatsheet?)
+
+1. Each image must reside in an individual sub-folder. Create one named after your image (lowercase, only [a-z0-9] characters should be
+used).
+2. Copy some simple existing `Dockerfile` (e.g. from `/chrome/`) and change it according to your needs (see below).
+3. Same with `Makefile` and `docker-compose.yml`
+
+Now some one can use the framework helpers (`make` should be installed on your host):
+* `make pull` will try to pull the desired base image
+* `make` will try to (re-)build your image (currently no build arguments are supported)
+* `make check` try to run the default command withing your image
+
+## Descrption of the building process for your image is in `Dockerfile`.
+
+For example see `chrome/Dockerfile`.
+
+0. Specify your contact email via `MAINTAINER`
+
+1. Choose a proper base image among already existing (see above) - `FROM`
+
+NOTE: currently we base our images on top of `phusion/baseimage:0.9.18` 
+which is based on `ubuntu:14.04` and contains a usefull launcher
+wrapper (`myinit`).
+
+2. Install additional SW packages (e.g. see `chrome/Dockerfile`) - `RUN`
+
+NOTE: one may also need to add keys and packages repositories .
+
+NOTE: it may be necessary to update repository caches before
+installing some packages.  Also do not forget to clean-up afterwards.
+
+NOTE: The best way to install something is `RUN update.sh && install.sh YOUR_PACKAGE && clean.sh`
+
+3. Add necessary local resources and online resources into your image - `ADD` or `COPY`
+
+
+NOTE: use `ADD URL_TO_FILE FILE_NAME_IN_IMAGE` to add something from
+network in build-time. 
+
+NOTE: use `COPY local_file1 local_file2 ... PATH_IN_IMAGE/` to copy
+local files (located alongside with your `Dockerfile`) into the image
+(with owner: `root` and the same file permissions).
+
+4. Run any initial configuration (post installation) actions - `RUN`
+
+NOTE: only previouslly installed/added (into the image) executables
+can be run.
+
+### Building notes:
+* one can have build arguments but we do not use them.
+* one can set environment variables within `Dockerfile` and later
+override them in run-time.
+* exposing network ports may be done either statically inside
+`Dockerfile` or dynammically in run-time. 
+* Same goes to specification of default command / entry-point script/application.
+
+
+## Run Your Image (run-time)
+
+
+
+
