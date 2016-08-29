@@ -237,15 +237,15 @@ override them in run-time.
 What can be specified in run-time:
 
 * docker image
-* entry-point wrapper and command
+* default command
 * environment variables to be passed to executed command
 * exposed (and redirected) ports
 * mounted devices
 * mounted volumes (local and docker's logical)
-* restart policy (e.g. see https://blog.codeship.com/ensuring-containers-are-always-running-with-dockers-restart-policy/)
-* labels attached to running container
+* restart policy: "on-failure:5" (e.g. see https://blog.codeship.com/ensuring-containers-are-always-running-with-dockers-restart-policy/)
+* labels attached to running container (including `is_top_app=0/1`)
 * working directory
-* mode of execution: `privileged` or not
-* stdin attachment and tty allocation
+
+* mode of execution: not `privileged` in most cases
 
 See for example `mng/docker-compose.yml` or `mng/Makefile`
