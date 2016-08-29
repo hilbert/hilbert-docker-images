@@ -229,11 +229,23 @@ can be run.
 override them in run-time.
 * exposing network ports may be done either statically inside
 `Dockerfile` or dynammically in run-time. 
-* Same goes to specification of default command / entry-point script/application.
+* Same goes to specification of default command / entry-point script/application and labels.
 
 
-## Run Your Image (run-time)
+## Run Your Image (run-time): `Makefile` and `docker-compose.yml`
 
+What can be specified in run-time:
 
+* docker image
+* entry-point wrapper and command
+* environment variables to be passed to executed command
+* exposed (and redirected) ports
+* mounted devices
+* mounted volumes (local and docker's logical)
+* restart policy (e.g. see https://blog.codeship.com/ensuring-containers-are-always-running-with-dockers-restart-policy/)
+* labels attached to running container
+* working directory
+* mode of execution: `privileged` or not
+* stdin attachment and tty allocation
 
-
+See for example `mng/docker-compose.yml` or `mng/Makefile`
