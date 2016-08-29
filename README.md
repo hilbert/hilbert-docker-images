@@ -175,19 +175,25 @@ docker rmi -f x11 test dummy
 docker ps -aq | xargs docker rm -fv
 ```
 
-# Dockerization within this framework (cheatsheet?)
+# Dockerization within this framework (cheatsheet?) - what to run and how?
+
+## General notes
 
 1. Each image must reside in an individual sub-folder. Create one named after your image (lowercase, only [a-z0-9] characters should be
 used).
 2. Copy some simple existing `Dockerfile` (e.g. from `/chrome/`) and change it according to your needs (see below).
 3. Same with `Makefile` and `docker-compose.yml`
 
-Now some one can use the framework helpers (`make` should be installed on your host):
+## Using `Makefile`:
+
 * `make pull` will try to pull the desired base image
 * `make` will try to (re-)build your image (currently no build arguments are supported)
 * `make check` try to run the default command withing your image
+* `make prune` will clean-up dangling docker images (left after rebuilding images)
 
-## Descrption of the building process for your image is in `Dockerfile`.
+NOTE: `make` needs to be installed only on your development host.
+
+## What to run: specify building your of image with `Dockerfile`
 
 For example see `chrome/Dockerfile`.
 
@@ -231,19 +237,20 @@ override them in run-time.
 `Dockerfile` or dynammically in run-time. 
 * Same goes to specification of default command / entry-point script/application and labels.
 
+5. `make` to build the image
 
-## Run Your Image (run-time): `Makefile` and `docker-compose.yml`
+## Run-time: how to run Your Image - `Makefile` and `docker-compose.yml`
 
 What can be specified in run-time:
 
-* docker image
+* your docker image
 * default command
 * environment variables to be passed to executed command
 * exposed (and redirected) ports
 * mounted devices
 * mounted volumes (local and docker's logical)
 * restart policy: "on-failure:5" (e.g. see https://blog.codeship.com/ensuring-containers-are-always-running-with-dockers-restart-policy/)
-* labels attached to running container (including `is_top_app=0/1`)
+* labels attached to running container (e.g. `is_top_app=0` for BG service and `is_top_app=1` for top-front GUI application)
 * working directory
 
 * mode of execution: not `privileged` in most cases
