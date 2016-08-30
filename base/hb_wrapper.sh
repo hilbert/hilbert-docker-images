@@ -69,3 +69,5 @@ do
   tail -f /dev/null & wait ${!}
 done
 
+HB "hb_done" "1"
+exit

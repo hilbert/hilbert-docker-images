@@ -220,7 +220,7 @@ cd .. && rmdir ./~/
 
 cd "${BASE_DIR}/"
 ## TODO: only directories/stations
-ls -1 | grep -vE '^(list|md5|.*~)$' > "list~" 
+ls -1 | grep -vE '^(list|md5|supernova|.*~|[\.].*)$' > "list~" 
 chmod a+r "list~" && mv "list~" list
 
 md5sum `ls -1 */md5 | grep -vE '^[^/]*~/md5$'` > "md5~"

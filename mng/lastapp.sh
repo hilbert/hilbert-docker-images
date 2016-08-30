@@ -47,6 +47,8 @@ if [[ $? -ne 0 ]]; then
   exit 1
 fi
 
+chmod go+rw "./~/$f"
+
 mv --backup=numbered -f -- "./~/$f" .
 if [[ $? -ne 0 ]]; then
   echo "ERROR: could not mv './~/$f' into $PWD!"

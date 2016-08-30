@@ -49,8 +49,6 @@ services:
      - /var/run/dbus/system_bus_socket:/var/run/dbus/system_bus_socket
     labels:
      - "is_top_app=0"
-    ipc: host
-    pid: "host"
     cap_add:
      - SYS_ADMIN
      - NET_ADMIN
@@ -108,6 +106,7 @@ services:
       service: admin
     image: malex984/dockapp:dummy
     build: ../../dummy/
+    privileged: true
     stdin_open: false
     tty: false
     restart: "on-failure:5"
@@ -171,6 +170,7 @@ services:
      - HB_PORT
      - HB_HOST
      - HB_URL
+     - HB_INIT_TIMEOUT
      - APP_ID=hb_test
     stdin_open: false
     tty: false
@@ -198,6 +198,7 @@ services:
      - HB_PORT
      - HB_HOST
      - HB_URL
+     - HB_INIT_TIMEOUT
     stdin_open: false
     tty: false
     restart: "on-failure:5"
@@ -373,11 +374,17 @@ services:
     labels:
      - "is_top_app=1"
      - "description=Kiosk Web Browser GUI app."
+    environment:
+     - HB_PORT
+     - HB_HOST
+     - HB_URL
+     - HB_INIT_TIMEOUT=9
     entrypoint: 
      - /sbin/my_init 
      - --skip-runit 
      - --skip-startup-files
      - -- 
+     - hb_wrapper.sh
      - launch.sh
      - browser.sh
      - -l
@@ -389,16 +396,21 @@ services:
       service: kiosk
     labels:
      - "description=Image Blend under Kiosk"
+    environment:
+     - APP_ID=light_pollution
     command: 
-     - "${WEBGL_APPS}/WebGL_ImageBlend_New/fade_08_new_05.html"
+     - "${WEBGL_APPS}/WebGL_ImageBlend_New/fade_08_new_05b_hb.html?HB_URL=${HB_URL}&HB_APP_ID=light_pollution"
+
 
   HZ_kiosk:
     extends: 
       service: kiosk
     labels:
      - "description=Habitable Zone under Kiosk"
+    environment:
+     - APP_ID=habitable_zones
     command: 
-     - "${WEBGL_APPS}/WebGL_Habitable_New/gravity_habitable_new_04b.html"
+     - "${WEBGL_APPS}/WebGL_Habitable_New_HB/gravity_habitable_new_05_hb2.html?HB_URL=${HB_URL}&HB_APP_ID=habitable_zones"
 
   chrome:
     extends: 
@@ -409,11 +421,17 @@ services:
      - "is_top_app=1"
      - "description=Google Chrome Web Browser GUI app."
     restart: "on-failure:5"
+    environment:
+     - HB_PORT
+     - HB_HOST
+     - HB_URL
+     - HB_INIT_TIMEOUT=9
     entrypoint: 
      - /sbin/my_init 
      - --skip-runit 
      - --skip-startup-files
      - -- 
+     - hb_wrapper.sh
      - launch.sh
      - browser.sh
     command: 
@@ -424,16 +442,20 @@ services:
       service: chrome
     labels:
      - "description=Image Blend under Chrome"
+    environment:
+     - APP_ID=light_pollution
     command: 
-     - "${WEBGL_APPS}/WebGL_ImageBlend_New/fade_08_new_05.html"
+     - "${WEBGL_APPS}/WebGL_ImageBlend_New/fade_08_new_05b_hb.html?HB_URL=${HB_URL}&HB_APP_ID=light_pollution"
 
   HZ_chrome:
     extends: 
       service: chrome 
     labels:
      - "description=Habitable Zone under Chrome"
+    environment:
+     - APP_ID=habitable_zones
     command: 
-     - "${WEBGL_APPS}/WebGL_Habitable_New/gravity_habitable_new_04b.html"
+     - "${WEBGL_APPS}/WebGL_Habitable_New_HB/gravity_habitable_new_05_hb2.html?HB_URL=${HB_URL}&HB_APP_ID=habitable_zones"
 
   opera:
     extends: 
@@ -560,6 +582,9 @@ services:
      - "/dev/snd:/dev/snd"
      - "/dev/shm:/dev/shm"
      - "/dev/input:/dev/input"
+    network_mode: "host"
+    ipc: host
+    pid: "host"
 
   x11_xclock:
     extends: 

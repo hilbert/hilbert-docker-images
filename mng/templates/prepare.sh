@@ -38,11 +38,11 @@ fi
 chmod a+x ./compose
 
 #! Finish our services (possible left-overs due to some crash)
-./finishall.sh
+#### ./finishall.sh # NOTE: no clean-up for left-overs for now
 
 #! Clean-up the rest of containers
 ## TODO: FIXME: corner case: nothing to kill - do nothing! 
-docker ps -aq | xargs docker rm -fv
+#?# docker ps -aq | xargs docker rm -fv
 
 ## cd ./tmp/
 ### TODO: add the plugin for global installation?
@@ -127,17 +127,26 @@ else
     export current_app="${station_default_app}"
 fi
 
+#! Pull for BG services
 for d in ${background_services}; do
   echo "Pulling Image for background Service: '${d}'..."
   "./luncher.sh" pull --ignore-pull-failures "${d}"
 done
 
 
+#! Pull the default GUI app
 if [ -n "${current_app}" ]; then
   echo "Pulling image for Front GUI Application: '${current_app}'..."
   "./luncher.sh" pull --ignore-pull-failures "${current_app}"
 fi
 
+#! Pull other possible GUI apps
+for d in ${possible_apps}; do
+  if [ ! "x$d" = "x${current_app}" ]; then
+    echo "Pulling Image for background Service: '${d}'..."
+    "./luncher.sh" pull --ignore-pull-failures "${d}"
+  fi  
+done
 
 
 

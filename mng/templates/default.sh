@@ -38,13 +38,13 @@ if [ -n "${COMPOSE_FILE}" ]; then
   "./luncher.sh" config > "$F"
   export COMPOSE_FILE="$F"
 fi
-	
-	
 
 for d in ${background_services}; do
   echo "Starting Background Service: '${d}'..."
   "./luncher.sh" up -d "${d}"
 done
+
+unset COMPOSE_FILE
 
 echo "Front GUI Application: '${current_app}'..."
 

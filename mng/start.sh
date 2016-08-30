@@ -40,7 +40,7 @@ if [ -z "${WOL}" ]; then
   
     DM_HOST="${DM_HOST:-supernova}"
     if [ -n "${DM_HOST}" ]; then
-      DM="${SELFDIR}/remote.sh ${DM_HOST} ${DM}"
+      DM="${SELFDIR}/remote.sh ${DM_HOST} DISPLAY=:0 ${DM}"
     fi
 
     export WOL="${DM} start ${station_id}"
