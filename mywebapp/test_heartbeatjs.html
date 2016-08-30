@@ -1,0 +1,26 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <title>Testing heartbeat.js library</title>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    <script src="hb.js"></script>
+</head>
+
+<body>
+    <script>
+        document.write('<h1>HB messages should follow : </h1><br><hr>');
+        var heartbeat = new Heartbeat({
+            url: Heartbeat.getPassedUrl('http://localhost:8888'),
+            appId: Heartbeat.getPassedAppId('mywebapp'),
+            interval: 7000,
+            sendInitCommand: false,
+            sendDoneCommand: false,
+            debugLog: function(msg) {
+                document.write(msg + "<br>");
+            }
+        });
+    </script>
+</body>
+
+</html>

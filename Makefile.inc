@@ -7,8 +7,11 @@ SHELL  ?= /bin/bash
 GREP   ?= grep
 SED    ?= sed
 MAKE   ?= make
-DOCKER ?= docker
 TR     ?= tr
+DOCKER ?= docker
+COMPOSE?= docker-compose
+
+COMPOSE_PROJECT_NAME ?= dockapp
 
 # Makefile.inc is expected to be on the top level!
 top_dir       :=$(dir $(abspath $(lastword $(MAKEFILE_LIST))))
@@ -118,5 +121,13 @@ prune:
 #force_look:
 #	true
 
+
+COMPOSE_BUILD_OPTS=--force-rm
+
+build_compose:${DF} ${ACOPYFILES} ${ACOPYFILES2} 
+	$(RM) -f ${TS}
+	cd ${mkfile_dir} && $(COMPOSE) -p $(COMPOSE_PROJECT_NAME) build ${COMPOSE_BUILD_OPTS} ${APP}
+	$(DOCKER) tag "${IMG}" "${TAG}"
+	$(MAKE) -C ${mkfile_dir}/ ${TS}
 
 .SILENT :

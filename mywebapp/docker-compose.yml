@@ -1,0 +1,33 @@
+version: '2.0'
+services:
+  mywebapp:
+    build: .
+    image: malex984/dockapp:mywebapp
+    labels:
+     - "is_top_app=1"
+     - "description=MyWebApp"
+    environment:
+      DISPLAY: "${DISPLAY}"
+      LANGUAGE: en
+      MOUSE_CURSOR: 'on'
+      QT_X11_NO_MITSHM: '1'
+      XLIB_SKIP_ARGB_VISUALS: '1'
+      APP_ID: 'mywebapp'
+      HB_URL: 'http://127.0.0.1:8888'
+      HB_INIT_TIMEOUT: 9
+    entrypoint:
+    - /sbin/my_init
+    - --skip-runit
+    - --skip-startup-files
+    - --
+    command:
+    - hb_wrapper.sh
+    - launch.sh
+    - browser.sh
+    - -l
+    - file:///usr/local/src/mywebapp/test_heartbeatjs.html?HB_APP_ID=mywebapp&HB_URL=http://127.0.0.1:8888
+    network_mode: host
+    restart: on-failure:5
+    volumes:
+    - /etc/localtime:/etc/localtime:ro
+    - /tmp:/tmp:rw
