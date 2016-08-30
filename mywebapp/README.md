@@ -1,15 +1,17 @@
 # Step-by-step Dockerization of web browser (kiosk) together with heartbeat JS library and sample .html file using it: 
 
-* 1. create new sub-folder: `/mywebapp/` (the resulting image will be named `malex984/dockapp:mywebapp`)
+* Create new sub-folder: `/mywebapp/` (the resulting image will be named `malex984/dockapp:mywebapp`)
 
-* 2. Specify the base image and your resources in a custom `Dockerfile`:
+* Specify the base image and your resources in a custom `Dockerfile`:
+
 ```
 FROM malex984/dockapp:kiosk # Base docker image with Web Browser
 RUN mkdir -p /usr/local/src/mywebapp # New folder for resources
 COPY test_heartbeatjs.html hb.js /usr/local/src/mywebapp/ # copy local files into docker image
 ```
 
-* 3. Specify how to execute the resulting docker image in `docker-compose.yml`
+* Specify how to execute the resulting docker image in `docker-compose.yml`
+
 ```
 version: '2.0'
 services:
@@ -42,7 +44,8 @@ services:
     - /tmp:/tmp:rw          # Use host's /tmp (needs for accessing X11 socket file)
 ```
 
-* 4. Copy-paste `Makefile`:
+* Copy-paste/adapt the following `Makefile`:
+
 ```
 mkfile_path := $(abspath $(lastword $(MAKEFILE_LIST))) # Specify the current path
 include ../Makefile.inc                                # Framework's make-rules
@@ -58,7 +61,7 @@ check: $(TS) ./docker-compose.yml    # make check expects a lock file (created b
 	$(COMPOSE) -p $(COMPOSE_PROJECT_NAME) run --rm -e DISPLAY ${APP} ${CMD} # Main run respects CMD variable, which may be set from outside
 ```
 
-* Now the Framework enables the following commands:
+* Now the framework enables the following commands:
  * `make` build your image
  * `make check` run the default command (Kiosk opens file
 `test_heartbeatjs.html?HB_APP_ID=mywebapp&HB_URL=http://127.0.0.1:8888`,
