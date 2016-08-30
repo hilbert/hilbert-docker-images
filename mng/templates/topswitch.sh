@@ -24,6 +24,13 @@ else
     old="${default_app}"
 fi
 
+if [ -n "${COMPOSE_FILE}" ]; then
+  F="plain.${COMPOSE_FILE}"
+  rm -f "$F"
+  "./luncher.sh" config > "$F"
+  export COMPOSE_FILE="$F"
+fi
+
 "./luncher.sh" stop -t 10 "${old}"
 "./luncher.sh" kill -s SIGTERM  "${old}"
 "./luncher.sh" kill -s SIGKILL  "${old}"
