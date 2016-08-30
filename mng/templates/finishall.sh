@@ -72,31 +72,39 @@ fi
 
 ## TODO: FIXME: in reversed order!?
 for d in ${background_services}; do
-
-    if [ ! "x$d" = "xomd_agent" ]; then  
+  #! Exclude Monitoring agent (for now) 
+  if [ ! "x$d" = "xomd_agent" ]; then  
     echo "Stop/kill/rm BG Service: '$d'..."
     "./luncher.sh" stop -t 10 "$d"
     "./luncher.sh" kill -s SIGTERM "$d"
     "./luncher.sh" kill -s SIGKILL "$d"
     "./luncher.sh" rm -f "$d"
-    fi
+  fi
     
 done
 
-unset COMPOSE_FILE
 
 #! TODO: Make sure that OMD known the most recent states (trigger update?)
 
+#! Stop the monitoring agent - last with a delay 
 for d in ${background_services}; do
-
-    if [ "x$d" = "xomd_agent" ]; then  
+  if [ "x$d" = "xomd_agent" ]; then
+  
     echo "Stop/kill/rm BG Service: '$d'..."
     
-    sleep 5
+    if [ -n "${COMPOSE_FILE}" ]; then
+      F="${COMPOSE_FILE}.plain"
+      rm -f "$F"
+      unset COMPOSE_FILE
+      "./luncher.sh" config > "$F"
+      export COMPOSE_FILE="$F"
+    fi
+
+    sleep 10 # ??
+    
     "./luncher.sh" stop -t 10 "$d"
     "./luncher.sh" kill -s SIGTERM "$d"
     "./luncher.sh" kill -s SIGKILL "$d"
     "./luncher.sh" rm -f "$d"
-    fi
-    
+  fi    
 done
