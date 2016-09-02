@@ -1,31 +1,44 @@
 version: '2.0'
 services:
-  mng:
+  demo:
+    labels:
+     - "is_top_app=1"
+     - "description=Management front-end and back-end (simulated back-end management scripts)"
     build: .
+    image: malex984/dockapp:mng
+    privileged: false
+    stdin_open: false
+    tty: false
+    volumes:
+    - /etc/localtime:/etc/localtime:ro
+    - "${PWD}/dockapp_dashboard:/usr/local/dockapp_dashboard:ro"
     entrypoint:
     - /sbin/my_init
     - --skip-runit
     - --skip-startup-files
     - --
+    expose:
+     - "8080"
+    restart: always
     command:
-    - /DOCKAPP/run.sh
+     - /usr/local/bin/run.sh
+     - --test=true
+
+  mng:
+    extends: 
+      service: demo
+    labels:
+     - "description=Management front-end and back-end (real management scripts)"
+    restart: on-failure:5
+    volumes:
+    - /tmp:/tmp:rw
+    - "${HOME}/.ssh:/root/.ssh:ro"  
+    - "${HOME}:${HOME}:ro"
+    - "${PWD}:/DOCKAPP:rw"
+    - "${PWD}/dockapp_dashboard/server/log:/usr/local/dockapp_dashboard/server/log:rw"
     environment:
       CFG_DIR: /DOCKAPP
-    image: malex984/dockapp:mng
-    labels:
-     - "is_top_app=1"
-     - "description=Management front-end and back-end"
-    ports:
-     - "8081:8080"
-    privileged: false
-    restart: on-failure:5
-    stdin_open: false
-    tty: false
     working_dir: /DOCKAPP
-    volumes:
-    - /etc/localtime:/etc/localtime:ro
-    - /tmp:/tmp:rw
-    - "${PWD}:/DOCKAPP:rw" 
-    - "${HOME}/.ssh:/root/.ssh:ro"  
-    - "${HOME}:${HOME}:ro" 
-    - "${PWD}/dockapp_dashboard:/usr/local/dockapp_dashboard:ro"
+    command:
+    - /DOCKAPP/run.sh
+  

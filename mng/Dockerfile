@@ -60,6 +60,7 @@ COPY dockapp_dashboard /usr/local/dockapp_dashboard
 #}\n'\
 #>> /etc/nginx/sites-enabled/dockapp-dashboard
 
+COPY run.sh /usr/local/bin/
 
 # configure services for baseimage-docker's init system
 #RUN echo "#!/bin/sh\nnginx" > /etc/rc.local

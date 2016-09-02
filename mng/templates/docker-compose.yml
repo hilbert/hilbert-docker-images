@@ -397,9 +397,9 @@ services:
     labels:
      - "description=Image Blend under Kiosk"
     environment:
-     - APP_ID=IB_kiosk
+     - APP_ID=light_pollution
     command: 
-     - "${WEBGL_APPS}/WebGL_ImageBlend_New/fade_08_new_05b_hb.html?HB_URL=${HB_URL}&HB_APP_ID=IB_kiosk"
+     - "${WEBGL_APPS}/WebGL_ImageBlend_New/fade_08_new_05b_hb.html?HB_APP_ID=light_pollution&HB_URL=${HB_URL}"
 
 
   HZ_kiosk:
@@ -408,9 +408,9 @@ services:
     labels:
      - "description=Habitable Zone under Kiosk"
     environment:
-     - APP_ID=HZ_kiosk
+     - APP_ID=habitable_zones
     command: 
-     - "${WEBGL_APPS}/WebGL_Habitable_New_HB/gravity_habitable_new_05_hb2.html?HB_URL=${HB_URL}&HB_APP_ID=HZ_kiosk"
+     - "${WEBGL_APPS}/WebGL_Habitable_New_HB/gravity_habitable_new_05_hb2.html?HB_APP_ID=habitable_zones&HB_URL=${HB_URL}"
 
   chrome:
     extends: 
