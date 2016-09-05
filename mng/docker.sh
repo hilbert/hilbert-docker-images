@@ -1,4 +1,4 @@
-#!/bin/sh
+#!/bin/bash -xv
 
 SELFDIR=`dirname "$0"`
 SELFDIR=`cd "$SELFDIR" && pwd`
