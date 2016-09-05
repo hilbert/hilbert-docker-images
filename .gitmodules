@@ -1,9 +1,9 @@
+[submodule "mng/dockapp_dashboard"]
+	path = mng/dockapp_dashboard
+	url = https://github.com/IMAGINARY/dockapp_dashboard.git
 [submodule "xeyes/xfullscreen"]
 	path = xeyes/xfullscreen
 	url = https://github.com/IMAGINARY/xfullscreen.git
 [submodule "alsa/apulse"]
 	path = alsa/apulse
 	url = https://github.com/i-rinat/apulse.git
-[submodule "mng/dockapp_dashboard"]
-	path = mng/dockapp_dashboard
-	url = https://github.com/IMAGINARY/dockapp_dashboard.git
