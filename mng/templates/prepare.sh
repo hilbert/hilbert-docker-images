@@ -1,4 +1,4 @@
-#! /bin/sh
+#!/bin/sh -xv
 
 ### Preparation for actual docker-framework
 

@@ -1,4 +1,5 @@
-#! /bin/sh
+#! /bin/sh  -xv
+
 unset DISPLAY
 
 while : 

@@ -1,6 +1,6 @@
-#!/bin/sh
-#
-# Run docker-compose within 'ddd'
+#!/bin/sh -xv
+
+# Run docker-compose (not within 'ddd'!)
 #
 # This script will attempt to mirror the host paths by using volumes for the
 # following paths:
