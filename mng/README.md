@@ -48,9 +48,11 @@ NOTE: rebooting the station can be done with: `shutdown.sh STATION -r now` or `r
 * `default.sh STATION_ID`: lunch all BG services and the specified (by default or cached choice) GUI app. on the station
 * `topswitch.sh STATION_ID APP2`: stop/kill the current GUI .app and start APP2
 * `finishall.sh STATION_ID`: stop/kill all BG services and the current GUI app on the station
-* `lastapp.sh STATION_ID`: retrieve station's `lastapp.cfg` and cache it on the server (in `./STATIONS/STATION_ID/`)
+* `topswitch_update.sh STATION_ID APP2`: runs `topswitch.sh STATION_ID APP2` and `lastapp.sh STATION_ID`
+* `default_update.sh STATION_ID`: runs `default.sh STATION_ID` and `lastapp.sh STATION_ID`
 
 ### Helpers: 
+* `lastapp.sh STATION_ID`: retrieve station's `lastapp.cfg` and cache it on the server (in `./STATIONS/STATION_ID/`)
 * `remote.sh STATION_ID CMD ARGS`: runs the command specified by `CMD ARGS` on the station via `ssh`. This is the main working-horse for the rest of management scripts. 
 * `docker.sh STATION_ID ARGS`: run `docker ARGS` on the station
 * `launcher.sh STATION_ID COMPOSE_CMD_WITH_ARGS`: run `docker-compose COMPOSE_CMD_WITH_ARGS` on the remote station within corresponding configuration directory (e.g. `~/.config/dockapp/`) with all the deployed configuration files after reading the necessary station configs.
@@ -77,6 +79,9 @@ NOTE: all of the following start from within station's config. cache (e.g. `~/.c
 * `default.sh`: lunch all BG services and the specified (by default or cached choice) GUI app. on the station. May update station's `lastapp.cfg`.
 * `topswitch.sh APP2`: stop/kill the current GUI .app and start APP2. May update station's `lastapp.cfg`.
 * `finishall.sh`: stop/kill all BG services and the current GUI app on the station. May update station's `lastapp.cfg`.
+
+### Helpers: 
+
 * `launcher.sh COMPOSE_CMD_WITH_ARGS`: run `docker-compose COMPOSE_CMD_WITH_ARGS` within corresponding configuration directory (e.g. `~/.config/dockapp/`) with all the config files after reading the necessary ones.
 This is the basis for higher-level scripts (`default.sh`, `finishall.sh`, `topswitch.sh` and `prepare.sh`).
 * `ptmx.sh`: misc. helper to try workaround docker setting wrong permissions on system's `/dev/pts/ptmx`
