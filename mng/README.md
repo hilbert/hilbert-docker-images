@@ -2,7 +2,7 @@
 
 ![Management structure](mng.png)
 
-## General notes:
+# General notes about shell scripts:
 
 * Exit codes may be as follows (see `status.sh`, others will be updated):
   * 0: success
@@ -12,29 +12,30 @@
 
 * One may need to capture both `STDOUT` and `STDERR`. Error messages (in `STDERR`) that are meant to be presented to users (admins) must be as informative as possible.
 
-## UI Back-end: high-level action scripts (see `dockapp_dashboard/server/scripts/`)
+# UI Back-end: high-level action scripts (see `dockapp_dashboard/server/scripts/`)
 
 * `list_stations.sh`: reads current config cache (`STATIONS/`)
-
 * `start_station.sh`: start stopped station
   1. `start.sh $station_id`: initiates station power-on (e.g. via WOL)
   2. `deploy.sh $station_id`: transfer neccessary configs/scripts if update is necessary (station may have nothing yet)
   3. `prepare.sh $station_id`: post-action upon changes due to above deployment
   4. `default_update.sh $station_id`: default framework start on the station (all BG services and GUI application) + updates server's copy of station's `lastapp.cfg`
-
 * `appchange_station.sh`: switch GUI applicaiton running on the station
   1. `topswitch_update.sh $station_id $app_id`: switches GUI app. on the station + updates server's copy of station's `lastapp.cfg`
-
 * `stop_station.sh`: stop station
   1. `finishall.sh $station_id`: gracefully finish (stop / kill / remove) all running framework' services
   2. `shutdown.sh $station_id -h now`: initiate system shutdown (with power-off) of the station (alternative: `poweroff.sh $station_id`)
 
 NOTE: rebooting the station can be done with: `shutdown.sh STATION -r now` or `reboot.sh STATION`
 
-* TODO(?): To be done once before front-end starts & upon request from CMS (external trigger!):
-  1. `sync.sh` (to synchronize local cache `STATIONS/` with station configs & scripts from CMS) 
+TODOs: 
+  * `sync.sh` (to synchronize local cache `STATIONS/` with station configs & scripts from CMS). 
+  Sync. is to be performed once before front-end starts & upon request from CMS (external trigger!):
+  * `list_stations.sh` should also provide descriptions
+  * `start.sh` may not wait for remote machine to power-on completely - there should be a wait on OMD afterwards
+  * `lastapp.cfg` will be updated during start and appchange in order to indicate the current GUI app - cheaper alternative to waiting for OMD to report that.
 
-## Server-side scripts (wrappers for generic interface):
+# Server-side scripts (wrappers for generic interface):
 
 * these scripts are to be directly accessible by high-level action scripts (described above) only. 
 * they all currently require server's config cache (`./STATIONS/`) to be alongside with them.
@@ -43,35 +44,38 @@ NOTE: rebooting the station can be done with: `shutdown.sh STATION -r now` or `r
 * Arguments coming AFTER the leading `STATION_ID` argument to server-side management scripts will be forwarded AS IS to the corresponding command run on the station.
 
 * `start.sh STATION_ID [WAKE_UP_ARGS]`: tries to initiate a powering-on (e.g. via wake-on-lan) for the station specified by `STATION_ID`
-* `deploy.sh STATION_ID`: deploys the content of config cache (`./STATIONS/STATION_ID/)` to the specified station via `scp` (or `sync.sh`)
+* `deploy.sh STATION_ID`: deploys the content of config cache (`./STATIONS/STATION_ID/)` to the specified station via `scp` (or maybe via `sync.sh`)
 * `prepare.sh STATION_ID`: prepares the station for framework execution. To be run once after any changes to station configs or management scripts (e.g. due to deployment/package installation)
 * `default.sh STATION_ID`: lunch all BG services and the specified (by default or cached choice) GUI app. on the station
 * `topswitch.sh STATION_ID APP2`: stop/kill the current GUI .app and start APP2
 * `finishall.sh STATION_ID`: stop/kill all BG services and the current GUI app on the station
+
+### Wrappers for UI (?):
+* `lastapp.sh STATION_ID`: retrieve station's `lastapp.cfg` and cache it on the server (in `./STATIONS/STATION_ID/`)
 * `topswitch_update.sh STATION_ID APP2`: runs `topswitch.sh STATION_ID APP2` and `lastapp.sh STATION_ID`
 * `default_update.sh STATION_ID`: runs `default.sh STATION_ID` and `lastapp.sh STATION_ID`
 
 ### Helpers: 
-* `lastapp.sh STATION_ID`: retrieve station's `lastapp.cfg` and cache it on the server (in `./STATIONS/STATION_ID/`)
-* `remote.sh STATION_ID CMD ARGS`: runs the command specified by `CMD ARGS` on the station via `ssh`. This is the main working-horse for the rest of management scripts. 
+* `remote.sh STATION_ID CMD ARGS`: runs the command specified by `CMD ARGS` on the station via `ssh`. This is the main working-horse for the rest of management scripts. NOTE: it is assumed that the station's user has password-less permissions to run the commands.
+* `remote_cmd.sh`: helper to run station-side scripts with the same name (see `./template/*.sh`)
 * `docker.sh STATION_ID ARGS`: run `docker ARGS` on the station
 * `launcher.sh STATION_ID COMPOSE_CMD_WITH_ARGS`: run `docker-compose COMPOSE_CMD_WITH_ARGS` on the remote station within corresponding configuration directory (e.g. `~/.config/dockapp/`) with all the deployed configuration files after reading the necessary station configs.
 
-NOTE: uses `SSH_OPTS` from Station configuration folder (see `station.cfg` and `access.cfg`) to do password-less command execution via `ssh`. 
+NOTE: `remote.sh`, `status.sh` and `lastapp.sh` use `SSH_OPTS` from config. cache (`station.cfg` and `access.cfg`) to do password-less command execution via `ssh`. 
 
-NOTE: it is assumed that the station's user has password-less permissions to run the commands.
-
-* `remote_cmd.sh`: helper to run station-side scripts with the same name (see `./template/*.sh`)
 * `remote_sbin.sh`: helper for running corresponding system commands on the station:
   * `reboot.sh STATION_ID [ARGS]` (run `sudo -n -P /usr/sbin/reboot ARGS` on the station)
   * `poweroff.sh STATION_ID [ARGS]` (run `sudo -n -P /usr/sbin/poweroff ARGS` on the station)
   * `shutdown.sh STATION_ID [ARGS]` (run `sudo -n -P /usr/sbin/shutdown ARGS` on the station)
  NOTE that these system commands require password-less permissions on the target station.
-* `./forall.sh SERVER_SIDE_SCRIPT_BASENAME ADDITIONAL_ARGUMENTS_FOR_SCRIPT`: for all valid and active `STATION_ID` in `./STATIONS/list` runs: `./SERVER_SIDE_SCRIPT_BASENAME.sh $STATION_ID ADDITIONAL_ARGUMENTS_FOR_SCRIPT`. 
+* `forall.sh SERVER_SIDE_SCRIPT_BASENAME ADDITIONAL_ARGUMENTS_FOR_SCRIPT`: for all valid and active `STATION_ID` in `./STATIONS/list` runs: `./SERVER_SIDE_SCRIPT_BASENAME.sh $STATION_ID ADDITIONAL_ARGUMENTS_FOR_SCRIPT`. 
 
-NOTE: the last helper may be replaced with argument to server-side scripts instead of leading station-id argument.
+TODO: 
+* `forall.sh` may be replaced with argument to server-side scripts instead of leading station-id argument.
+* `deploy.sh` (and maybe `lastapp.sh`) should better use rsync (e.g. `sync.sh`) instead of `scp`.
 
-## Station-side low-level implementations (only accessible via SSH):
+
+# Station-side low-level implementations (only accessible via SSH):
 
 NOTE: all of the following start from within station's config. cache (e.g. `~/.config/dockapp/`)
 
