@@ -7,7 +7,6 @@ digraph deps{ graph [label="an arrow means that its source is based on the arrow
 ":chrome" -> ":webbase" ;
 ":cups" -> ":base" ;
 ":dd" -> ":base" ;
-":ddd" -> "docker/compose:1.7.0" ;
 ":demo" -> ":main" ;
 ":dummy" -> ":x11" ;
 ":gui" -> ":xeyes" ;
@@ -16,6 +15,7 @@ digraph deps{ graph [label="an arrow means that its source is based on the arrow
 ":kivy" -> ":test" ;
 ":main" -> ":dd" ;
 ":mng" -> ":nodejs" ;
+":mywebapp" -> ":kiosk" ;
 ":nodejs" -> ":base" ;
 ":omd" -> ":base" ;
 ":omd_agent" -> ":dd" ;
