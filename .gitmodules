@@ -1,9 +1,9 @@
 [submodule "mng/dockapp_dashboard"]
-	path = mng/dockapp_dashboard
+	path = images/mng/dockapp_dashboard
 	url = https://github.com/hilbert/hilbert-ui.git
 [submodule "xeyes/xfullscreen"]
-	path = xeyes/xfullscreen
+	path = images/xeyes/xfullscreen
 	url = https://github.com/IMAGINARY/xfullscreen.git
 [submodule "alsa/apulse"]
-	path = alsa/apulse
+	path = images/alsa/apulse
 	url = https://github.com/i-rinat/apulse.git
