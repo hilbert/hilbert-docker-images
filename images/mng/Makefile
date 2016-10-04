@@ -7,7 +7,7 @@ RUNTERM=-it -a stdin -a stdout -a stderr
 OPTS=--skip-startup-files --skip-runit
 
 # CMD=bash
-RUN=/usr/local/bin/run.sh
+RUN=/usr/local/run.sh
 CMD=$(RUN)
 ARGS=
 
@@ -18,7 +18,7 @@ check_compose: $(TS)
 	docker-compose -p $(COMPOSE_PROJECT_NAME) run --rm -p 8081:8080 ${APP} ${CMD} ${ARGS}
 
 check_docker: $(TS)
-	docker run --rm ${RUNTERM} --label is_top_app=1 -v "/tmp/:/tmp/:rw" -v "${PWD}:/DOCKAPP:rw" -v "${HOME}/.ssh:/root/.ssh:ro"  -v "${HOME}:${HOME}:ro" -v "${PWD}/dockapp_dashboard:/usr/local/dockapp_dashboard:ro" -v "${PWD}/dockapp_dashboard/server/log:/usr/local/dockapp_dashboard/server/log:rw" -p 8081:8080 $(IMG) ${OPTS} -- ${CMD} ${ARGS}
+	docker run --rm ${RUNTERM} --label is_top_app=1 -v "/tmp/:/tmp/:rw" -p 8081:8080 $(IMG) ${OPTS} -- ${CMD} ${ARGS}
 
 check: check_compose
 
@@ -43,6 +43,6 @@ demo_compose: $(TS)
 	docker-compose -p $(COMPOSE_PROJECT_NAME) run --rm -p 8088:8080 demo
 
 demo_docker: $(TS)
-	docker run --rm ${RUNTERM} --label is_top_app=1 -v "/tmp/:/tmp/:rw" -v "${PWD}/dockapp_dashboard:/usr/local/dockapp_dashboard:ro" -p 8088:8080 $(IMG) ${OPTS} -- $(RUN) --test=true
+	docker run --rm ${RUNTERM} --label is_top_app=1 -p 8088:8080 $(IMG) ${OPTS} -- $(RUN) --test=true
 
 demo: demo_compose

@@ -3,7 +3,7 @@ server {
        server_name  localhost;
 
        location / {
-           root   /usr/local/dockapp_dashboard/public;
+           root   /usr/local/hilbert-ui/client/public;
            index index.html index.htm;
        }
 
