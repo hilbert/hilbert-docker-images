@@ -5,7 +5,7 @@
 ### Added
 - [Semantic Versioning](http://semver.org/)
 - Changelog according to (http://keepachangelog.com/)
-- License
+- License: Apache v2
 - Git branching model
 
 ### Changed
