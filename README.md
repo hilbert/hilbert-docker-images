@@ -223,3 +223,6 @@ docker rmi -f x11 test dummy
 ```
 docker ps -aq | xargs docker rm -fv
 ```
+
+## License
+This project is licensed under the [Apache v2 license](LICENSE). See also [Notice](NOTICE).
