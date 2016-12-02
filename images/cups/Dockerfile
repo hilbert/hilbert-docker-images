@@ -1,4 +1,4 @@
-FROM malex984/dockapp:base
+FROM hilbert/base
 # FROM debian:sid
 
 MAINTAINER Oleksandr Motsak <malex984@googlemail.com>

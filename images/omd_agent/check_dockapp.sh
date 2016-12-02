@@ -52,7 +52,7 @@ function bashjoin
 
 #TOP=$(docker ps -a -q --filter "label=is_top_app=1" --filter "label=com.docker.compose.project=dockapp" --filter "status=running" 2>/dev/null)
 # --format="{{.ID}};{{.Image}};Status: {{.Status}}, Created: {{.CreatedAt}}, Running: {{.RunningFor}}"
-# | sed 's!malex984/dockapp:!!g'
+# | sed 's!hilbert/!!g'
 
 
 
@@ -83,7 +83,7 @@ MSG=($(docker ps -a -q \
  2>/dev/null \
  | xargs -n 1 -I '{}' docker inspect --format='{{index .Config.Labels "com.docker.compose.service" }}@[{{json .State}}]&{{.Id}}' '{}' 2>/dev/null))
 #  --format="{{.Image}}@[Status:{{.Status}},Created:{{.CreatedAt}}]&{{.ID}}" \
-## | sed -e 's!^malex984/dockapp:!!g' -e 's![ ]!_!g'
+## | sed -e 's!^hilbert/!!g' -e 's![ ]!_!g'
 ### --filter "status=running" 
 
 if [ $? -ne 0 ]; then
@@ -134,7 +134,7 @@ MSG=($(docker ps -a -q \
  --filter "status=exited" 2>/dev/null \
  | xargs -n 1 -I '{}' docker inspect --format='{{index .Config.Labels "com.docker.compose.service" }}@[{{json .State}}]&{{.Id}}' '{}' 2>/dev/null))
 #  --format="{{.Image}}@[Status:{{.Status}},Created:{{.CreatedAt}}]&{{.ID}}" \
-##  | sed -e 's!^malex984/dockapp:!!g' -e 's![ ]!_!g'
+##  | sed -e 's!^hilbert/!!g' -e 's![ ]!_!g'
 
 if [ $? -ne 0 ]; then
   CRITICAL "cannot determine docker ps info"
@@ -182,7 +182,7 @@ MSG=($(docker ps -a -q \
  | xargs -n 1 -I '{}' docker inspect --format='{{index .Config.Labels "com.docker.compose.service" }}@[{{json .State}}]&{{.Id}}' '{}' 2>/dev/null))
 #  --filter "status=running" \
 #  --format="{{.Image}}@[Status:{{.Status}},Created:{{.CreatedAt}}]&{{.ID}}" \
-## | sed -e 's!^malex984/dockapp:!!g' -e 's![ ]!_!g'
+## | sed -e 's!^hilbert/!!g' -e 's![ ]!_!g'
 
 if [ $? -ne 0 ]; then
   CRITICAL "cannot determine docker ps info"

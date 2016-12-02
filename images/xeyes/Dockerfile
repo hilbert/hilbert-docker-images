@@ -1,4 +1,4 @@
-FROM malex984/dockapp:alsa
+FROM hilbert/alsa
 
 MAINTAINER Oleksandr Motsak <malex984@googlemail.com>
 

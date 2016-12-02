@@ -1,12 +1,11 @@
 #!/bin/bash
 
-U=malex984
-I=dockapp
+U=hilbert
 
 ## the following commands will generate the dependency tree for all our images  (deps.png)
 (
  echo "digraph deps{ graph [label=\"an arrow means that its source is based on the arrow's target\", labelloc=b]; node [color=white]; rankdir = RL;";
- git grep -i '^ *FROM .*' ../images/*/Dockerfile | sed -e 's@^../images/\(.*\)/Dockerfile: *FROM *@\1 @g' -e "s@$U/$I@@g" | awk '{ print "\":" $1 "\" -> \"" $2 "\" ;" }';
+ git grep -i '^ *FROM .*' ../images/*/Dockerfile | sed -e 's@^../images/\(.*\)/Dockerfile: *FROM *@\1 @g' -e "s@$U/@@g" | awk '{ print "\"" $1 "\" -> \"" $2 "\" ;" }';
 # echo '":x11.nv.V.E.R" -> ":x11" ;'
 # echo '":x11.vb.V.E.R" -> ":x11" ;'
 # echo '":test.nv.V.E.R" -> ":test" ;'

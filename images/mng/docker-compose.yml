@@ -5,7 +5,7 @@ services:
      - "is_top_app=1"
      - "description=Management front-end and back-end (simulated back-end management scripts)"
     build: .
-    image: malex984/dockapp:mng
+    image: hilbert/mng
     network_mode: host
     privileged: false
     stdin_open: false

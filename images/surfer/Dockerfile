@@ -1,4 +1,4 @@
-FROM malex984/dockapp:gui
+FROM hilbert/gui
 
 MAINTAINER Christian Stussak <stussak@mfo.de>
 

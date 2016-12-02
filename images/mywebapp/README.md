@@ -1,11 +1,11 @@
 # Step-by-step Dockerization of web browser (kiosk) together with heartbeat JS library and sample .html file using it: 
 
-* Create new sub-folder: `/mywebapp/` (the resulting image will be named `malex984/dockapp:mywebapp`)
+* Create new sub-folder: `/mywebapp/` (the resulting image will be named `hilbert/mywebapp`)
 
 * Specify the base image and your resources in a custom `Dockerfile`:
 
 ```
-FROM malex984/dockapp:kiosk # Base docker image with Web Browser
+FROM hilbert/kiosk # Base docker image with Web Browser
 RUN mkdir -p /usr/local/src/mywebapp # New folder for resources
 COPY test_heartbeatjs.html hb.js /usr/local/src/mywebapp/ # copy local files into docker image
 ```
@@ -17,7 +17,7 @@ version: '2.0'
 services:
   mywebapp:  # Name this service for docker-compose
     build: . # use Dockerfile and resources from this location
-    image: malex984/dockapp:mywebapp # new docker image
+    image: hilbert/mywebapp # new docker image
     labels: # framework's  labels:
      - "is_top_app=1"       # This is a top-front GUI appication 
      - "description=MyWebApp: internal HB.JS operation" # Application description for management UI

@@ -200,8 +200,8 @@ do
     ;;
 
     202)
-      echo "Generating /tmp/OGL.tgz with the use of malex984/dockapp:dummy... "
-      $SELFDIR/generate_ogl.sh "malex984/dockapp:dummy" /tmp/OGL.tgz
+      echo "Generating /tmp/OGL.tgz with the use of hilbert/dummy... "
+      $SELFDIR/generate_ogl.sh "hilbert/dummy" /tmp/OGL.tgz
       
     ;;
 

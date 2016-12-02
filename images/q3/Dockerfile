@@ -1,4 +1,4 @@
-FROM malex984/dockapp:xeyes
+FROM hilbert/xeyes
 
 MAINTAINER Oleksandr Motsak <malex984@googlemail.com>
 

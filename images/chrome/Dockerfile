@@ -1,5 +1,5 @@
 #! Base image with the necessary libraries for web-browsers:
-FROM malex984/dockapp:webbase
+FROM hilbert/webbase
 
 #! Person responsible for this image:
 MAINTAINER Oleksandr Motsak <malex984@googlemail.com>

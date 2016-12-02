@@ -1,4 +1,4 @@
-FROM malex984/dockapp:test
+FROM hilbert/test
 
 MAINTAINER Oleksandr Motsak <malex984@googlemail.com>
 

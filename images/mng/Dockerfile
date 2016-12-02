@@ -1,4 +1,4 @@
-FROM malex984/dockapp:nodejs
+FROM hilbert/nodejs
 
 MAINTAINER Oleksandr Motsak <malex984@googlemail.com>
 

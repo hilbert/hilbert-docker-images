@@ -45,7 +45,7 @@ ${GL}: ${TS} ${mkfile_dir}/../main/generate_ogl.sh
 	# mkdir -p ${GL} && tar xzvf ${GL}.tgz -C ${GL}
 check: ${TS} ${GL}
 	$(DOCKER) ps -a
-	$(DOCKER) run ${RUNTERM} --label is_top_app=1 --rm malex984/dockapp:xeyes ${OPTS} -- bash -c "which setup_ogl.sh; setup_ogl.sh $(GZ); sleep 1"
+	$(DOCKER) run ${RUNTERM} --label is_top_app=1 --rm hilbert/xeyes ${OPTS} -- bash -c "which setup_ogl.sh; setup_ogl.sh $(GZ); sleep 1"
 	$(DOCKER) ps -a
 
 clean:
