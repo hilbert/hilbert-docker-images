@@ -3,13 +3,19 @@
 APP="$1"
 shift
 ARGS="$@"
+
+U=hilbert
+IMAGE_VERSION="${IMAGE_VERSION:-latest}"
+IMG="$U/${APP}:${IMAGE_VERSION}" # IMG="$APP" #IMG="$U/$I:$APP"
+
+ID=$(docker images | awk '{ print "[" $1 ":" $2 "]" }' | sort | uniq | grep "\[${IMG}\]")
+
+if [ -z "$ID" ]; then
+  echo "ERROR: no such image '${IMG}'"
+  exit 2
+fi
+
 ##  echo "Creating $IMG for running '$ARGS'"
-
-IMG="$APP"
-
-#U=malex984
-#I=dockapp
-#IMG="$U/$I:$APP"
 
 [ -z "$X" ] && X="NOX" 
 # " -v /tmp/:/tmp/:rw -v /dev/:/dev/:rw "
@@ -30,7 +36,7 @@ IMG="$APP"
 RUNTERM="-it -a stdin -a stdout -a stderr --privileged --net=host --ipc=host --pid=host"
 OPTS="--skip-startup-files --no-kill-all-on-exit --quiet --skip-runit"
 
-# $RUNTERM --net=none --name appa "$U/$I:appa" $OPTS -- "/sbin/setuser" "ur" "/home/ur/bin/A.sh" "$@"
+# $RUNTERM --net=none --name appa "hilbert/appa" $OPTS -- "/sbin/setuser" "ur" "/home/ur/bin/A.sh" "$@"
 # -- /bin/bash $ARGS
 docker create $RUNTERM -e $X "$IMG" $OPTS -- $ARGS
 

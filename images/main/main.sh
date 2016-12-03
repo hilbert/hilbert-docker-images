@@ -12,10 +12,10 @@ fi
 SELFDIR=`dirname "$0"`
 SELFDIR=`cd "$SELFDIR" && pwd`
 
-U=malex984
-I=dockapp
-#
-PREFIX="$U/$I"
+U=hilbert
+PREFIX="$U/"
+IMAGE_VERSION="${IMAGE_VERSION:-latest}"
+# IMG="$U/${APP}:${IMAGE_VERSION}" # IMG="$APP" #IMG="$U/$I:$APP"
 
 if [ -z "$HIP" ]; then 
   HIP=$(ip route show 0.0.0.0/0 | grep -Eo 'via \S+' | awk '{ print $2 }')
@@ -200,8 +200,8 @@ do
     ;;
 
     202)
-      echo "Generating /tmp/OGL.tgz with the use of hilbert/dummy... "
-      $SELFDIR/generate_ogl.sh "hilbert/dummy" /tmp/OGL.tgz
+      echo "Generating /tmp/OGL.tgz with the use of hilbert/dummy:???... "
+      $SELFDIR/generate_ogl.sh 'dummy' /tmp/OGL.tgz
       
     ;;
 
@@ -409,19 +409,19 @@ done
 #       --lxc-conf='lxc.cgroup.devices.allow=c 226:* rwm' \
 #       --lxc-conf='lxc.cgroup.devices.allow=c 81:* rwm' \
 #       --lxc-conf='lxc.cgroup.devices.allow=c 116:* rwm' \
-#      "$U/$I:sound" /sbin/setuser ur /bin/bash
+#      "$U/sound:???" /sbin/setuser ur /bin/bash
 
 #echo "Pulling necessary images: "
-#docker pull "$U/$I:base"
-#docker pull "$U/$I:dd"
-#docker pull "$U/$I:main"
-#docker pull "$U/$I:menu"
-#docker pull "$U/$I:appa"
-#docker pull "$U/$I:alsa"
-#docker pull "$U/$I:xeyes"
-#docker pull "$U/$I:gui"
-#docker pull "$U/$I:x11"
-#docker pull "$U/$I:skype"
-#docker pull "$U/$I:q3"
-#docker pull "$U/$I:iceweasel"
-#docker pull "$U/$I:cups"
+#docker pull "$U/base:???"
+#docker pull "$U/dd:???"
+#docker pull "$U/main:???"
+#docker pull "$U/menu:???"
+#docker pull "$U/appa:???"
+#docker pull "$U/alsa:???"
+#docker pull "$U/xeyes:???"
+#docker pull "$U/gui:???"
+#docker pull "$U/x11:???"
+#docker pull "$U/skype:???"
+#docker pull "$U/q3:???"
+#docker pull "$U/iceweasel:???"
+#docker pull "$U/cups:???"

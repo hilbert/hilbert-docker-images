@@ -1,10 +1,9 @@
 #! /bin/bash
 
-U=malex984
-I=dockapp
-
+U=hilbert
 USER_UID=$(id -u)
 APP="q3"
+IMAGE_VERSION="${IMAGE_VERSION:-latest}"
 
 ARGS="$@"
   export XSOCK=/tmp/.X11-unix
@@ -49,7 +48,7 @@ ARGS="$@"
 RUNTERM="-it --rm -a stdin -a stdout -a stderr"
 OPTS="--skip-startup-files --no-kill-all-on-exit --quiet --skip-runit"
 
-# docker run $RUNTERM --net=none --name appa "$U/$I:appa" $OPTS -- "/sbin/setuser" "ur" "/home/ur/bin/A.sh" "$@"
+# docker run $RUNTERM --net=none --name appa "$U/appa:${IMAGE_VERSION}" $OPTS -- "/sbin/setuser" "ur" "/home/ur/bin/A.sh" "$@"
 
    sudo docker run --name $APP \
      $RUNTERM \
@@ -58,7 +57,7 @@ OPTS="--skip-startup-files --no-kill-all-on-exit --quiet --skip-runit"
      --lxc-conf='lxc.cgroup.devices.allow=c 226:* rwm' \
      --lxc-conf='lxc.cgroup.devices.allow=c 81:* rwm' \
      --lxc-conf='lxc.cgroup.devices.allow=c 116:* rwm' \
-     "$U/$I:$APP" \
+     "$U/$APP:${IMAGE_VERSION}" \
         "/bin/bash" "$ARGS"
 # $OPTS --
 ### "/sbin/setuser" "ur" 

@@ -5,7 +5,7 @@ Applications are within docker images to be pulled and run by Hilbert.
 Current top folders | Folder description
 ------------------- | -----------
 `helpers` | shell scripts shared between images
-`images`  | our base and application's images (previous `dockapp`'s repository)
+`images`  | our base and application's images
 
 ## All current images with dependencies are as follows: 
 ![Dependencies between docker images](docs/deps.png)
@@ -141,10 +141,9 @@ See for example `mng/docker-compose.yml` or `mng/Makefile`
 
 ## Old testing procedure:
 
-1. `setup.sh`: Pull or build necessary starting images.
-    Most of our images are currently available via a different tag in malex984/dockapp repository 
+1. `setup.sh`: Pull or build necessary starting images (`hilbert/*`).
+    Previously our images were available via a different tag in malex984/dockapp repository 
     (https://registry.hub.docker.com/u/malex984/dockapp/).
-    Since some of them are quite big please do consider building them instead of pulling!
     Run (and change) `setup.sh` in order to pull the base image and build starting images.
     *We assume the host linux to run docker service.*
 2. We are experimenting with different customization approaches:
@@ -158,8 +157,8 @@ See for example `mng/docker-compose.yml` or `mng/Makefile`
     which than will be tagged with local names (e.g. `test:latest` or `x11:latest`). 
     *We assume host system to be fully pre-configured (and all necessary kernel modules installed and loaded).*
     Therefore we avoid installing/building kernel modules inside docker container (e.g. using `dkms`).
-3. `runme.sh`: Launch this dockapp application.
-    The shell script `runme.sh` is supposed to be the dockapp's entry point.
+3. `runme.sh`: Launch demo prototype application.
+    The shell script `runme.sh` is supposed to be the demo entry point.
     Using host docker it runs `main` (or its alteration if available) image,
     which contains a glue-together script `main.sh` that 
     now overtakes the control (!) over the host system (docker service and `/dev`).    
@@ -213,9 +212,10 @@ that.
 docker rmi $(docker images -f "dangling=true" -q)
 ```
 
-### Cleanup dockapp-related images:
+### Cleanup Hilbert-related images:
 ```
-docker images | grep malex984/dockapp | awk ' { print $1 ":" $2 } ' | xargs docker rmi -f 
+docker images | grep malex984/dockapp | awk ' { print $1 ":" $2 } ' | xargs docker rmi -f # old 
+docker images | grep 'hilbert/' | awk ' { print $1 ":" $2 } ' | xargs docker rmi -f # new?
 docker rmi -f x11 test dummy
 ```
 

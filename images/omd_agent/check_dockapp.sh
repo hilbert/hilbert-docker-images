@@ -14,6 +14,8 @@
 #   CRITICAL - container is stopped 2
 #   UNKNOWN - does not exist 3
 
+COMPOSE_PROJECT_NAME="${COMPOSE_PROJECT_NAME:-hilbert}" # COMPOSE_PROJECT_NAME="${COMPOSE_PROJECT_NAME:-dockapp}"
+
 function OK
 {
   msg="$@"
@@ -50,7 +52,7 @@ function bashjoin
 }
 
 
-#TOP=$(docker ps -a -q --filter "label=is_top_app=1" --filter "label=com.docker.compose.project=dockapp" --filter "status=running" 2>/dev/null)
+#TOP=$(docker ps -a -q --filter "label=is_top_app=1" --filter "label=com.docker.compose.project=${COMPOSE_PROJECT_NAME}" --filter "status=running" 2>/dev/null)
 # --format="{{.ID}};{{.Image}};Status: {{.Status}}, Created: {{.CreatedAt}}, Running: {{.RunningFor}}"
 # | sed 's!hilbert/!!g'
 
@@ -79,7 +81,7 @@ function res_usage
 function check_dockapp_top1
 {
 MSG=($(docker ps -a -q \
- --filter "label=is_top_app=1" --filter "label=com.docker.compose.project=dockapp" \
+ --filter "label=is_top_app=1" --filter "label=com.docker.compose.project=${COMPOSE_PROJECT_NAME}" \
  2>/dev/null \
  | xargs -n 1 -I '{}' docker inspect --format='{{index .Config.Labels "com.docker.compose.service" }}@[{{json .State}}]&{{.Id}}' '{}' 2>/dev/null))
 #  --format="{{.Image}}@[Status:{{.Status}},Created:{{.CreatedAt}}]&{{.ID}}" \
@@ -130,7 +132,7 @@ OK "TOP: $M|t=$N;;;0; $U"
 function check_dockapp_exited
 {
 MSG=($(docker ps -a -q \
- --filter "label=is_top_app" --filter "label=com.docker.compose.project=dockapp" \
+ --filter "label=is_top_app" --filter "label=com.docker.compose.project=${COMPOSE_PROJECT_NAME}" \
  --filter "status=exited" 2>/dev/null \
  | xargs -n 1 -I '{}' docker inspect --format='{{index .Config.Labels "com.docker.compose.service" }}@[{{json .State}}]&{{.Id}}' '{}' 2>/dev/null))
 #  --format="{{.Image}}@[Status:{{.Status}},Created:{{.CreatedAt}}]&{{.ID}}" \
@@ -178,7 +180,7 @@ CRITICAL "$N exited apps/services: $M|e=$N;;;0; $U"
 function check_dockapp_back
 {
 MSG=($(docker ps -a -q \
- --filter "label=is_top_app=0" --filter "label=com.docker.compose.project=dockapp" 2>/dev/null \
+ --filter "label=is_top_app=0" --filter "label=com.docker.compose.project=${COMPOSE_PROJECT_NAME}" 2>/dev/null \
  | xargs -n 1 -I '{}' docker inspect --format='{{index .Config.Labels "com.docker.compose.service" }}@[{{json .State}}]&{{.Id}}' '{}' 2>/dev/null))
 #  --filter "status=running" \
 #  --format="{{.Image}}@[Status:{{.Status}},Created:{{.CreatedAt}}]&{{.ID}}" \
@@ -242,7 +244,7 @@ fi
 
 #! NOTE: all our containers bear is_top_app label + are to be started via docker composer!
 # --format="{{.Image}} @ [Status: {{.Status}}, Created: {{.CreatedAt}}]" 
-docker ps -a -q --filter "label=is_top_app"  --filter "label=com.docker.compose.project=dockapp" 2>/dev/null | sort > "$tmpdir/my"
+docker ps -a -q --filter "label=is_top_app"  --filter "label=com.docker.compose.project=${COMPOSE_PROJECT_NAME}" 2>/dev/null | sort > "$tmpdir/my"
 if [ $? -ne 0 ]; then
   CRITICAL "cannot determine docker ps info"
 fi

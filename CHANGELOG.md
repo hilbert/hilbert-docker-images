@@ -9,7 +9,7 @@
 - Git branching model
 
 ### Changed
-- Restructurization/migration of older `malex984/dockapp` to `hilbert/hilbert-*`
+- Restructurization/migration of older `malex984/dockapp:*` to `hilbert/*`
 
 ### Security 
 - Starting to remove `sudo` and `privileged` requirements 

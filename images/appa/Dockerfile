@@ -1,4 +1,6 @@
+#ARG IMAGE_VERSION=latest
 FROM hilbert/base
+#:${IMAGE_VERSION}
 
 MAINTAINER Oleksandr Motsak <malex984@googlemail.com>
 

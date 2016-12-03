@@ -1,9 +1,9 @@
 #! /bin/bash
 
-U=malex984
-I=dockapp
-
-IMG="$U/$I:appchoo"
+U=hilbert
+APP=appchoo
+IMAGE_VERSION="${IMAGE_VERSION:-latest}"
+IMG="$U/appchoo:$IMAGE_VERSION"
 
 #PP="$1"
 #shift
@@ -24,7 +24,7 @@ if [ -z "$ID" ]; then
 
   OPTS="--skip-startup-files --no-kill-all-on-exit --quiet --skip-runit"
 
-  #docker run --rm $RUNTERM --net=host "$U/$I:menu" $OPTS -- "/usr/local/bin/menu.sh" "$@"
+  #docker run --rm $RUNTERM --net=host "hilbert/menu:???" $OPTS -- "/usr/local/bin/menu.sh" "$@"
   #exit $?
   [ -z "$X" ] && X="X" 
 

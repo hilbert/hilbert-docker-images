@@ -6,42 +6,17 @@ APP="$1"
 shift
 ARGS="$@"
 
-#U=malex984
-#I=dockapp
 
+# The following is an adaptation to the new naming schema: hilbert/$APP:$VERSION
+U=hilbert
+IMAGE_VERSION="${IMAGE_VERSION:-latest}"
+IMG="$U/${APP}:${IMAGE_VERSION}" # IMG="$APP" #IMG="$U/$I:$APP"
 
-## full image name?
-ID=$(docker images | awk '{ print "[" $1 ":" $2 "]" }' | sort | uniq | grep "\[$APP\]" )
+ID=$(docker images | awk '{ print "[" $1 ":" $2 "]" }' | sort | uniq | grep "\[${IMG}\]")
 
-# yes?
-if [ ! -z "$ID" ]; then  
-  IMG="$APP"
-  APP=$(echo "$IMG" | sed 's@^.*:@@g')  
-  if [ "$APP" = "latest" ]; then
-    APP=$(echo "$IMG" | sed -e 's@:.*$@@g' -e 's@/@_@g')  
-  fi
-else
-# short local image name?
-  ID=$(docker images | awk '{ print "[" $1 "]" }' | sort | uniq | grep "\[$APP\]" )
-  
-  # yes?
-  if [ ! -z "$ID" ]; then  
-    IMG="$APP:latest"
-  else
-    # no?
-    
-    TAG=$(echo "$APP" | sed 's@^.*/.*:@@g')
-    
-    if [ "x$APP" = "x$TAG" ]; then 
-      # missing prefix for a missing standard image
-      IMG="$U/$I:$TAG"
-    else
-      # is it a full name for a missing image?
-      IMG="$APP"
-      APP="$TAG"
-    fi  
-    unset TAG
-  fi  
+if [ -z "$ID" ]; then
+  echo "ERROR: no such image '${IMG}'"
+  exit 2
 fi
 
 APP="c_$APP"
@@ -120,7 +95,7 @@ docker rm -f "$ID"
 
 exit $RET
 
-# $RUNTERM --net=none --name appa "$U/$I:appa" $OPTS -- "/sbin/setuser" "ur" "/home/ur/bin/A.sh" "$@"
+# $RUNTERM --net=none --name appa "$U/appa:???" $OPTS -- "/sbin/setuser" "ur" "/home/ur/bin/A.sh" "$@"
 # -- /bin/bash $ARGS
 ### "/sbin/setuser" "ur" 
 

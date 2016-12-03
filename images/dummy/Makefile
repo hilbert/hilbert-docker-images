@@ -24,7 +24,7 @@ ${GL}: ${TS} ${mkfile_dir}/../main/generate_ogl.sh
 	docker images
 	docker ps -a
 	echo "Customizing with '${mkfile_dir}/generate_ogl.sh "${IMG}" "${GL}" > ${mkfile_dir}/${APP}_${D}.diff'"
-	${mkfile_dir}/../main/generate_ogl.sh "${IMG}" "${GL}" > ${mkfile_dir}/${APP}_${D}.diff
+	${mkfile_dir}/../main/generate_ogl.sh "${APP}" "${GL}" > ${mkfile_dir}/${APP}_${D}.diff
 	docker images
 	docker ps -a
 	ls -la ${GL} > ${DS}

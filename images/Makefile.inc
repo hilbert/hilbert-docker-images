@@ -11,7 +11,7 @@ TR     ?= tr
 DOCKER ?= docker
 COMPOSE?= docker-compose
 
-COMPOSE_PROJECT_NAME ?= dockapp
+COMPOSE_PROJECT_NAME ?= hilbert
 
 # Makefile.inc is expected to be on the top level!
 top_dir       :=$(dir $(abspath $(lastword $(MAKEFILE_LIST))))
@@ -21,13 +21,15 @@ current_dir   := $(notdir $(patsubst %/,%,$(mkfile_dir)))
 
 
 #### Docker Hub-related refs:
-U    ?= malex984
-I    ?= dockapp
-REPO ?= ${U}/${I}
+U    ?= hilbert
+REPO ?= ${U}
+# /${I}
+# TODO: Add tag depending on git branch!?
+IMAGE_VERSION ?= latest
 
 APP  ?= $(shell $(ECHO) "${current_dir}" | $(SED) -e 's@[\-]@_@g' | $(TR) '[:upper:]' '[:lower:]')
-IMG  ?= ${REPO}:${APP}
-TAG  ?= imaginary.mfo.de:5000/${U}/${APP}
+IMG  ?= ${REPO}/${APP}:${IMAGE_VERSION}
+TAG  ?= imaginary.mfo.de:5000/${U}/${APP}:${IMAGE_VERSION}
 
 DF     :=${mkfile_dir}/Dockerfile
 
@@ -40,7 +42,7 @@ COPYFILES2 :=$(shell $(GREP) -iE '^ *COPY ' ${DF} | $(SED) -e 's@^ *COPY  *@@g' 
 ACOPYFILES :=$(patsubst %,${mkfile_dir}/%,${COPYFILES})
 ACOPYFILES2:=$(patsubst %,${mkfile_dir}/%,${COPYFILES2})
 
-TS := ${top_dir}/${U}_${I}_${APP}.timestamp
+TS := ${top_dir}/${U}_${APP}_${IMAGE_VERSION}.timestamp
 SS := ${top_dir}/${BASE}.timestamp
 
 
@@ -66,7 +68,7 @@ debug:
 	$(ECHO) "Auto Deps         : ${ACOPYFILES2}"
 
 
-DOCKER_BUILD_OPTS=--pull=false --force-rm=true --rm=true
+DOCKER_BUILD_OPTS=--pull=false --force-rm=true --rm=true --build-arg IMAGE_VERSION=${IMAGE_VERSION}
 # --no-cache=true
 
 # ${TS} ${SS} 
@@ -88,7 +90,7 @@ ${top_dir}/docker_compose_1.6.2.timestamp:
 	$(DOCKER) images | grep -E 'docker[\/]compose *1[\.]6[\.]2 ' > $@
 
 ${TS}:
-	$(DOCKER) images | $(GREP) -E "^${U}/${I}  *${APP}  *" > $@
+	$(DOCKER) images | $(GREP) -E "^${U}/${APP}  *" > $@
 #	${TS}
 # ${SS} 
 rebuild: ${DF} ${ACOPYFILES} ${ACOPYFILES2} ${mkfile_dir}/Makefile $(abspath $(lastword $(MAKEFILE_LIST)))

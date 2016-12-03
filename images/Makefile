@@ -2,6 +2,7 @@
 
 #include Makefile.inc
 
+# TODO: use shell ls to get all sub-folders
 DIRS = \
 base \
 dd \
@@ -30,17 +31,19 @@ skype
 
 all: build
 
-build: phusion_baseimage_0.9.18.timestamp docker_compose_1.6.2.timestamp
+build: phusion_baseimage_0.9.18.timestamp
+
+# docker_compose_1.6.2.timestamp
 
 phusion_baseimage_0.9.18.timestamp: 
 	docker pull 'phusion/baseimage:0.9.18'
 	docker images | grep -E 'phusion[\/]baseimage *0[\.]9[\.]18 ' > $@
 
 
-docker_compose_1.6.2.timestamp:
-	docker pull 'docker/compose:1.6.2'
-	docker images | grep -E 'docker[\/]compose *1[\.]6[\.]2 ' > $@
+#docker_compose_1.6.2.timestamp:
+#	docker pull 'docker/compose:1.6.2'
+#	docker images | grep -E 'docker[\/]compose *1[\.]6[\.]2 ' > $@
 
-force_look :
+force_look:
 	true
 

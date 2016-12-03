@@ -6,6 +6,8 @@ if [ -r "/tmp/lastapp.cfg" ]; then
     source "/tmp/lastapp.cfg"
 fi
 
+### TODO: FIXME: reading `current_app` from `/tmp/lastapp.cfg` !!!
+
 APP="${current_app:-UNKNOWN_APPLICATION}"
 TIME=`date +"%s_%N"`
 QR="$@"

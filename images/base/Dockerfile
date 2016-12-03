@@ -1,3 +1,4 @@
+# ARG IMAGE_VERSION=latest
 FROM phusion/baseimage:0.9.18
 
 MAINTAINER Oleksandr Motsak <malex984@googlemail.com>

@@ -15,10 +15,14 @@ ln -s check_dockapp.sh check_dockapp_foreign.sh && \
 ln -s check_dockapp.sh check_dockapp_top1.sh && \
 ln -s check_dockapp.sh check_dockapp_heartbeat.sh
 
-COPY logwatch.cfg mrpe.cfg /etc/check_mk/
-COPY heartbeat2.py omd_agent_entrypoint.sh /usr/local/bin/
-
 EXPOSE 6556
 EXPOSE 8888
+
+COPY logwatch.cfg mrpe.cfg /etc/check_mk/
+COPY omd_agent_entrypoint.sh /usr/local/bin/
+
+#RUN git clone https://github.com/hilbert/hilbert-heartbeat.git /usr/local/src
+RUN curl -L "https://raw.githubusercontent.com/hilbert/hilbert-heartbeat/devel/server/heartbeat2.py" > /usr/local/bin/heartbeat2.py
+
 
 # VOLUME ...?

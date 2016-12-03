@@ -1,0 +1,608 @@
+version: '2.1'
+services:
+  base:
+    image: hilbert/base:${IMAGE_VERSION:-latest}
+    build: base/
+    volumes:
+     - /tmp:/tmp:rw
+     - ${PWD}:/DOCKAPP
+     - /etc/localtime:/etc/localtime:ro 
+    labels:
+     - "is_top_app=0"
+     - "description=Base for dockapp services"
+    working_dir: /DOCKAPP
+    privileged: false
+    network_mode: "host"
+    environment:
+     - CFG_DIR=/DOCKAPP
+     - CUPS_SERVER
+     - ALSA_CARD
+     - LANGUAGE
+     - MOUSE_CURSOR
+     - CUSTOMIZATION
+    entrypoint:
+     - /bin/sh
+
+  ddd:
+    extends: 
+      service: base
+    image: ${DOCKER_COMPOSE_IMAGE}
+    build: ddd/
+    labels:
+     - "is_top_app=0"
+     - "description=Docker CLI + Compose"
+    volumes:
+     - ${NO_PROXY}:${NO_PROXY}
+    environment:
+     - NO_PROXY
+    entrypoint: 
+     - /bin/sh
+   
+  admin:
+    extends: 
+      service: ddd
+    volumes:
+     - /dev:/dev:rw
+     - /run/udev:/run/udev
+     - /sys/fs/cgroup:/sys/fs/cgroup:ro
+     - /run/systemd:/run/systemd
+     - /var/run/dbus/system_bus_socket:/var/run/dbus/system_bus_socket
+    labels:
+     - "is_top_app=0"
+    cap_add:
+     - SYS_ADMIN
+     - NET_ADMIN
+     - ALL
+     
+  consul_base:
+    extends:
+      service: admin
+    image: progrium/consul
+    ports:
+     - "8400:8400"
+     - "8500:8500"
+     - "8600:53/udp"
+    labels:
+     - "is_top_app=0"
+    stdin_open: false
+    tty: false
+    restart: "on-failure:5"
+    entrypoint: 
+     - /bin/start
+
+  consul_agent:
+    extends:
+      service: consul_base
+    command: 
+     - "-advertise"
+     - "{station_public_ip}"
+     - "-join"
+     - "${management_server_ip}"
+
+  consul:
+    extends:
+      service: consul_base
+    volumes:
+     - "${PWD}/KV:/data"
+    command: 
+     - "-server"
+     - "-bootstrap"
+     - "-advertise"
+     - "{station_public_ip}"
+     - "-ui-dir"
+     - "/ui"
+
+  registrator:
+    extends:
+      service: admin
+    image: gliderlabs/registrator:latest
+    entrypoint:
+     - "/bin/registrator"
+    command:
+     - "consul://${management_server_ip}:8500"
+
+  x11:
+    extends:
+      service: admin
+    image: hilbert/dummy:${IMAGE_VERSION:-latest}
+    build: dummy/
+    privileged: true
+    stdin_open: false
+    tty: false
+    restart: "on-failure:5"
+    entrypoint: 
+     - /sbin/my_init
+     - --skip-runit
+     - --skip-startup-files
+     - --
+    command: 
+     - startXephyr.sh
+
+  xephyr:
+    extends:
+      service: x11
+    environment:
+     - XCMD=Xephyr
+
+  xvfb:
+    extends:
+      service: x11
+    environment:
+     - XCMD=Xvfb
+    command: 
+     - startXephyr.sh
+     - "-screen" 
+     - "0"
+     - "1024x768x16"
+
+  omd_agent:
+    extends: 
+      service: ddd
+    image: hilbert/omd_agent:${IMAGE_VERSION:-latest}
+    build: omd_agent/
+    environment:
+     - HB_PORT
+     - HB_HOST
+     - HB_URL
+    ports:
+     - "6556"
+     - "${HB_PORT}"
+    stdin_open: false
+    tty: false
+    restart: "on-failure:5"
+    labels:
+     - "is_top_app=0"
+    entrypoint: 
+     - /sbin/my_init
+     - --skip-runit
+     - --skip-startup-files
+     - --
+    command: 
+     - omd_agent_entrypoint.sh
+
+  hb_test:
+    extends: 
+      service: base
+    privileged: false
+    image: hilbert/omd_agent:${IMAGE_VERSION:-latest}
+    build: omd_agent/
+    environment:
+     - HB_PORT
+     - HB_HOST
+     - HB_URL
+     - HB_INIT_TIMEOUT
+     - APP_ID=hb_test
+    stdin_open: false
+    tty: false
+    restart: "on-failure:5"
+    labels:
+     - "is_top_app=1"
+     - "description=HB test in python"
+    entrypoint: 
+     - /sbin/my_init
+     - --skip-runit
+     - --skip-startup-files
+     - --
+    command: 
+     - python2.7 
+     - /usr/local/bin/heartbeat2.py 
+
+
+  hb_test_a:
+    extends: 
+      service: base
+    image: hilbert/appa:${IMAGE_VERSION:-latest}
+    build: appa/
+    environment:
+     - APP_ID=hb_test_a
+     - HB_PORT
+     - HB_HOST
+     - HB_URL
+     - HB_INIT_TIMEOUT
+    stdin_open: false
+    tty: false
+    restart: "on-failure:5"
+    labels:
+     - "description=HB test in bash: A"
+     - "is_top_app=1"
+    entrypoint: 
+     - /sbin/my_init
+     - --skip-runit
+     - --skip-startup-files
+     - --
+     - /usr/local/bin/A.sh
+    command: 
+     - AHB_HelloA
+
+  hb_test_b:
+    extends: 
+      service: hb_test_a
+    environment:
+     - APP_ID=hb_test_b
+    labels:
+     - "description=HB test in bash: B"
+    command: 
+     - BHB_HelloB
+
+  hb_test_c:
+    extends: 
+      service: hb_test_a
+    environment:
+     - APP_ID=hb_test_c
+    labels:
+     - "description=HB test in bash: C"
+    command: 
+     - CHB_HelloC
+
+  busybox:
+    extends: 
+      service: admin
+    labels:
+     - "is_top_app=0"
+    image: busybox
+    entrypoint: 
+     - /bin/sh
+    
+  ptmx:
+    extends: 
+      service: busybox
+    stdin_open: false
+    tty: false
+    restart: "on-failure:5"
+    command:
+     - "./ptmx.sh"
+
+  reboot:
+    extends: 
+      service: busybox
+    stdin_open: false
+    tty: false
+    command:
+     - reboot
+
+  omd_anew:
+    extends: 
+      service: base
+    image: hilbert/omd:${IMAGE_VERSION:-latest}
+    build: omd/
+    ports:
+     - "80"
+     - "514"
+     - "5667"
+     - "5000"
+    labels:
+     - "is_top_app=0"
+    stdin_open: false
+    tty: false
+    restart: "on-failure:5"
+    volumes:
+     - "omd_data:/OMD"
+    entrypoint: 
+     - /sbin/my_init
+     - --skip-runit
+     - --skip-startup-files
+     - --
+    command: 
+     - omd_entrypoint.sh
+
+  omd_persistent:
+    extends: 
+      service: omd_anew
+    volumes:
+     - "omd_data:/omd/sites"
+
+  pa:
+    extends: 
+      service: admin
+    labels:
+     - "is_top_app=0"
+    volumes:
+     - ${PULSE_SOCKET}:/run/pulse/native
+     - ${PULSE_COOKIE}:/run/pulse/cookie
+    environment:
+     - PULSE_SERVER=/run/pulse/native
+     - PULSE_COOKIE=/run/pulse/cookie
+  
+  gui:
+    extends: 
+      service: pa
+    labels:
+     - "is_top_app=0"
+    environment:
+     - QT_X11_NO_MITSHM=1
+     - XLIB_SKIP_ARGB_VISUALS=1
+     - XAUTHORITY="${XAUTH}"
+     - DISPLAY
+    stdin_open: false
+    tty: false
+    entrypoint: 
+     - /sbin/my_init
+     - --skip-runit
+     - --skip-startup-files
+     - --
+
+  qrhandler:
+    extends: 
+      service: gui
+    labels:
+     - "is_top_app=0"
+    image: hilbert/qrhandler:${IMAGE_VERSION:-latest}
+    build: qrhandler/
+    restart: "on-failure:5"
+    volumes:
+     - supernova:/supernova
+    environment:
+     - QR_DEVICE_ID
+     - qrs_screenshot_message
+     - qr_uploadlocs
+    command: 
+     - qrhandler.sh
+ 
+  x11vnc:
+    extends: 
+      service: gui
+    labels:
+     - "is_top_app=0"
+    image: hilbert/x11vnc:${IMAGE_VERSION:-latest}
+    build: x11vnc/
+    restart: "on-failure:5"
+    ports:
+     - "127.0.0.1:5900-5910:5900-5910"
+    environment:
+     - VNC_PASSWD
+    command: 
+     - x11vnc.sh
+
+
+  xeyes:
+    extends: 
+      service: gui
+    image: hilbert/xeyes:${IMAGE_VERSION:-latest}
+    build: xeyes/
+    restart: "on-failure:5"    
+    labels:
+     - "is_top_app=1"
+    command: 
+     - xeyes
+    
+  kiosk:
+    extends: 
+      service: gui
+    image: hilbert/kiosk:${IMAGE_VERSION:-latest}
+    build: kiosk/
+    restart: "on-failure:5"
+    labels:
+     - "is_top_app=1"
+     - "description=Kiosk Web Browser GUI app."
+    environment:
+     - HB_PORT
+     - HB_HOST
+     - HB_URL
+     - HB_INIT_TIMEOUT=9
+    entrypoint: 
+     - /sbin/my_init 
+     - --skip-runit 
+     - --skip-startup-files
+     - -- 
+     - hb_wrapper.sh
+     - launch.sh
+     - browser.sh
+     - -l
+    command: 
+     - "${WEBGL_APPS}/"
+     
+  IB_kiosk:
+    extends: 
+      service: kiosk
+    labels:
+     - "description=Image Blend under Kiosk"
+    environment:
+     - APP_ID=light_pollution
+    command: 
+     - "${WEBGL_APPS}/WebGL_ImageBlend_New/fade_08_new_05b_hb.html?HB_APP_ID=light_pollution&HB_URL=${HB_URL}"
+
+
+  HZ_kiosk:
+    extends: 
+      service: kiosk
+    labels:
+     - "description=Habitable Zone under Kiosk"
+    environment:
+     - APP_ID=habitable_zones
+    command: 
+     - "${WEBGL_APPS}/WebGL_Habitable_New_HB/gravity_habitable_new_05_hb2.html?HB_APP_ID=habitable_zones&HB_URL=${HB_URL}"
+
+  chrome:
+    extends: 
+      service: gui
+    image: hilbert/chrome:${IMAGE_VERSION:-latest}
+    build: chrome/
+    labels:
+     - "is_top_app=1"
+     - "description=Google Chrome Web Browser GUI app."
+    restart: "on-failure:5"
+    environment:
+     - HB_PORT
+     - HB_HOST
+     - HB_URL
+     - HB_INIT_TIMEOUT=9
+    entrypoint: 
+     - /sbin/my_init 
+     - --skip-runit 
+     - --skip-startup-files
+     - -- 
+     - hb_wrapper.sh
+     - launch.sh
+     - browser.sh
+    command: 
+     - "${WEBGL_APPS}/"
+
+  IB_chrome:
+    extends: 
+      service: chrome
+    labels:
+     - "description=Image Blend under Chrome"
+    environment:
+     - APP_ID=IB_chrome
+    command:
+     - "${WEBGL_APPS}/WebGL_ImageBlend_New/fade_08_new_05b_hb.html?HB_URL=${HB_URL}&HB_APP_ID=IB_chrome"
+
+  HZ_chrome:
+    extends: 
+      service: chrome 
+    labels:
+     - "description=Habitable Zone under Chrome"
+    environment:
+     - APP_ID=HZ_chrome
+    command: 
+     - "${WEBGL_APPS}/WebGL_Habitable_New_HB/gravity_habitable_new_05_hb2.html?HB_URL=${HB_URL}&HB_APP_ID=HZ_chrome"
+
+  opera:
+    extends: 
+      service: chrome
+    labels:
+     - "description=Opera Web Browser GUI app."
+    environment:
+     - GOOGLE_CHROME=opera
+
+  chromium:
+    extends: 
+      service: chrome
+    labels:
+     - "description=Chromium Web Browser GUI app."
+    environment:
+     - GOOGLE_CHROME=chromium-browser
+
+  kivy:
+    extends: 
+      service: gui
+    image: hilbert/kivy:${IMAGE_VERSION:-latest}
+    build: kivy/
+    labels:
+     - "is_top_app=1"
+    restart: "on-failure:5"
+    entrypoint: 
+     - /sbin/my_init 
+     - --skip-runit 
+     - --skip-startup-files
+     - -- 
+     - launch.sh
+    command:
+     - /usr/local/src/Deflectouch/run.sh
+
+  main:
+    extends: 
+      service: gui
+    image: hilbert/main:${IMAGE_VERSION:-latest}
+    labels:
+     - "is_top_app=1"
+    restart: "on-failure:5"
+    environment:
+     - MENU_TRY="gui"
+    entrypoint: 
+     - /sbin/my_init 
+     - --skip-runit 
+     - --skip-startup-files
+     - -- 
+     - /usr/local/bin/main.sh
+
+  demo:
+    extends: 
+      service: gui
+    image: hilbert/demo:${IMAGE_VERSION:-latest}
+    labels:
+     - "is_top_app=1"
+     - "description=Choose demo app"
+    restart: "on-failure:5"
+    environment:
+     - MENU_TRY="gui"
+    entrypoint: 
+     - /sbin/my_init 
+     - --skip-runit 
+     - --skip-startup-files
+     - -- 
+     - /usr/local/bin/demo.sh
+
+  x11vnc:
+    extends: 
+      service: gui
+    image: hilbert/x11vnc:${IMAGE_VERSION:-latest}
+    labels:
+     - "is_top_app=0"
+    restart: "on-failure:5"
+    entrypoint: 
+     - /sbin/my_init 
+     - --skip-runit 
+     - --skip-startup-files
+     - -- 
+     - /usr/local/bin/x11vnc.sh     
+
+
+  registry:
+    image: registry:2
+    labels:
+     - "is_top_app=0"
+     - "description=Docker Private Registry"
+    ports:
+     - "8055:5000"
+    restart: "on-failure:5"
+    volumes:
+     - "${PWD}/REG/DATA:/var/lib/registry"
+     
+  registry_tls:
+    extends:
+      service: registry
+    volumes:
+     - "${PWD}/REG/CERT:/certs"
+    labels:
+     - "description=Docker Private Registry (with TLS)"
+    environment:
+     - "REGISTRY_HTTP_TLS_CERTIFICATE=/certs/domain.crt"
+     - "REGISTRY_HTTP_TLS_KEY=/certs/domain.key"
+     
+
+  dockapp:
+    extends: 
+      service: gui
+    volumes:
+     - .:/DOCKAPP
+    working_dir: /DOCKAPP/
+    labels:
+     - "is_top_app=1"
+
+  register:
+    extends: 
+      service: dockapp
+    image: imaginary.mfo.de:5000/malex984/alpine
+    devices:
+     - "/dev/bus/usb:/dev/bus/usb:rwm"
+     - "/dev/nvidia0:/dev/nvidia0"
+     - "/dev/nvidiactl:/dev/nvidiactl"
+     - "/dev/dri:/dev/dri"
+     - "/dev/snd:/dev/snd"
+     - "/dev/shm:/dev/shm"
+     - "/dev/input:/dev/input"
+    network_mode: "host"
+    ipc: host
+    pid: "host"
+
+  x11_xclock:
+    extends: 
+      service: admin
+    image: alpine:3.4
+    stdin_open: false
+    tty: false
+    restart: "on-failure:5"
+    labels:
+     - "is_top_app=1"
+    entrypoint: 
+     - /bin/sh
+     - -c
+    command:
+     - 'apk update && apk add xorg-server xf86-video-vesa xf86-input-evdev xf86-input-mouse xf86-input-keyboard udev && echo "exec xclock">>~/.xinitrc && apk add xclock  --update-cache --repository "http://dl-cdn.alpinelinux.org/alpine/edge/testing" && startx'
+
+volumes:
+  supernova:
+    driver: local
+  omd_data:
+    driver: local
