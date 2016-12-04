@@ -1,5 +1,7 @@
-# ARG IMAGE_VERSION=latest
 FROM phusion/baseimage:0.9.18
+
+ARG IMAGE_VERSION=latest
+LABEL IMAGE_VERSION=${IMAGE_VERSION}
 
 MAINTAINER Oleksandr Motsak <malex984@googlemail.com>
 

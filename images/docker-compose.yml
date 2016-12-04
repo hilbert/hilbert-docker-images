@@ -2,7 +2,11 @@ version: '2.1'
 services:
   base:
     image: hilbert/base:${IMAGE_VERSION:-latest}
-    build: base/
+    build: 
+      context: base/
+      dockerfile: Dockerfile
+      args:
+        - IMAGE_VERSION=${IMAGE_VERSION:-latest}
     volumes:
      - /tmp:/tmp:rw
      - ${PWD}:/DOCKAPP
@@ -24,10 +28,11 @@ services:
      - /bin/sh
 
   ddd:
-    extends: 
+    extends:
       service: base
     image: ${DOCKER_COMPOSE_IMAGE}
-    build: ddd/
+    build: 
+      context: ddd/
     labels:
      - "is_top_app=0"
      - "description=Docker CLI + Compose"
@@ -105,7 +110,8 @@ services:
     extends:
       service: admin
     image: hilbert/dummy:${IMAGE_VERSION:-latest}
-    build: dummy/
+    build: 
+      context: dummy/
     privileged: true
     stdin_open: false
     tty: false
@@ -139,7 +145,8 @@ services:
     extends: 
       service: ddd
     image: hilbert/omd_agent:${IMAGE_VERSION:-latest}
-    build: omd_agent/
+    build: 
+      context: omd_agent/
     environment:
      - HB_PORT
      - HB_HOST
@@ -601,6 +608,22 @@ services:
     command:
      - 'apk update && apk add xorg-server xf86-video-vesa xf86-input-evdev xf86-input-mouse xf86-input-keyboard udev && echo "exec xclock">>~/.xinitrc && apk add xclock  --update-cache --repository "http://dl-cdn.alpinelinux.org/alpine/edge/testing" && startx'
 
+
+  wol_enable:
+    extends: 
+      service: admin
+    image: alpine:3.4
+    stdin_open: false
+    tty: false
+    restart: "on-failure:5"
+    labels:
+     - "is_top_app=1"
+    entrypoint: 
+     - /bin/sh
+     - -c
+    command:
+     - 'apk update && apk add ethtool && /bin/sh'
+    # for i in `LANG=C netstat -rn|awk '/^0.0.0.0/ {f=substr($0,74); print f;} /^default.*UG/ {f=substr($0,65); print f;}'`; do sudo -n -P ethtool $i; done
 volumes:
   supernova:
     driver: local

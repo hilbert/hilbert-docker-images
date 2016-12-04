@@ -11,8 +11,6 @@ RUN=/usr/local/run.sh
 CMD=$(RUN)
 ARGS=
 
-# COMPOSE_PROJECT_NAME=dockapp
-
 ## COPY dockapp_dashboard /usr/local/dockapp_dashboard
 check_compose: $(TS)
 	docker-compose -p $(COMPOSE_PROJECT_NAME) run --rm -p 8081:8080 ${APP} ${CMD} ${ARGS}

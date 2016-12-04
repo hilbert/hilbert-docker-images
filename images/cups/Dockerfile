@@ -1,5 +1,9 @@
 FROM hilbert/base
-# FROM debian:sid
+
+ARG IMAGE_VERSION=latest
+LABEL IMAGE_VERSION=${IMAGE_VERSION}
+
+#####FRM debian:sid
 
 MAINTAINER Oleksandr Motsak <malex984@googlemail.com>
 

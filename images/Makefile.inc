@@ -1,6 +1,7 @@
 # http://stackoverflow.com/questions/18136918/how-to-get-current-directory-of-your-makefile
 # http://www.gnu.org/software/make/manual/make.html#toc-Quick-Reference-1
 
+CAT    ?= cat
 RM     ?= rm
 ECHO   ?= echo
 SHELL  ?= /bin/bash
@@ -11,6 +12,7 @@ TR     ?= tr
 DOCKER ?= docker
 COMPOSE?= docker-compose
 
+#COMPOSE_PROJECT_NAME ?= dockapp
 COMPOSE_PROJECT_NAME ?= hilbert
 
 # Makefile.inc is expected to be on the top level!
@@ -35,7 +37,7 @@ DF     :=${mkfile_dir}/Dockerfile
 
 ### Parsing parts of Dockerfile:
 BASE   :=$(shell $(GREP) -m 1 -iE '^ *FROM' ${DF} | $(SED) -e 's@^ *FROM  *@@g' -e 's@[:/ ]@_@g')
-BASETEG:=$(shell $(GREP) -m 1 -iE '^ *FROM' ${DF} | $(SED) -e 's@^ *FROM *@@g' -e 's@${REPO}:@@g' -e 's@[:/ ]@_@g')
+BASETEG:=$(shell $(GREP) -m 1 -iE '^ *FROM' ${DF} | $(SED) -e 's@^ *FROM  *@@g' -e 's@^.*/@@g')
 COPYFILES2 :=$(shell $(GREP) -iE '^ *COPY ' ${DF} | $(SED) -e 's@^ *COPY  *@@g' -e 's@ /.*@@g' | xargs -r)
 
 # Absolute path to necessary local files
@@ -71,10 +73,14 @@ debug:
 DOCKER_BUILD_OPTS=--pull=false --force-rm=true --rm=true --build-arg IMAGE_VERSION=${IMAGE_VERSION}
 # --no-cache=true
 
+TMP_DF=${mkfile_dir}/Dockerfile_${APP}_${IMAGE_VERSION}
+
 # ${TS} ${SS} 
+## Maybe try using docker-compose for building?
 build: ${DF} ${ACOPYFILES} ${ACOPYFILES2}
-	$(RM) -f ${TS}
-	cd ${mkfile_dir} && $(DOCKER) -D build ${DOCKER_BUILD_OPTS} -t "${IMG}" -f "${DF}" "${mkfile_dir}"
+	$(RM) -f ${TS}  ### 
+	$(CAT) "${DF}" | $(SED) -e "s@FROM  *${U}/${APP}@FROM ${U}/${APP}:${IMAGE_VERSION}@g" > "${TMP_DF}"
+	cd ${mkfile_dir} && $(DOCKER) -D build ${DOCKER_BUILD_OPTS} -t "${IMG}" -f "${TMP_DF}" "${mkfile_dir}"
 	$(DOCKER) tag "${IMG}" "${TAG}"
 	$(MAKE) -C ${mkfile_dir}/ ${TS}
 
@@ -85,9 +91,9 @@ ${top_dir}/phusion_baseimage_0.9.18.timestamp:
 	$(DOCKER) pull 'phusion/baseimage:0.9.18'
 	$(DOCKER) images | $(GREP) -E 'phusion[\/]baseimage *0[\.]9[\.]18 ' > $@
 
-${top_dir}/docker_compose_1.6.2.timestamp:
-	$(DOCKER) pull 'docker/compose:1.6.2'
-	$(DOCKER) images | grep -E 'docker[\/]compose *1[\.]6[\.]2 ' > $@
+#${top_dir}/docker_compose_1.6.2.timestamp:
+#	$(DOCKER) pull 'docker/compose:1.6.2'
+#	$(DOCKER) images | grep -E 'docker[\/]compose *1[\.]6[\.]2 ' > $@
 
 ${TS}:
 	$(DOCKER) images | $(GREP) -E "^${U}/${APP}  *" > $@

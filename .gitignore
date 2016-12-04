@@ -1,4 +1,5 @@
 *~
 /.deprecated/
 *.timestamp
+Dockerfile_*_*
 

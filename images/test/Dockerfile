@@ -1,5 +1,8 @@
 FROM hilbert/gui
 
+ARG IMAGE_VERSION=latest
+LABEL IMAGE_VERSION=${IMAGE_VERSION}
+
 MAINTAINER Oleksandr Motsak <malex984@googlemail.com>
 
 ENV LIBGL_DEBUG=verbose

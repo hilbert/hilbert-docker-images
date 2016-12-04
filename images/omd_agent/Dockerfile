@@ -1,5 +1,8 @@
 FROM hilbert/dd
 
+ARG IMAGE_VERSION=latest
+LABEL IMAGE_VERSION=${IMAGE_VERSION}
+
 MAINTAINER Oleksandr Motsak <malex984@googlemail.com>
 
 RUN update.sh && install.sh --no-install-recommends xinetd python2.7 ethtool && clean.sh

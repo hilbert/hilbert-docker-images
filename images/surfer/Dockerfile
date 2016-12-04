@@ -1,5 +1,8 @@
 FROM hilbert/gui
 
+ARG IMAGE_VERSION=latest
+LABEL IMAGE_VERSION=${IMAGE_VERSION}
+
 MAINTAINER Christian Stussak <stussak@mfo.de>
 
 ADD http://imaginary.org/sites/default/files/surfer-1.2.4.x86_64.deb /tmp/surfer-1.2.4.x86_64.deb

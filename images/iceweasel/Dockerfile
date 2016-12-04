@@ -1,5 +1,8 @@
 FROM hilbert/webbase
 
+ARG IMAGE_VERSION=latest
+LABEL IMAGE_VERSION=${IMAGE_VERSION}
+
 MAINTAINER Oleksandr Motsak <malex984@googlemail.com>
 
 # DEBIAN_FRONTEND=noninteractive apt-key adv --keyserver ? --recv-keys ? && \

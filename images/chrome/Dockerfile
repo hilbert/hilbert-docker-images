@@ -1,7 +1,10 @@
-#! Base image with the necessary libraries for web-browsers:
 FROM hilbert/webbase
+#< Base image with the necessary libraries for web-browsers:
 
 #! Person responsible for this image:
+ARG IMAGE_VERSION=latest
+LABEL IMAGE_VERSION=${IMAGE_VERSION}
+
 MAINTAINER Oleksandr Motsak <malex984@googlemail.com>
 
 #! Default value for environment variable (used below)
