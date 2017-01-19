@@ -68,7 +68,8 @@ debug:
 	$(ECHO)
 	$(ECHO) "Deps              : ${ACOPYFILES}"
 	$(ECHO) "Auto Deps         : ${ACOPYFILES2}"
-
+	$(ECHO)
+	$(ECHO) "DOCKER_BUILD_OPTS : ${DOCKER_BUILD_OPTS}"
 
 DOCKER_BUILD_OPTS=--pull=false --force-rm=true --rm=true --build-arg IMAGE_VERSION=${IMAGE_VERSION}
 # --no-cache=true
@@ -78,8 +79,8 @@ TMP_DF=${mkfile_dir}/Dockerfile_${APP}_${IMAGE_VERSION}
 # ${TS} ${SS} 
 ## Maybe try using docker-compose for building?
 build: ${DF} ${ACOPYFILES} ${ACOPYFILES2}
-	$(RM) -f ${TS}  ### 
-	$(CAT) "${DF}" | $(SED) -e "s@FROM  *${U}/${APP}@FROM ${U}/${APP}:${IMAGE_VERSION}@g" > "${TMP_DF}"
+	$(RM) -f ${TS}
+	$(CAT) "${DF}" | $(SED) -e 's@^FROM  *\([^ :#][^ :#]*\) *$$@FROM \1:$(IMAGE_VERSION)@g' > "${TMP_DF}"
 	cd ${mkfile_dir} && $(DOCKER) -D build ${DOCKER_BUILD_OPTS} -t "${IMG}" -f "${TMP_DF}" "${mkfile_dir}"
 	$(DOCKER) tag "${IMG}" "${TAG}"
 	$(MAKE) -C ${mkfile_dir}/ ${TS}
