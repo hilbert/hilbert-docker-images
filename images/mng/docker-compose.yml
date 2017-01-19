@@ -11,12 +11,18 @@ services:
     stdin_open: false
     tty: false
     volumes:
-    - /etc/localtime:/etc/localtime:ro
+     - /etc/localtime:/etc/localtime:ro
+     - ~/.ssh:/root/SSH
+     - /tmp:/tmp:rw
+     - ${PWD}:/HILBERT
+    environment:
+     - HILBERT_CLI_PATH=/usr/local/bin
+     - HILBERT_SERVER_CONFIG_PATH=/HILBERT/Hilbert.yml
     entrypoint:
-    - /sbin/my_init
-    - --skip-runit
-    - --skip-startup-files
-    - --
+     - /sbin/my_init
+     - --skip-runit
+     - --skip-startup-files
+     - --
     expose:
      - "8080"
     restart: always
@@ -35,5 +41,5 @@ services:
      - /usr/local/run.sh
      - --log_level=debug
      - --test=false 
-     - --hilbert_cli_path=/usr/local/hilbert-cli/server
+     - --hilbert_cli_path=/usr/local/bin
 

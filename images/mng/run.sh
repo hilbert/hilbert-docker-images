@@ -21,4 +21,4 @@ nginx
 # export NODE_PATH=/usr/lib/node_modules/hilbert-ui/node_modules
 cd /usr/local/hilbert-ui/server/app
 echo "Starting Dashboard's Back-end Server with the following arguments: '$*'"
-exec node main.js "$*"
+exec node main.js $@
