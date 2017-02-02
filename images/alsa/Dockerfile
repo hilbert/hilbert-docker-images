@@ -7,11 +7,7 @@ MAINTAINER Oleksandr Motsak <malex984+hilbert.alsa@gmail.com>
 
 # Update & Install & Clean up APT
 # Not: please if possible add all the packages to the following single install command!
-RUN update.sh && \
-    install.sh \
-        --no-install-recommends \
-	alsa alsa-tools alsa-utils && \
-    clean.sh
+RUN update.sh && install.sh alsa alsa-tools alsa-utils && clean.sh
 
 # RUN usermod -a -G pulse-access ur
 # RUN usermod -a -G pulse ur

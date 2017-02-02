@@ -1,4 +1,4 @@
-FROM hilbert/test
+FROM hilbert/gui
 
 ARG IMAGE_VERSION=latest
 LABEL IMAGE_VERSION=${IMAGE_VERSION}
@@ -9,14 +9,8 @@ MAINTAINER Oleksandr Motsak <malex984+hilbert.kivy@gmail.com>
 
 RUN DEBIAN_FRONTEND=noninteractive apt-key adv --keyserver keyserver.ubuntu.com --recv-keys A863D2D6 && \
     DEBIAN_FRONTEND=noninteractive echo|add-apt-repository ppa:kivy-team/kivy && \
-    update.sh && install.sh \
-       gstreamer1.0-plugins-bad gstreamer1.0-nice gstreamer1.0-plugins-good gstreamer1.0-plugins-base \
-       gstreamer1.0-plugins-ugly gstreamer1.0-tools gstreamer1.0-vaapi gstreamer1.0-alsa \
-       mtdev-tools libmtdev-dev libmtdev1 \
-       python-kivy python-numpy \
-       dbus-x11 dbus libdbus-glib-1-2 libdbusmenu-glib4  \
-    && \
-    clean.sh
+    update.sh && install.sh python-kivy python-numpy && clean.sh
+# TODO: python3?
 
 RUN git clone https://github.com/stocyr/Deflectouch.git /usr/local/src/Deflectouch/
 COPY run.sh /usr/local/src/Deflectouch/
@@ -26,6 +20,6 @@ COPY run.sh /usr/local/src/Deflectouch/
 ## https://wiki.ubuntu.com/Multitouch
 ## https://launchpad.net/canonical-multitouch
 
-RUN update.sh && install.sh alsamixergui pulseaudio && clean.sh
+# RUN update.sh && install.sh alsamixergui pulseaudio && clean.sh
 
 # WORKDIR /usr/local/src/Deflectouch/

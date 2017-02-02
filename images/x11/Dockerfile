@@ -1,38 +1,24 @@
-FROM hilbert/xeyes
+FROM hilbert/gui
 
 ARG IMAGE_VERSION=latest
 LABEL IMAGE_VERSION=${IMAGE_VERSION}
 
 MAINTAINER Oleksandr Motsak <malex984+hilbert.x11@gmail.com>
 
-RUN update.sh && \
-    install.sh \
-                     xserver-xorg xserver-xorg-video-all \
-                     libx11-6 libxcomposite1 libxdamage1 libxext6 libxfixes3 \
-		     libxmu6 libxt6 libxv1 \
-		     xserver-xephyr xauth x11-xserver-utils \
-		     libgl1-mesa-dri libgl1-mesa-glx libglu1-mesa \
-		     libgles1-mesa libgles2-mesa libegl1-mesa-drivers \
-		     mesa-vdpau-drivers freeglut3 mesa-utils libglu1 libglapi-mesa \
-		     xterm xinit x11-apps libglapi-mesa libglu1 \
-                     xvfb openbox \
-    && \
-    clean.sh
+RUN update.sh \
+ && install.sh xserver-xorg xserver-xorg-video-all xserver-xephyr x11-xserver-utils xinit xvfb openbox \
+ && clean.sh
 
-## xcompmgr compton openbox 
-
-    # libgl1 libgles2 ??
+# libgl1 libgles2 ??
 
 # xorg-video-abi-18
 # xserver-xorg-core \
 # xorg-video-abi-19 
 # unagi
-## compiz  
-## x11vnc 
-#  libx11 libxmu libxi
-
-
-
+#- compiz  
+#- x11vnc 
+#!  libx11 libxmu 
+## libxi?
 
 
 # VOLUME /tmp/.X11-unix/
@@ -43,7 +29,7 @@ COPY Xorg.sh startXephyr.sh /usr/local/bin/
 COPY .xinitrc /root/
 #COPY .xinitrc /
 
-RUN perl -pi -e 's@^ *allowed_users=.*$@allowed_users=anybody@' /etc/X11/Xwrapper.config
+RUN sed -i -e 's@^ *allowed_users=.*$@allowed_users=anybody@g' /etc/X11/Xwrapper.config
 
 # ADD https://github.com/IMAGINARY/xfullscreen/archive/master.tar.gz /usr/src/xfullscreen.tar.gz
 # COPY xfullscreen/wmfullscreen xfullscreen/xfullscreen /usr/local/bin/

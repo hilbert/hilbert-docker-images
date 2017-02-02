@@ -1,4 +1,4 @@
-FROM hilbert/base
+FROM hilbert/baseimage
 
 ARG IMAGE_VERSION=latest
 LABEL IMAGE_VERSION=${IMAGE_VERSION}

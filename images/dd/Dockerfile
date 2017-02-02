@@ -10,9 +10,6 @@ RUN update.sh && \
     curl -sSL https://get.docker.com/ | sh && \
     clean.sh
 
-# DEBIAN_FRONTEND=noninteractive apt-get -q -y install \
-# --no-install-recommends lxc-docker && \
-
 #ADD https://get.docker.com/builds/Linux/x86_64/docker-latest /usr/local/bin/docker
 #RUN chmod +x /usr/local/bin/docker
 
@@ -21,7 +18,7 @@ RUN update.sh && \
 
 # RUN chmod +x /usr/local/bin/docker /usr/local/bin/docker-compose
 # RUN ln -s $HOME/bin/docker-latest $HOME/bin/docker
-## ENV DOCKER_CERT_PATH=
+## ENV DOCKER_CERT_PATH 
 
 # nsenter does not work from inside a container :(
 # ADD ./baseimage-docker-nsenter ./docker-bash /usr/local/bin/
@@ -36,3 +33,5 @@ ENV NO_PROXY /var/run/docker.sock
 # VOLUME $HOME
 # WORKDIR $HOME
 
+# limit due to current docker client:
+ENV DOCKER_API_VERSION 1.24

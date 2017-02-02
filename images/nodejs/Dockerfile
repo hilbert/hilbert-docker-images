@@ -14,10 +14,10 @@ MAINTAINER Oleksandr Motsak <malex984+hilbert.nodejs@gmail.com>
 ## curl --silent --location https://deb.nodesource.com/setup_4.x | sudo -E bash -
 ## wget -qO- https://deb.nodesource.com/setup_4.x | bash -
 
-RUN update.sh && \
-    DEBIAN_FRONTEND=noninteractive curl -sL https://deb.nodesource.com/setup_4.x | sudo -E bash - && \
-    install.sh --no-install-recommends nodejs && \
-    clean.sh
+RUN update.sh \
+ && DEBIAN_FRONTEND=noninteractive curl -sL https://deb.nodesource.com/setup_4.x | sudo -E bash - \
+ && install.sh nodejs \
+ && clean.sh
 
 #RUN npm install electron-prebuilt -g 
 ## && npm install asar -g && \

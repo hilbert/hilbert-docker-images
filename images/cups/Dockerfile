@@ -8,13 +8,7 @@ LABEL IMAGE_VERSION=${IMAGE_VERSION}
 MAINTAINER Oleksandr Motsak <malex984+hilbert.cups@gmail.com>
 
 # Install cups
-RUN DEBIAN_FRONTEND=noninteractive apt-get -y -q update && \
-    DEBIAN_FRONTEND=noninteractive apt-get -q -y install \
-                    --no-install-recommends \
-                    cups cups-pdf whois cups-bsd && \
-    DEBIAN_FRONTEND=noninteractive apt-get clean && \
-    rm -rf /var/lib/apt/lists/* /tmp/* /var/tmp/*
-
+RUN update.sh && install.sh cups cups-pdf whois cups-bsd && clean.sh
 # cups-bsd for lp* tools!
 
 # Disable some cups backend that are unusable within a container

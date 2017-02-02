@@ -1,13 +1,11 @@
-FROM hilbert/alsa
+FROM hilbert/base
 
 ARG IMAGE_VERSION=latest
 LABEL IMAGE_VERSION=${IMAGE_VERSION}
 
 MAINTAINER Oleksandr Motsak <malex984+hilbert.xeyes@gmail.com>
 
-RUN update.sh && install.sh --no-install-recommends \
-	 xauth x11-apps xterm unclutter xdotool && \
-    clean.sh
+RUN update.sh && install.sh xauth x11-apps && clean.sh
 
 # ENV XLIB_SKIP_ARGB_VISUALS 1
 

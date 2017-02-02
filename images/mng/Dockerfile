@@ -7,12 +7,11 @@ MAINTAINER Oleksandr Motsak <malex984+hilbert.mng@gmail.com>
 
 # install dependencies
 RUN update.sh && \
-    install.sh --no-install-recommends nginx rsync lftp wakeonlan python3-pip && \
+    install.sh nginx rsync lftp wakeonlan python3-pip && \
     pip3 install --upgrade pip && pip install --upgrade setuptools && \
     pip install dill semantic_version ruamel.yaml argcomplete && \
     clean.sh && \
-    rm -f /etc/nginx/sites-enabled/default /etc/nginx/sites-available/default && \
-    rmdir /root/.ssh
+    rm -f /etc/nginx/sites-enabled/default /etc/nginx/sites-available/default /root/.ssh
 
 # tell Docker which port is exposed by the container
 # EXPOSE 8000
@@ -44,4 +43,4 @@ COPY hilbert-ui /etc/nginx/sites-enabled/
 # main entry point
 COPY nginx.sh run.sh uiserver.sh /usr/local/
 
-
+ENV HOME /root

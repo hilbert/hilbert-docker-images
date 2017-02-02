@@ -1,4 +1,4 @@
-FROM hilbert/webbase
+FROM hilbert/gui
 #< Base image with the necessary libraries for web-browsers:
 
 #! Person responsible for this image:

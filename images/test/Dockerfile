@@ -5,20 +5,13 @@ LABEL IMAGE_VERSION=${IMAGE_VERSION}
 
 MAINTAINER Oleksandr Motsak <malex984+hilbert.test@gmail.com>
 
-ENV LIBGL_DEBUG=verbose
+ENV LIBGL_DEBUG verbose
 # ENV XLIB_SKIP_ARGB_VISUALS 1
 
 # set the following if any QT GUI look like an empty rectangular window
 # ENV QT_X11_NO_MITSHM 1
 
-
-RUN update.sh && \
-    install.sh \
-          --no-install-recommends \
-          libgles1-mesa libgles2-mesa libegl1-mesa-drivers mesa-vdpau-drivers \
-	  freeglut3 nux-tools mesa-utils pciutils \
-	  glmark2 libxv1 g3dviewer libcanberra-gtk3-module && \
-    clean.sh
+RUN update.sh && install.sh glmark2 g3dviewer nux-tools && clean.sh
 
 # build-essential
 #  xkeyboard-config xkbcomp

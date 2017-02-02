@@ -5,9 +5,7 @@ LABEL IMAGE_VERSION=${IMAGE_VERSION}
 
 MAINTAINER Oleksandr Motsak <malex984+hilbert.main@gmail.com>
 
-RUN update.sh && install.sh --no-install-recommends \
-	                   xauth && \
-    clean.sh
+RUN update.sh && install.sh xauth && clean.sh
 
 COPY main.sh menu.sh run.sh runback.sh sv.sh A.sh generate_ogl.sh settings /usr/local/bin/
 
@@ -15,8 +13,5 @@ COPY main.sh menu.sh run.sh runback.sh sv.sh A.sh generate_ogl.sh settings /usr/
 # CMD /usr/local/bin/main.sh
 # /sbin/setuser ?? ___.sh
 
-#EXPOSE 5900-5910
 #EXPOSE 80
-#EXPOSE 6556
-#EXPOSE 5000
 ## 631
