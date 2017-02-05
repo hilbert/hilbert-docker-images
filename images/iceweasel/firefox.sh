@@ -71,7 +71,8 @@ EOF
 # user_pref("gestures.enable_single_finger_input", false);
 
 
-MOZ_USE_XINPUT2=1 $F ${ARGS} 2>&1 
+export MOZ_USE_XINPUT2=1 
+exec $F ${ARGS} 2>&1 
 exit $?
 # &
 
