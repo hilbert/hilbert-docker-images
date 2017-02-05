@@ -31,7 +31,8 @@ IMAGE_VERSION ?= latest
 
 APP  ?= $(shell $(ECHO) "${current_dir}" | $(SED) -e 's@[\-]@_@g' | $(TR) '[:upper:]' '[:lower:]')
 IMG  ?= ${REPO}/${APP}:${IMAGE_VERSION}
-TAG  ?= imaginary.mfo.de:5000/${U}/${APP}:${IMAGE_VERSION}
+REGISTRY?=imaginary.mfo.de:5000
+TAG  ?= ${REGISTRY}/${U}/${APP}:${IMAGE_VERSION}
 
 DF     :=${mkfile_dir}/Dockerfile
 
@@ -74,7 +75,7 @@ debug:
 DOCKER_BUILD_OPTS=--pull=false --force-rm=true --rm=true --build-arg IMAGE_VERSION=${IMAGE_VERSION}
 # --no-cache=true
 
-TMP_DF=${mkfile_dir}/Dockerfile_${APP}_${IMAGE_VERSION}
+TMP_DF=${mkfile_dir}/${APP}_${IMAGE_VERSION}_Dockerfile
 
 # ${TS} ${SS} 
 ## Maybe try using docker-compose for building?
@@ -82,19 +83,14 @@ build: ${DF} ${ACOPYFILES} ${ACOPYFILES2}
 	$(RM) -f ${TS}
 	$(CAT) "${DF}" | $(SED) -e 's@^FROM  *\([^ :#][^ :#]*\) *$$@FROM \1:$(IMAGE_VERSION)@g' > "${TMP_DF}"
 	cd ${mkfile_dir} && $(DOCKER) -D build ${DOCKER_BUILD_OPTS} -t "${IMG}" -f "${TMP_DF}" "${mkfile_dir}"
-	$(DOCKER) tag "${IMG}" "${TAG}"
 	$(MAKE) -C ${mkfile_dir}/ ${TS}
 
 ${SS}:
 	cd ${top_dir}/${BASETEG}/ && $(MAKE) -C ${top_dir}/${BASETEG}/
 
-${top_dir}/phusion_baseimage_0.9.18.timestamp:
-	$(DOCKER) pull 'phusion/baseimage:0.9.18'
-	$(DOCKER) images | $(GREP) -E 'phusion[\/]baseimage *0[\.]9[\.]18 ' > $@
-
-#${top_dir}/docker_compose_1.6.2.timestamp:
-#	$(DOCKER) pull 'docker/compose:1.6.2'
-#	$(DOCKER) images | grep -E 'docker[\/]compose *1[\.]6[\.]2 ' > $@
+${top_dir}/hilbert_baseimage_${IMAGE_VERSION}.timestamp:
+	$(DOCKER) pull 'hilbert/baseimage:${IMAGE_VERSION}'
+	$(DOCKER) images | $(GREP) -E 'hilbert[\/]baseimage *[a-z]* ' > $@
 
 ${TS}:
 	$(DOCKER) images | $(GREP) -E "^${U}/${APP}  *" > $@
@@ -106,18 +102,20 @@ rebuild: ${DF} ${ACOPYFILES} ${ACOPYFILES2} ${mkfile_dir}/Makefile $(abspath $(l
 
 test: $(TS) check
 
+tag: ${TS}
+	$(DOCKER) tag "${IMG}" "${TAG}"
+
 push: ${TS}
 	$(DOCKER) push "${TAG}"
 
 # ${SS}
 pull:
 	$(DOCKER) pull "${IMG}"
-	$(DOCKER) tag "${IMG}" "${TAG}"
-	$(MAKE) -C ${mkfile_dir}/ ${TS}
-	
-fix:
+	: $(DOCKER) tag "${IMG}" "${TAG}"
 	$(MAKE) -C ${mkfile_dir}/ ${TS}
 
+fix:
+	$(MAKE) -C ${mkfile_dir}/ ${TS}
 
 cleanup:
 	(cd ${make_dir}; $(MAKE) -i -k -C ${make_dir} clean || true; cd - )
@@ -126,7 +124,7 @@ cleanup:
 
 prune:
 	$(DOCKER) images -f "dangling=true" -q | xargs -r $(DOCKER) rmi
-	
+
 #force_look:
 #	true
 
@@ -136,7 +134,7 @@ COMPOSE_BUILD_OPTS=--force-rm
 build_compose:${DF} ${ACOPYFILES} ${ACOPYFILES2} 
 	$(RM) -f ${TS}
 	cd ${mkfile_dir} && $(COMPOSE) -p $(COMPOSE_PROJECT_NAME) build ${COMPOSE_BUILD_OPTS} ${APP}
-	$(DOCKER) tag "${IMG}" "${TAG}"
+	:  $(DOCKER) tag "${IMG}" "${TAG}"
 	$(MAKE) -C ${mkfile_dir}/ ${TS}
 
 .SILENT :

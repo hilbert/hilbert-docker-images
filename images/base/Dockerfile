@@ -1,4 +1,5 @@
-FROM phusion/baseimage:0.9.18
+#~~phusion/baseimage:0.9.18~~
+FROM hilbert/baseimage
 
 ARG IMAGE_VERSION=latest
 LABEL IMAGE_VERSION=${IMAGE_VERSION}
@@ -9,9 +10,10 @@ COPY update.sh install.sh upgrade.sh clean.sh /usr/local/bin/
 
 # Update & Install & Clean up APT
 # Not: please if possible add all the packages to the following single install command!
-RUN upgrade.sh && update.sh && install.sh --no-install-recommends \
-                 aptitude wget curl git cups-bsd && \
+RUN update.sh && upgrade.sh && install.sh --no-install-recommends \
+                 aptitude cups-bsd && \
                  clean.sh
+#                 apt-get -y --purge remove openssh-server && \
 
 # dist-upgrade ?
 
@@ -28,10 +30,10 @@ RUN upgrade.sh && update.sh && install.sh --no-install-recommends \
 COPY setup_ogl.sh hb.sh hb_wrapper.sh config_cups.sh /usr/local/bin/
 #RUN chmod +x /usr/local/bin/config_cups.sh
 
-RUN locale-gen en_US.utf8 && locale-gen de_DE.utf8 && locale-gen ru_RU.utf8
+# RUN locale-gen de_DE.utf8 && locale-gen ru_RU.utf8
 
-ADD https://raw.githubusercontent.com/phusion/baseimage-docker/master/image/bin/my_init /sbin/my_init
-RUN chmod +x /sbin/my_init
+#ADD https://raw.githubusercontent.com/phusion/baseimage-docker/master/image/bin/my_init /sbin/my_init
+#RUN chmod +x /sbin/my_init
 
 # Use baseimage-docker's init system.
 # CMD ["/sbin/my_init"]
