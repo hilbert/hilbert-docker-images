@@ -80,6 +80,9 @@ function res_usage
 
 function check_dockapp_top1
 {
+#### TODO: FIXME: due to ID usage by Dashboard:
+#### APP_ID: ${DOCKER} inspect --format='{{index .Config.Env }}' '{}' 2>/dev/null | sed -e 's@^.*APP_ID=@@g' -e 's@ .*$@@g'
+
 MSG=($(docker ps -a -q \
  --filter "label=is_top_app=1" --filter "label=com.docker.compose.project=${COMPOSE_PROJECT_NAME}" \
  2>/dev/null \
