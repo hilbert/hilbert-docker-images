@@ -22,16 +22,11 @@ build:
 cleanup: 
 	-for d in $(DIRS); do (cd $$d; $(MAKE) $@ || exit 1); done
 
-
-#build: phusion_baseimage_0.9.18.timestamp
-
-# docker_compose_1.6.2.timestamp
-
-#phusion_baseimage_0.9.18.timestamp: 
-#	docker pull 'phusion/baseimage:0.9.18'
-#	docker images | grep -E 'phusion[\/]baseimage *0[\.]9[\.]18 ' > $@
+pull:
+	-for d in $(DIRS); do (cd $$d; $(MAKE) $@ || exit 1); done
 
 
+#build: docker_compose_1.6.2.timestamp
 #docker_compose_1.6.2.timestamp:
 #	docker pull 'docker/compose:1.6.2'
 #	docker images | grep -E 'docker[\/]compose *1[\.]6[\.]2 ' > $@
