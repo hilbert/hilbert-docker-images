@@ -4,7 +4,7 @@
 # Email: 
 # License: MIT?
 # Nagios Usage: check_nrpe!check_docker_top1/back/exited/foreign!cpu/mem/t/e/f/b
-# Usage: check_dockapp_back.sh/check_dockapp_exited.sh/check_dockapp_foreign.sh/check_dockapp_top1.sh (link name)
+# Usage: check_hilbert_back.sh/check_hilbert_exited.sh/check_hilbert_foreign.sh/check_hilbert_top1.sh (link name)
 # PATH: e.g. /usr/local/lib/nagios/plugins/
 ## /usr/lib/check_mk_agent/plugins/ ?
 #
@@ -14,7 +14,8 @@
 #   CRITICAL - container is stopped 2
 #   UNKNOWN - does not exist 3
 
-COMPOSE_PROJECT_NAME="${COMPOSE_PROJECT_NAME:-hilbert}" # COMPOSE_PROJECT_NAME="${COMPOSE_PROJECT_NAME:-dockapp}"
+COMPOSE_PROJECT_NAME="${COMPOSE_PROJECT_NAME:-hilbert}" 
+# COMPOSE_PROJECT_NAME="${COMPOSE_PROJECT_NAME:-dockapp}"
 
 function OK
 {
@@ -78,7 +79,7 @@ function res_usage
 }
 
 
-function check_dockapp_top1
+function check_hilbert_top1
 {
 #### TODO: FIXME: due to ID usage by Dashboard:
 #### APP_ID: ${DOCKER} inspect --format='{{index .Config.Env }}' '{}' 2>/dev/null | sed -e 's@^.*APP_ID=@@g' -e 's@ .*$@@g'
@@ -132,7 +133,7 @@ OK "TOP: $M|t=$N;;;0; $U"
 
 
 
-function check_dockapp_exited
+function check_hilbert_exited
 {
 MSG=($(docker ps -a -q \
  --filter "label=is_top_app" --filter "label=com.docker.compose.project=${COMPOSE_PROJECT_NAME}" \
@@ -180,7 +181,7 @@ CRITICAL "$N exited apps/services: $M|e=$N;;;0; $U"
 }
 
 
-function check_dockapp_back
+function check_hilbert_back
 {
 MSG=($(docker ps -a -q \
  --filter "label=is_top_app=0" --filter "label=com.docker.compose.project=${COMPOSE_PROJECT_NAME}" 2>/dev/null \
@@ -231,7 +232,7 @@ OK "$N running service(s): $M|b=$N;;;0; $U"
 
 
 
-function check_dockapp_foreign
+function check_hilbert_foreign
 {
 
 tmpdir=$(mktemp -d)
@@ -310,7 +311,7 @@ WARNING "$N foreign container(s) present: $M|f=$N;;;0; $U"
 }
 
 
-function check_dockapp_heartbeat
+function check_hilbert_heartbeat
 {
 
 ### Following heartbeat2.py
@@ -341,7 +342,7 @@ echo "$S"; exit 3
 }
 
 
-CMD=$(basename "$0" '.sh' | grep -E '^check_dockapp_')
+CMD=$(basename "$0" '.sh' | grep -E '^check_hilbert_')
 if [ $? -ne 0 ]; then
   CRITICAL "wrong command: '$0'"
 fi
@@ -350,10 +351,10 @@ fi
 
 $CMD
 
-# check_dockapp_foreign
-# check_dockapp_back
-# check_dockapp_exited
-# check_dockapp_top1
+# check_hilbert_foreign
+# check_hilbert_back
+# check_hilbert_exited
+# check_hilbert_top1
 
 CRITICAL "something went wrong..."
 

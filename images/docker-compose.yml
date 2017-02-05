@@ -9,16 +9,16 @@ services:
         - IMAGE_VERSION=${IMAGE_VERSION:-latest}
     volumes:
      - /tmp:/tmp:rw
-     - ${PWD}:/DOCKAPP
+     - ${PWD}:/HILBERT_CONFIG
      - /etc/localtime:/etc/localtime:ro 
     labels:
      - "is_top_app=0"
-     - "description=Base for dockapp services"
-    working_dir: /DOCKAPP
+     - "description=Base for hilbert services"
+    working_dir: /HILBERT_CONFIG
     privileged: false
     network_mode: "host"
     environment:
-     - CFG_DIR=/DOCKAPP
+     - CFG_DIR=/HILBERT_CONFIG
      - CUPS_SERVER
      - ALSA_CARD
      - LANGUAGE
@@ -30,7 +30,7 @@ services:
   ddd:
     extends:
       service: base
-    image: ${DOCKER_COMPOSE_IMAGE}
+    image: hilbert/dd:${IMAGE_VERSION:-latest}
     build: 
       context: ddd/
     labels:
@@ -568,19 +568,19 @@ services:
      - "REGISTRY_HTTP_TLS_KEY=/certs/domain.key"
      
 
-  dockapp:
+  hilbert:
     extends: 
       service: gui
     volumes:
-     - .:/DOCKAPP
-    working_dir: /DOCKAPP/
+     - ${PWD}:/HILBERT_CONFIG
+    working_dir: /HILBERT_CONFIG/
     labels:
      - "is_top_app=1"
 
-  register:
+  keep_this_for_reference_only:
     extends: 
-      service: dockapp
-    image: imaginary.mfo.de:5000/malex984/alpine
+      service: hilbert
+    image: alpine:3.4
     devices:
      - "/dev/bus/usb:/dev/bus/usb:rwm"
      - "/dev/nvidia0:/dev/nvidia0"

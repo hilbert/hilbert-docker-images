@@ -31,7 +31,7 @@ Image | description
 `hilbert/x11vnc` | `x11vnc` as a service
 `hilbert/x11comp` | composing window manager (xcompmgr or compton) as a service
 `hilbert/omd` | containes pre-cofigured OMD service instance
-`hilbert/omd_agent` | containes pre-cofigured OMD/Check_MK Agent (with our addition: `check_dockapp.sh`) and HeartBeat server instance, see `hilbert/hilbert-heartbeat`
+`hilbert/omd_agent` | containes pre-cofigured OMD/Check_MK Agent (with our addition: `check_hilbert.sh`) and HeartBeat server instance, see `hilbert/hilbert-heartbeat`
 `hilbert/appa` | image run simple shell scripts saying AAA... or BBB... and sending Heartbeat
 `hilbert/mng` | Hilbert Dashboard UI (including Hilbert server tool)
 `hilbert/qrhandler` | is a service to exclusively handle QR Reader and take some action upon each new scanned code (show message & takes screenshot)
@@ -145,10 +145,10 @@ See for example `mng/docker-compose.yml` or `mng/Makefile`
 
 
 
-## Old testing procedure:
+## **Old** testing procedure:
 
 1. `setup.sh`: Pull or build necessary starting images (`hilbert/*`).
-    Previously our images were available via a different tag in malex984/dockapp repository 
+    Previously our images were available via a different tag in `malex984/dockapp` repository 
     (https://registry.hub.docker.com/u/malex984/dockapp/).
     Run (and change) `setup.sh` in order to pull the base image and build starting images.
     *We assume the host linux to run docker service.*
@@ -221,7 +221,7 @@ docker rmi $(docker images -f "dangling=true" -q)
 ### Cleanup Hilbert-related images:
 ```
 docker images | grep malex984/dockapp | awk ' { print $1 ":" $2 } ' | xargs docker rmi -f # old 
-docker images | grep 'hilbert/' | awk ' { print $1 ":" $2 } ' | xargs docker rmi -f # new?
+docker images | grep 'hilbert/' | awk ' { print $1 ":" $2 } ' | xargs docker rmi -f
 docker rmi -f x11 test dummy
 ```
 

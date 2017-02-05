@@ -6,13 +6,13 @@ ADD check-mk-agent_1.2.6p12-1_all.deb /tmp/check-mk-agent.deb
 
 RUN update.sh && install.sh xinetd && dpkg -i /tmp/check-mk-agent.deb && install.sh -fy && clean.sh
 
-COPY check_dockapp.sh /usr/local/lib/nagios/plugins/
+COPY check_hilbert.sh /usr/local/lib/nagios/plugins/
 RUN cd /usr/local/lib/nagios/plugins/ && \
-ln -s check_dockapp.sh check_dockapp_back.sh && \
-ln -s check_dockapp.sh check_dockapp_exited.sh && \
-ln -s check_dockapp.sh check_dockapp_foreign.sh && \
-ln -s check_dockapp.sh check_dockapp_top1.sh && \
-ln -s check_dockapp.sh check_dockapp_heartbeat.sh
+ln -s check_hilbert.sh check_hilbert_back.sh && \
+ln -s check_hilbert.sh check_hilbert_exited.sh && \
+ln -s check_hilbert.sh check_hilbert_foreign.sh && \
+ln -s check_hilbert.sh check_hilbert_top1.sh && \
+ln -s check_hilbert.sh check_hilbert_heartbeat.sh
 
 EXPOSE 6556
 EXPOSE 8888
@@ -37,7 +37,7 @@ ARG VCS_REF=HEAD
 ARG VCS_URL="https://github.com/hilbert/hilbert-docker-images"
 
 ARG DOCKERFILE="/images/omd_agent/Dockerfile"
-LABEL org.label-schema.description="containes pre-cofigured OMD/Check_MK Agent +check_dockapp.sh + HeartBeat server" \
+LABEL org.label-schema.description="containes pre-cofigured OMD/Check_MK Agent +check_hilbert.sh + HeartBeat server" \
       org.label-schema.build-date="${BUILD_DATE}" \
       org.label-schema.vcs-ref="${VCS_REF}" \
       org.label-schema.vcs-url="${VCS_URL}" \
