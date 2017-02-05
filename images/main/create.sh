@@ -33,8 +33,8 @@ fi
 # -v /sys/fs/cgroup:/sys/fs/cgroup:ro \
 
 # options for running terminal apps via docker run:
-RUNTERM="-it -a stdin -a stdout -a stderr --privileged --net=host --ipc=host --pid=host"
-OPTS="--skip-startup-files --no-kill-all-on-exit --quiet --skip-runit"
+RUNTERM="-it -a stdin -a stdout -a stderr --net=host --ipc=host"
+OPTS="--skip-startup-files --quiet --skip-runit"
 
 # $RUNTERM --net=none --name appa "hilbert/appa" $OPTS -- "/sbin/setuser" "ur" "/home/ur/bin/A.sh" "$@"
 # -- /bin/bash $ARGS

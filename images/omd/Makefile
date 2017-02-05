@@ -3,7 +3,7 @@ COPYFILES   :=
 include ../Makefile.inc
 
 # --privileged 
-RUNTERM=-it -a stdin -a stdout -a stderr --ipc=host --net=host --pid=host \
+RUNTERM=-it -a stdin -a stdout -a stderr --ipc=host --net=host \
         -v /etc/localtime:/etc/localtime:ro -v /tmp/:/tmp/:rw -P
 
 OPTS=--quiet

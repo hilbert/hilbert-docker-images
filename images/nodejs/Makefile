@@ -5,8 +5,8 @@ include ../Makefile.inc
 CMD=npm
 ARGS=-l
 
-RUNTERM=-it -a stdin -a stdout -a stderr --ipc=host --net=host --pid=host
-OPTS=--skip-startup-files --no-kill-all-on-exit --quiet --skip-runit
+RUNTERM=-it -a stdin -a stdout -a stderr --ipc=host --net=host
+OPTS=--skip-startup-files --quiet --skip-runit
 
 check: $(TS)
 	docker ps -a

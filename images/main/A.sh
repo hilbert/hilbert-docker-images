@@ -7,7 +7,7 @@ IMG="$U/appa:${IMAGE_VERSION}"
 
 # options for running terminal apps via docker run:
 RUNTERM="-it -a stdin -a stdout -a stderr"
-OPTS="--skip-startup-files --no-kill-all-on-exit --quiet --skip-runit"
+OPTS="--skip-startup-files --quiet --skip-runit"
 
 ID=$(docker create $RUNTERM --net=none "$IMG" $OPTS -- "/usr/local/bin/A.sh" "$@")
 docker start -ai $ID

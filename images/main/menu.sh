@@ -22,7 +22,7 @@ if [ -z "$ID" ]; then
      RUNTERM=" -it -a stdin $RUNTERM"
   fi
 
-  OPTS="--skip-startup-files --no-kill-all-on-exit --quiet --skip-runit"
+  OPTS="--skip-startup-files --quiet --skip-runit"
 
   #docker run --rm $RUNTERM --net=host "hilbert/menu:???" $OPTS -- "/usr/local/bin/menu.sh" "$@"
   #exit $?

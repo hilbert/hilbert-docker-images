@@ -34,8 +34,8 @@ docker rm -vf $C 1>&2 || true
 docker rmi -f --no-prune=false $D 1>&2 || true
 
 
-R="-it -a stdin -a stdout -a stderr --label is_top_app=0 --ipc=host --net=host --pid=host -v /etc/localtime:/etc/localtime:ro -v /tmp/:/tmp/:rw"
-O="--skip-startup-files --no-kill-all-on-exit --quiet --skip-runit"
+R="-it -a stdin -a stdout -a stderr --label is_top_app=0 --ipc=host --net=host -v /etc/localtime:/etc/localtime:ro -v /tmp/:/tmp/:rw"
+O="--skip-startup-files --quiet --skip-runit"
 
 ## Create $C conainer out of $IMG and run customization script in it:
 docker run $R --name $C $IMG $O -- bash -c 'customize.sh' 1>&2

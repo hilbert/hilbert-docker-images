@@ -3,11 +3,11 @@ COPYFILES   := Xorg.sh startXephyr.sh
 include ../Makefile.inc
 
 
-RUNTERM=--ipc=host --privileged --net=host --pid=host \
+RUNTERM=--ipc=host --net=host \
         -v /etc/localtime:/etc/localtime:ro -v /tmp/:/tmp/:rw
 # -v /dev/shm:/dev/shm -v /dev/dri:/dev/dri 
 
-OPTS=--skip-startup-files --no-kill-all-on-exit --quiet --skip-runit
+OPTS=--skip-startup-files --quiet --skip-runit
 
 CMD=startXephyr.sh
 # Xorg.sh

@@ -99,7 +99,7 @@ echo
 
 
 ## options for /sbin/my_init:
-#OPTS="--skip-startup-files --no-kill-all-on-exit --quiet --skip-runit"
+#OPTS="--skip-startup-files --quiet --skip-runit"
 ## options for running terminal apps via docker run:
 #RUNTERM="--rm -it  -a stdin -a stdout -a stderr"
 

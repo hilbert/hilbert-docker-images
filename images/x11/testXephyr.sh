@@ -2,7 +2,7 @@
 
 set -e 
 #set -x
-ID=$(docker run -d -e DISPLAY -v /tmp:/tmp -v /dev/shm:/dev/shm -v /dev/dri:/dev/dri --ipc=host --pid=host --name Xephyr hilbert/xephyr)
+ID=$(docker run -d -e DISPLAY -v /tmp:/tmp -v /dev/shm:/dev/shm -v /dev/dri:/dev/dri --ipc=host --name Xephyr hilbert/xephyr)
 
 # TODO: 
 sleep 2

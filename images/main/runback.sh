@@ -68,8 +68,8 @@ X="$X \
 
 # options for running terminal apps via docker run:
 # -P
-RUNTERM="-a stdout -a stderr --privileged --net=host --ipc=host --pid=host --label is_top_app=0"
-OPTS="--skip-startup-files --no-kill-all-on-exit --quiet --skip-runit"
+RUNTERM="-a stdout -a stderr --net=host --ipc=host --label is_top_app=0"
+OPTS="--skip-startup-files --quiet --skip-runit"
 
 #      --lxc-conf='lxc.cgroup.devices.allow=c 195:* rwm' \
 #     --lxc-conf='lxc.cgroup.devices.allow=c 249:* rwm' \

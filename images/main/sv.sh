@@ -115,7 +115,7 @@ mydeamon () {
 #        --lxc-conf='lxc.cgroup.devices.allow=c 116:* rwm' \
 #        --lxc-conf='lxc.cgroup.devices.allow=c  81:* rwm' \
 
-  R="--ipc=host --net=host --pid=host --privileged --label is_top_app=0"
+  R="--ipc=host --net=host --label is_top_app=0"
 
 # -v /dev/shm:/dev/shm -v /dev/dri:/dev/dri 
 #  -P
@@ -135,7 +135,7 @@ mydeamon () {
 # echo "Starting service $APP ('$ARGS')"
 
 # 
-OPTS="--skip-startup-files --quiet --skip-runit --no-kill-all-on-exit"
+OPTS="--skip-startup-files --quiet --skip-runit"
 # --name $APP 
 
 # --name "$APP" 
