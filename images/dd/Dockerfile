@@ -1,8 +1,5 @@
 FROM hilbert/base
 
-ARG IMAGE_VERSION=latest
-LABEL IMAGE_VERSION=${IMAGE_VERSION}
-
 MAINTAINER Oleksandr Motsak <malex984+hilbert.dd@gmail.com>
 
 RUN update.sh && \
@@ -35,3 +32,22 @@ ENV NO_PROXY /var/run/docker.sock
 
 # limit due to current docker client:
 ENV DOCKER_API_VERSION 1.24
+
+
+
+ARG IMAGE_VERSION=latest
+ARG GIT_NOT_CLEAN_CHECK
+# Build-time metadata as defined at http://label-schema.org
+ARG BUILD_DATE=someday
+ARG VCS_REF=HEAD
+ARG VCS_URL="https://github.com/hilbert/hilbert-docker-images"
+
+ARG DOCKERFILE="/images/dd/Dockerfile"
+LABEL org.label-schema.description="contains docker client - serves as a basis for images requiring interaction with the docker engine" \
+      org.label-schema.build-date="${BUILD_DATE}" \
+      org.label-schema.vcs-ref="${VCS_REF}" \
+      org.label-schema.vcs-url="${VCS_URL}" \
+      org.label-schema.version="${IMAGE_VERSION}" \
+      com.microscaling.docker.dockerfile="${DOCKERFILE}" \
+      IMAGE_VERSION="${IMAGE_VERSION}" \
+      GIT_NOT_CLEAN_CHECK="${GIT_NOT_CLEAN_CHECK}"

@@ -1,15 +1,12 @@
 FROM hilbert/gui
 
-ARG IMAGE_VERSION=latest
-LABEL IMAGE_VERSION=${IMAGE_VERSION}
-
 MAINTAINER Oleksandr Motsak <malex984+hilbert.x11@gmail.com>
 
 RUN update.sh \
  && install.sh xserver-xorg xserver-xorg-video-all xserver-xephyr x11-xserver-utils xinit xvfb openbox \
  && clean.sh
 
-# libgl1 libgles2 ??
+# libgl1 libgles2 x11
 
 # xorg-video-abi-18
 # xserver-xorg-core \
@@ -36,8 +33,25 @@ RUN sed -i -e 's@^ *allowed_users=.*$@allowed_users=anybody@g' /etc/X11/Xwrapper
 
 # CMD Xorg
 ## --privileged --net=host -v /dev/dri/:/dev/dri/ -v /dev/input/:/dev/input/ -v /tmp/.X11-unix/:/tmp/.X11-unix/ 
-#### -v /run/udev:/run/udev #???
+#### -v /run/udev:/run/udev #x11?
 
 # xcm?
 # git://people.freedesktop.org/~ajax/xcm
 
+
+ARG IMAGE_VERSION=latest
+ARG GIT_NOT_CLEAN_CHECK
+# Build-time metadata as defined at http://label-schema.org
+ARG BUILD_DATE=someday
+ARG VCS_REF=HEAD
+ARG VCS_URL="https://github.com/hilbert/hilbert-docker-images"
+
+ARG DOCKERFILE="/images/x11/Dockerfile"
+LABEL org.label-schema.description="basis for Xorg/Xephyr service" \
+      org.label-schema.build-date="${BUILD_DATE}" \
+      org.label-schema.vcs-ref="${VCS_REF}" \
+      org.label-schema.vcs-url="${VCS_URL}" \
+      org.label-schema.version="${IMAGE_VERSION}" \
+      com.microscaling.docker.dockerfile="${DOCKERFILE}" \
+      IMAGE_VERSION="${IMAGE_VERSION}" \
+      GIT_NOT_CLEAN_CHECK="${GIT_NOT_CLEAN_CHECK}"

@@ -1,8 +1,5 @@
-FROM hilbert/baseimage
 #~~phusion/baseimage:0.9.18~~
-
-ARG IMAGE_VERSION=latest
-LABEL IMAGE_VERSION=${IMAGE_VERSION}
+FROM hilbert/baseimage
 
 MAINTAINER Oleksandr Motsak <malex984+hilbert.base@gmail.com>
 
@@ -40,3 +37,25 @@ COPY setup_ogl.sh hb.sh hb_wrapper.sh config_cups.sh /usr/local/bin/
 ## ENTRYPOINT ["/sbin/my_init"]
 
 
+ARG IMAGE_VERSION=latest
+# Build-time metadata as defined at http://label-schema.org
+ARG BUILD_DATE=someday
+ARG VCS_REF=HEAD
+ARG VCS_URL="https://github.com/hilbert/hilbert-docker-images"
+# ARG VERSION=${IMAGE_VERSION}
+ARG GIT_NOT_CLEAN_CHECK
+ARG DOCKERFILE="/images/base/Dockerfile"
+
+LABEL org.label-schema.build-date="${BUILD_DATE}" \
+      org.label-schema.name="Hilbert" \
+      org.label-schema.description="Base docker image for most apps and services of Hilbert" \
+      org.label-schema.vendor="IMAGINARY gGmbH" \
+      org.label-schema.url="https://hilbert.github.io" \
+      org.label-schema.vcs-ref="${VCS_REF}" \
+      org.label-schema.vcs-url="${VCS_URL}" \
+      org.label-schema.version="${IMAGE_VERSION}" \
+      org.label-schema.schema-version="1.0" \
+      com.microscaling.license="Apache-2.0" \
+      com.microscaling.docker.dockerfile="${DOCKERFILE}" \
+      IMAGE_VERSION="${IMAGE_VERSION}" \
+      GIT_NOT_CLEAN_CHECK="${GIT_NOT_CLEAN_CHECK}"

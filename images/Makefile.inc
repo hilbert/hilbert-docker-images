@@ -27,7 +27,32 @@ U    ?= hilbert
 REPO ?= ${U}
 # /${I}
 # TODO: Add tag depending on git branch!?
+
+# Get the latest git commit ID
+GIT_COMMIT=$(strip $(shell git rev-parse --short HEAD))
+# Get the git repository URL
+GIT_ORIGIN_URL=$(strip $(shell git config --get remote.origin.url))
+# Get the current checkout status
+GIT_NOT_CLEAN_CHECK=$(strip $(shell git status --porcelain))
+
+ifneq (x$(GIT_NOT_CLEAN_CHECK), x)
+DOCKER_TAG_SUFFIX = "-dirty"
+endif
+
+# CODE_VERSION = $(strip $(shell cat VERSION))
+
+## See what commit is tagged to match the version
+#VERSION_COMMIT = $(strip $(shell git rev-list $(CODE_VERSION) -n 1 | cut -c1-7))
+#ifneq ($(VERSION_COMMIT), $(GIT_COMMIT))
+#$(error echo You are trying to push a build based on commit $(GIT_COMMIT) but the tagged release version is $(VERSION_COMMIT))
+#endif
+
+
+
 IMAGE_VERSION ?= latest
+VCS_REF       ?= ${GIT_COMMIT}
+VCS_URL       ?= ${GIT_ORIGIN_URL}
+
 
 APP  ?= $(shell $(ECHO) "${current_dir}" | $(SED) -e 's@[\-]@_@g' | $(TR) '[:upper:]' '[:lower:]')
 IMG  ?= ${REPO}/${APP}:${IMAGE_VERSION}
@@ -72,7 +97,14 @@ debug:
 	$(ECHO)
 	$(ECHO) "DOCKER_BUILD_OPTS : ${DOCKER_BUILD_OPTS}"
 
-DOCKER_BUILD_OPTS=--pull=false --force-rm=true --rm=true --build-arg IMAGE_VERSION=${IMAGE_VERSION}
+DOCKER_BUILD_OPTS=--pull=false --force-rm=true --rm=true \
+--build-arg IMAGE_VERSION="${IMAGE_VERSION}" \
+--build-arg VCS_REF="${VCS_REF}" \
+--build-arg VCS_URL="${VCS_URL}" \
+--build-arg GIT_NOT_CLEAN_CHECK="${GIT_NOT_CLEAN_CHECK}" \
+--build-arg BUILD_DATE=`date -u +"%Y-%m-%dT%H:%M:%SZ"` \
+--build-arg DOCKERFILE="/images/${APP}/${APP}_${IMAGE_VERSION}_Dockerfile"
+
 # --no-cache=true
 
 TMP_DF=${mkfile_dir}/${APP}_${IMAGE_VERSION}_Dockerfile
