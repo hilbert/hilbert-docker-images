@@ -3,7 +3,7 @@ FROM hilbert/alsa
 ARG IMAGE_VERSION=latest
 LABEL IMAGE_VERSION=${IMAGE_VERSION}
 
-MAINTAINER Oleksandr Motsak <malex984@googlemail.com>
+MAINTAINER Oleksandr Motsak <malex984+hilbert.xeyes@gmail.com>
 
 RUN update.sh && install.sh --no-install-recommends \
 	 xauth x11-apps xterm unclutter xdotool && \

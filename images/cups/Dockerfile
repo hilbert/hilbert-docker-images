@@ -5,7 +5,7 @@ LABEL IMAGE_VERSION=${IMAGE_VERSION}
 
 #####FRM debian:sid
 
-MAINTAINER Oleksandr Motsak <malex984@googlemail.com>
+MAINTAINER Oleksandr Motsak <malex984+hilbert.cups@gmail.com>
 
 # Install cups
 RUN DEBIAN_FRONTEND=noninteractive apt-get -y -q update && \

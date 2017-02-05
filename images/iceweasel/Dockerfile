@@ -3,7 +3,7 @@ FROM hilbert/webbase
 ARG IMAGE_VERSION=latest
 LABEL IMAGE_VERSION=${IMAGE_VERSION}
 
-MAINTAINER Oleksandr Motsak <malex984@googlemail.com>
+MAINTAINER Oleksandr Motsak <malex984+hilbert.iceweasel@gmail.com>
 
 # DEBIAN_FRONTEND=noninteractive apt-key adv --keyserver ? --recv-keys ? && \
 # ppa:mozillateam/firefox-stable ppa:mozillateam/firefox-next 

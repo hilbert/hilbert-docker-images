@@ -4,7 +4,7 @@ FROM hilbert/baseimage
 ARG IMAGE_VERSION=latest
 LABEL IMAGE_VERSION=${IMAGE_VERSION}
 
-MAINTAINER Oleksandr Motsak <malex984@googlemail.com>
+MAINTAINER Oleksandr Motsak <malex984+hilbert.base@gmail.com>
 
 COPY update.sh install.sh upgrade.sh clean.sh /usr/local/bin/
 

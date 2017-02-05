@@ -3,7 +3,7 @@ FROM hilbert/base
 ARG IMAGE_VERSION=latest
 LABEL IMAGE_VERSION=${IMAGE_VERSION}
 
-MAINTAINER Oleksandr Motsak <malex984@googlemail.com>
+MAINTAINER Oleksandr Motsak <malex984+hilbert.alsa@gmail.com>
 
 # Update & Install & Clean up APT
 # Not: please if possible add all the packages to the following single install command!

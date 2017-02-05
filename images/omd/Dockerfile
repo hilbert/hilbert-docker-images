@@ -3,7 +3,7 @@ FROM hilbert/base
 ARG IMAGE_VERSION=latest
 LABEL IMAGE_VERSION=${IMAGE_VERSION}
 
-MAINTAINER Oleksandr Motsak <malex984@googlemail.com>
+MAINTAINER Oleksandr Motsak <malex984+hilbert.omd@gmail.com>
 
 # Install OMD, see http://labs.consol.de/OMD/
 RUN gpg --keyserver keys.gnupg.net --recv-keys F8C1CA08A57B9ED7 && \
@@ -62,7 +62,7 @@ RUN omd create default || true
 # * Accept connections on any IP address, since we get a random one
 
 RUN omd config default set TMPFS "off" && \
- omd config default set ADMIN_MAIL "malex984@googlemail.com" && \
+ omd config default set ADMIN_MAIL "malex984+omd@gmail.com" && \
  omd config default set LIVESTATUS_TCP "on" && \
  omd config default set MKEVENTD "on"  && \
  omd config default set NAGIOS_THEME "classicui"  && \

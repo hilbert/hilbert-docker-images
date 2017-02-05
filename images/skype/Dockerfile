@@ -3,7 +3,7 @@ FROM hilbert/base
 ARG IMAGE_VERSION=latest
 LABEL IMAGE_VERSION=${IMAGE_VERSION}
 
-MAINTAINER Oleksandr Motsak <malex984@googlemail.com>
+MAINTAINER Oleksandr Motsak <malex984+hilbert.skype@gmail.com>
 
 # Setup multiarch because Skype is 32bit only
 # Make sure the repository information is up to date

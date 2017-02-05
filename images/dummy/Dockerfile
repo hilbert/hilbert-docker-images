@@ -3,7 +3,7 @@ FROM hilbert/x11
 ARG IMAGE_VERSION=latest
 LABEL IMAGE_VERSION=${IMAGE_VERSION}
 
-MAINTAINER Oleksandr Motsak <malex984@googlemail.com>
+MAINTAINER Oleksandr Motsak <malex984+hilbert.dummy@gmail.com>
 
 RUN update.sh && install.sh \
                         p7zip-full curl wget pciutils && \

@@ -5,7 +5,7 @@ FROM hilbert/webbase
 ARG IMAGE_VERSION=latest
 LABEL IMAGE_VERSION=${IMAGE_VERSION}
 
-MAINTAINER Oleksandr Motsak <malex984@googlemail.com>
+MAINTAINER Oleksandr Motsak <malex984+hilbert.chrome@gmail.com>
 
 #! Default value for environment variable (used below)
 ENV OPERA opera-stable

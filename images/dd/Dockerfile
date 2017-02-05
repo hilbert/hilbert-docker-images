@@ -3,7 +3,7 @@ FROM hilbert/base
 ARG IMAGE_VERSION=latest
 LABEL IMAGE_VERSION=${IMAGE_VERSION}
 
-MAINTAINER Oleksandr Motsak <malex984@googlemail.com>
+MAINTAINER Oleksandr Motsak <malex984+hilbert.dd@gmail.com>
 
 RUN update.sh && \
     curl -sSL https://get.docker.com/gpg | apt-key add - && \

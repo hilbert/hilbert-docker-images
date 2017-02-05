@@ -3,7 +3,7 @@ FROM hilbert/test
 ARG IMAGE_VERSION=latest
 LABEL IMAGE_VERSION=${IMAGE_VERSION}
 
-MAINTAINER Oleksandr Motsak <malex984@googlemail.com>
+MAINTAINER Oleksandr Motsak <malex984+hilbert.kivy@gmail.com>
 
 # http://kivy.org/docs/installation/installation-linux.html#ubuntu-11-10-or-newer
 
