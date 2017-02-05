@@ -11,12 +11,13 @@ RUN=/usr/local/run.sh
 CMD=$(RUN)
 ARGS=
 
-## COPY dockapp_dashboard /usr/local/dockapp_dashboard
 check_compose: $(TS)
-	docker-compose -p $(COMPOSE_PROJECT_NAME) run --rm -p 8081:8080 ${APP} ${CMD} ${ARGS}
+	export IMAGE_VERSION=${IMAGE_VERSION}
+	docker-compose -p $(COMPOSE_PROJECT_NAME) run --rm -p 8000:8000 ${APP} ${CMD} ${ARGS}
+	unset IMAGE_VERSION
 
 check_docker: $(TS)
-	docker run --rm ${RUNTERM} --label is_top_app=1 -v "/tmp/:/tmp/:rw" -p 8081:8080 $(IMG) ${OPTS} -- ${CMD} ${ARGS}
+	docker run --rm ${RUNTERM} --label is_top_app=1 -v "/tmp/:/tmp/:rw" -p 8000:8000 $(IMG) ${OPTS} -- ${CMD} ${ARGS}
 
 check: check_compose
 
@@ -28,7 +29,6 @@ stop: $(TS)
 	docker-compose -p $(COMPOSE_PROJECT_NAME) kill -s SIGTERM ${APP}
 	docker-compose -p $(COMPOSE_PROJECT_NAME) kill -s SIGKILL ${APP}
 	docker-compose -p $(COMPOSE_PROJECT_NAME) rm -f ${APP}
-		
 
 #COMPOSE_BUILD_OPTS=--force-rm
 #build: ${DF} ${ACOPYFILES} ${ACOPYFILES2}
@@ -38,9 +38,9 @@ stop: $(TS)
 #	$(MAKE) ${TS}
 
 demo_compose: $(TS)
-	docker-compose -p $(COMPOSE_PROJECT_NAME) run --rm -p 8088:8080 demo
+	docker-compose -p $(COMPOSE_PROJECT_NAME) run --rm -p 8000:8000 demo
 
 demo_docker: $(TS)
-	docker run --rm ${RUNTERM} --label is_top_app=1 -p 8088:8080 $(IMG) ${OPTS} -- $(RUN) --test=true
+	docker run --rm ${RUNTERM} --label is_top_app=1 -p 8000:8000 $(IMG) ${OPTS} -- $(RUN) --test=1
 
 demo: demo_compose
