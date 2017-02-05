@@ -13,7 +13,7 @@ RUNTERM=-a stdout -a stderr --ipc=host --net=host \
 
 ### TODO: switch to remote docker / networking!?
 
-OPTS=--skip-startup-files --quiet --skip-runit
+OPTS=/sbin/my_init --skip-startup-files --quiet --skip-runit
 
 check: $(TS)
 	test -n "${DISPLAY}"

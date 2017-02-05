@@ -14,7 +14,7 @@ HIP=$(shell netstat -rn | grep "^0.0.0.0 " | cut -d " " -f10)
 
 RUNTERM=-it -a stdin -a stdout -a stderr -e HIP -e CUPS_SERVER
 
-OPTS=--skip-startup-files --quiet --skip-runit
+OPTS=/sbin/my_init --skip-startup-files --quiet --skip-runit
 
 # todo: download test pdf , lpr, lpq, lprm-job , lpq
 CMD=bash -c 'config_cups.sh && lpq && sleep 3'

@@ -5,7 +5,7 @@ include ../Makefile.inc
 CMD=launch.sh xterm -e bash /usr/src/bm_gpu.sh
 
 RUNTERM=-it -a stdin -a stdout -a stderr --ipc=host --net=host
-OPTS=--skip-startup-files --quiet --skip-runit
+OPTS=/sbin/my_init --skip-startup-files --quiet --skip-runit
 
 ### [ -z "${DISPLAY}" ] && exit 1
 check: $(TS)

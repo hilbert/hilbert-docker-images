@@ -37,6 +37,7 @@ COPY setup_ogl.sh hb.sh hb_wrapper.sh config_cups.sh /usr/local/bin/
 
 # Use baseimage-docker's init system.
 # CMD ["/sbin/my_init"]
-ENTRYPOINT ["/sbin/my_init"]
+
+## ENTRYPOINT ["/sbin/my_init"]
 
 

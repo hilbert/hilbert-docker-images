@@ -11,7 +11,7 @@ PA_SETTING= -v "/run/user/`id -u`/pulse:/run/pulse" -e PULSE_SERVER=/run/pulse/n
 
 RUNTERM= -it -a stdin -a stdout -a stderr --ipc=host \
          --net=host -e DISPLAY -v /tmp/:/tmp/:rw ${PA_SETTING}
-OPTS=--skip-startup-files --quiet --skip-runit
+OPTS=/sbin/my_init --skip-startup-files --quiet --skip-runit
 
 check: $(TS)
 	### [ -z "${DISPLAY}" ] && exit 1

@@ -7,7 +7,7 @@ RUNTERM=--ipc=host --net=host \
         -v /etc/localtime:/etc/localtime:ro -v /tmp/:/tmp/:rw
 # -v /dev/shm:/dev/shm -v /dev/dri:/dev/dri 
 
-OPTS=--skip-startup-files --quiet --skip-runit
+OPTS=/sbin/my_init --skip-startup-files --quiet --skip-runit
 
 CMD=startXephyr.sh
 # Xorg.sh

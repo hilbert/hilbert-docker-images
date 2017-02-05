@@ -6,7 +6,7 @@ CMD=npm
 ARGS=-l
 
 RUNTERM=-it -a stdin -a stdout -a stderr --ipc=host --net=host
-OPTS=--skip-startup-files --quiet --skip-runit
+OPTS=/sbin/my_init --skip-startup-files --quiet --skip-runit
 
 check: $(TS)
 	docker ps -a

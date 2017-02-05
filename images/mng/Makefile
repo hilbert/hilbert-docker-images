@@ -4,7 +4,7 @@ include ../Makefile.inc
 
 RUNTERM=-it -a stdin -a stdout -a stderr 
 # -p 8077:8066
-OPTS=--skip-startup-files --skip-runit
+OPTS=/sbin/my_init --skip-startup-files --skip-runit
 
 # CMD=bash
 RUN=/usr/local/run.sh

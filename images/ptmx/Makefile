@@ -5,13 +5,13 @@ include ../Makefile.inc
 CMD=ptmx.sh
 ARGS=
 
-RUNTERM=-a stdout -a stderr --ipc=host --net=host \
-        -v /etc/localtime:/etc/localtime:ro -v /tmp/:/tmp/:rw \
-        -v /var/run/docker.sock:/var/run/docker.sock -P
+RUNTERM=-a stdout -a stderr --ipc=host --net=none --privileged \
+        -v /etc/localtime:/etc/localtime:ro 
+	# -v /tmp/:/tmp/:rw -v /var/run/docker.sock:/var/run/docker.sock -P
 
 ### TODO: switch to remote docker / networking!?
 
-OPTS=--skip-startup-files --quiet --skip-runit
+OPTS=/sbin/my_init --skip-startup-files --quiet --skip-runit
 
 check: $(TS)
 	docker ps -a

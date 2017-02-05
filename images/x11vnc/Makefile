@@ -8,7 +8,7 @@ RUNTERM=-a stdout -a stderr --ipc=host --net=host \
 
 # -v /dev/shm:/dev/shm -v /dev/dri:/dev/dri 
 
-OPTS=--skip-startup-files --quiet --skip-runit
+OPTS=/sbin/my_init --skip-startup-files --quiet --skip-runit
 
 CMD=x11vnc.sh
 

@@ -10,7 +10,7 @@ RUNTERM=-it -a stdin -a stdout -a stderr -P \
 
 ### --label is_top_app=1
 
-OPTS=--skip-startup-files --quiet --skip-runit
+OPTS=/sbin/my_init --skip-startup-files --quiet --skip-runit
 
 check: $(TS)
 	docker run --rm ${RUNTERM} $(IMG) ${OPTS} -- ${CMD}

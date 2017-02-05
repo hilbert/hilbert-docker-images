@@ -2,8 +2,8 @@ mkfile_path := $(abspath $(lastword $(MAKEFILE_LIST)))
 COPYFILES   := 
 include ../Makefile.inc
 
-RUNTERM=-it -a stdin -a stdout -a stderr
-OPTS=--skip-startup-files --quiet --skip-runit
+RUNTERM=-it -a stdin -a stdout -a stderr --privileged
+OPTS=/sbin/my_init --skip-startup-files --quiet --skip-runit
 
 CMD=soundtest.sh
 
