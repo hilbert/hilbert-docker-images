@@ -7,9 +7,16 @@
 - Changelog according to (http://keepachangelog.com/)
 - License: Apache v2
 - Git branching model
+- Each Docker Image is now in separate Docker Hub repository with automatic building (=> there may be different image versions, e.g. `latest` and `devel`)
+- Added micro badges and additional image labels
+- Added docker hooks to enable dynamic base image specification (`FROM ...:**SAME_TAG**`)
+
 
 ### Changed
 - Restructurization/migration of older `malex984/dockapp:*` to `hilbert/*`
+- Migration of docker images to `hilbert/hilbert-docker-images`
+- Change of hierarchy of images
+
 
 ### Security 
 - Starting to remove `sudo` and `privileged` requirements 
