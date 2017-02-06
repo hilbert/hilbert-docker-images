@@ -15,11 +15,12 @@ RUN update.sh && \
 
 RUN mkdir -p /usr/local/src
 
-# download latest development version and install node.js dependencies
-RUN git clone --depth 1 -b 'devel' https://github.com/hilbert/hilbert-ui.git /usr/local/hilbert-ui \
+# download latest stable version and install node.js dependencies
+RUN git clone --depth 1 -b 'master' https://github.com/hilbert/hilbert-ui.git /usr/local/hilbert-ui \
     && cd /usr/local/hilbert-ui/client && npm install && cd /usr/local/hilbert-ui/server && npm install
 
-RUN git clone --depth 1 -b 'feature/hilbert_cli_tools' https://github.com/hilbert/hilbert-cli.git /usr/local/src/cli \
+# download latest version. (note: required python packages were installed above)
+RUN git clone --depth 1 -b 'devel' https://github.com/hilbert/hilbert-cli.git /usr/local/src/cli \
     && cd /usr/local/src/cli && python3 ./setup.py install 
 
 # Dummy script checker  (instead of full Haskel Suite)
