@@ -1,24 +1,26 @@
-#!/bin/sh
+#!/usr/bin/env bash
 
-set -v
-set -x 
+if [[ -r /etc/container_environment.sh ]]; then 
+  source /etc/container_environment.sh
+fi
 
-#SELFDIR=`dirname "$0"`
-#SELFDIR=`cd "${SELFDIR}" && pwd`
-#cd "${SELFDIR}"
+## export >> /tmp/list_vars0
 
-# ./mng.sh
+[[ -z "${HOME}" ]] && export HOME=/root
 
-nginx -t
-nginx -s stop
-nginx -s quit
-nginx
+if [[ ! -d "${HOME}/.ssh" ]]; then 
+  mkdir -p "${HOME}/.ssh"
+  if [[ -d "${HILBERT_SERVER_CONFIG_SSH_PATH}" ]]; then 
+##    ls -la "${HILBERT_SERVER_CONFIG_SSH_PATH}/"
+    cd "${HILBERT_SERVER_CONFIG_SSH_PATH}" && cp -R -P -p -t "${HOME}/.ssh/" ./* && cd -
+  fi
+fi
 
-# echo debug start
-# ls -lL /usr/local/dockapp_dashboard/server/scripts
-# echo debug end
+# ls -la "${HOME}/.ssh/"
 
-# export NODE_PATH=/usr/lib/node_modules/hilbert-ui/node_modules
-cd /usr/local/hilbert-ui/server/app
-echo "Starting Dashboard's Back-end Server with the following arguments: '$*'"
-exec node main.js "$*"
+## set -v
+## set -x 
+
+/usr/local/nginx.sh || exit 1
+
+exec /usr/local/uiserver.sh $@

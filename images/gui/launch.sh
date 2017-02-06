@@ -52,6 +52,7 @@ fi
 [[ "${MOUSE_CURSOR}" = "off" ]] && (echo "Hiding the mouse..."; unclutter -idle 0; )
 
 
+export ALSA_CARD="${HILBERT_ALSA_CARD:-${ALSA_CARD}}"
 
 if [ ! -z "${ALSA_CARD}" ]; then 
 
@@ -59,8 +60,10 @@ if [ ! -z "${ALSA_CARD}" ]; then
 
 CARD="${ALSA_CARD}"
 
-HOME=${HOME:-/root}
-cat <<EOF > $HOME/.asoundrc
+export HOME=${HOME:-/root}
+
+# NOTE: the following may be part of customiations... 
+cat <<EOF > $HOME/.asoundrc~
 pcm.!default {
     type hw
     card $CARD
@@ -71,10 +74,16 @@ ctl.!default {
 }
 EOF
 ## fi
+if [ ! -f "$HOME/.asoundrc" ]; then
+  mv "$HOME/.asoundrc~" "$HOME/.asoundrc"
 fi
 
-qclosebutton "$SELFDIR/x_64x64.png" xfullscreen $CMD $ARGS 2>&1
+fi
 
+## TODO: make  qclosebutton and xfullscreen optional!
+# exec qclosebutton "$SELFDIR/x_64x64.png" 
+# exec xfullscreen 
+exec $CMD $ARGS 2>&1
 exit $?
 
 

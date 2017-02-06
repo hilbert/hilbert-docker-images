@@ -1,6 +1,0 @@
-[submodule "images/xeyes/xfullscreen"]
-	path = images/xeyes/xfullscreen
-	url = https://github.com/IMAGINARY/xfullscreen.git
-[submodule "images/alsa/apulse"]
-	path = images/alsa/apulse
-	url = https://github.com/i-rinat/apulse.git

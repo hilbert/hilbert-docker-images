@@ -1,6 +1,6 @@
-FROM malex984/dockapp:base
+FROM hilbert/base
 
-MAINTAINER Oleksandr Motsak <malex984@googlemail.com>
+MAINTAINER Oleksandr Motsak <malex984+hilbert.nodejs@gmail.com>
 
 # https://github.com/nodesource/distributions
 
@@ -11,10 +11,10 @@ MAINTAINER Oleksandr Motsak <malex984@googlemail.com>
 ## curl --silent --location https://deb.nodesource.com/setup_4.x | sudo -E bash -
 ## wget -qO- https://deb.nodesource.com/setup_4.x | bash -
 
-RUN update.sh && \
-    DEBIAN_FRONTEND=noninteractive curl -sL https://deb.nodesource.com/setup_4.x | sudo -E bash - && \
-    install.sh --no-install-recommends nodejs && \
-    clean.sh
+RUN update.sh \
+ && DEBIAN_FRONTEND=noninteractive curl -sL https://deb.nodesource.com/setup_4.x | sudo -E bash - \
+ && install.sh nodejs \
+ && clean.sh
 
 #RUN npm install electron-prebuilt -g 
 ## && npm install asar -g && \
@@ -22,4 +22,23 @@ RUN update.sh && \
 
 # ONBUILD COPY package.json index.html main.js /usr/src/kiosk/
 # CMD [ "npm", "start" ]
-# CMD [ "launch.sh", "/usr/src/kiosk/run.sh" ] ## ??
+# CMD [ "launch.sh", "/usr/src/kiosk/run.sh" ] ## nodejs
+
+
+
+ARG IMAGE_VERSION=latest
+ARG GIT_NOT_CLEAN_CHECK
+# Build-time metadata as defined at http://label-schema.org
+ARG BUILD_DATE=someday
+ARG VCS_REF=HEAD
+ARG VCS_URL="https://github.com/hilbert/hilbert-docker-images"
+
+ARG DOCKERFILE="/images/nodejs/Dockerfile"
+LABEL org.label-schema.description="contains basic Node JS 4" \
+      org.label-schema.build-date="${BUILD_DATE}" \
+      org.label-schema.vcs-ref="${VCS_REF}" \
+      org.label-schema.vcs-url="${VCS_URL}" \
+      org.label-schema.version="${IMAGE_VERSION}" \
+      com.microscaling.docker.dockerfile="${DOCKERFILE}" \
+      IMAGE_VERSION="${IMAGE_VERSION}" \
+      GIT_NOT_CLEAN_CHECK="${GIT_NOT_CLEAN_CHECK}"

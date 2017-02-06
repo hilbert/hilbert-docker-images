@@ -3,7 +3,7 @@ COPYFILES   :=
 include ../Makefile.inc
 
 RUNTERM=-it -a stdin -a stdout -a stderr
-OPTS=--skip-startup-files --skip-runit
+OPTS=/sbin/my_init --skip-startup-files --skip-runit
 
 CMD=A.sh 
 ARGS=AHelloA

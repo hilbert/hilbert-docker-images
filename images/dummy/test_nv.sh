@@ -1,12 +1,7 @@
 #!/bin/bash
 
 APP="$1"
-
-#U=malex984
-#I=dockapp
-
-IMG="$APP"
-## $U/$I:$APP"
+IMG="$APP" ## $U/$I:$APP"
 
 
 # Count the number of NVIDIA controllers found.

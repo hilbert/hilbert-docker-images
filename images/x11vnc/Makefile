@@ -3,12 +3,12 @@ COPYFILES   := x11vnc.sh
 include ../Makefile.inc
 
 
-RUNTERM=-a stdout -a stderr --ipc=host --net=host --pid=host \
+RUNTERM=-a stdout -a stderr --ipc=host --net=host \
         -v /etc/localtime:/etc/localtime:ro -v /tmp/:/tmp/:rw
 
 # -v /dev/shm:/dev/shm -v /dev/dri:/dev/dri 
 
-OPTS=--skip-startup-files --no-kill-all-on-exit --quiet --skip-runit
+OPTS=/sbin/my_init --skip-startup-files --quiet --skip-runit
 
 CMD=x11vnc.sh
 

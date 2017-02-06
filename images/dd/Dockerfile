@@ -1,14 +1,11 @@
-FROM malex984/dockapp:base
+FROM hilbert/base
 
-MAINTAINER Oleksandr Motsak <malex984@googlemail.com>
+MAINTAINER Oleksandr Motsak <malex984+hilbert.dd@gmail.com>
 
 RUN update.sh && \
     curl -sSL https://get.docker.com/gpg | apt-key add - && \
     curl -sSL https://get.docker.com/ | sh && \
     clean.sh
-
-# DEBIAN_FRONTEND=noninteractive apt-get -q -y install \
-# --no-install-recommends lxc-docker && \
 
 #ADD https://get.docker.com/builds/Linux/x86_64/docker-latest /usr/local/bin/docker
 #RUN chmod +x /usr/local/bin/docker
@@ -18,7 +15,7 @@ RUN update.sh && \
 
 # RUN chmod +x /usr/local/bin/docker /usr/local/bin/docker-compose
 # RUN ln -s $HOME/bin/docker-latest $HOME/bin/docker
-## ENV DOCKER_CERT_PATH=
+## ENV DOCKER_CERT_PATH 
 
 # nsenter does not work from inside a container :(
 # ADD ./baseimage-docker-nsenter ./docker-bash /usr/local/bin/
@@ -33,3 +30,24 @@ ENV NO_PROXY /var/run/docker.sock
 # VOLUME $HOME
 # WORKDIR $HOME
 
+# limit due to current docker client:
+ENV DOCKER_API_VERSION 1.24
+
+
+
+ARG IMAGE_VERSION=latest
+ARG GIT_NOT_CLEAN_CHECK
+# Build-time metadata as defined at http://label-schema.org
+ARG BUILD_DATE=someday
+ARG VCS_REF=HEAD
+ARG VCS_URL="https://github.com/hilbert/hilbert-docker-images"
+
+ARG DOCKERFILE="/images/dd/Dockerfile"
+LABEL org.label-schema.description="contains docker client - serves as a basis for images requiring interaction with the docker engine" \
+      org.label-schema.build-date="${BUILD_DATE}" \
+      org.label-schema.vcs-ref="${VCS_REF}" \
+      org.label-schema.vcs-url="${VCS_URL}" \
+      org.label-schema.version="${IMAGE_VERSION}" \
+      com.microscaling.docker.dockerfile="${DOCKERFILE}" \
+      IMAGE_VERSION="${IMAGE_VERSION}" \
+      GIT_NOT_CLEAN_CHECK="${GIT_NOT_CLEAN_CHECK}"

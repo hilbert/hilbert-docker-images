@@ -1,0 +1,87 @@
+#!/bin/bash
+
+# $IMAGE_NAME var is injected into the build so the tag is correct.
+
+IMAGE_NAME="${IMAGE_NAME:-index.docker.io/hilbert/base:latest}"
+
+# TODO: dynamic base !!!
+
+GIT_COMMIT="${GIT_SHA1:-`git rev-parse --short HEAD`}"
+GIT_ORIGIN_URL=`git config --get remote.origin.url`
+GIT_NOT_CLEAN_CHECK=`git status --porcelain`
+
+VCS_REF="${GIT_COMMIT}"
+VCS_URL="${GIT_ORIGIN_URL}"
+
+
+# IMAGE_NAME = ..../ USER / APP : VERSION
+IMG_TAG="${IMAGE_NAME##*[:]}"
+IMG_BASENAME="${IMAGE_NAME%[:]*}"
+IMG_USER="${IMG_BASENAME%[/]*}"
+
+# BASENAME = USER / APP
+IMG_APP="${IMG_BASENAME##*[/]}"
+
+IMAGE_VERSION="${DOCKER_TAG:-${IMG_TAG}}"
+
+echo "Build hook running [$@] for [${IMAGE_NAME}] -> [${IMG_USER}] / [${IMG_APP}] : [${IMG_TAG}]"
+
+set
+env
+export
+declare -p
+
+TMP_DF="${DF}"
+
+DF="Dockerfile"
+
+pwd
+ls -al "${DF}" prepare.sh buildconfig
+
+set -v
+set -x
+
+TMP_DF="${DF}"
+
+if [[ ! "x${IMAGE_VERSION}" = "xlatest" ]]; then
+   TMP_DF="${IMG_APP}_${IMAGE_VERSION}_Dockerfile"
+   sed "s@^FROM  *\([^ :#][^ :#]*\) *\$@FROM \1:${IMAGE_VERSION}@g" "${DF}" > "${TMP_DF}" 
+fi
+
+echo "${TMP_DF}"
+ls -la "${TMP_DF}"
+
+if [[ -f "${TMP_DF}" ]] && [[ -r "${TMP_DF}" ]]; then 
+
+cat "${TMP_DF}"
+
+docker build \
+--tag "${IMAGE_NAME}" \
+--build-arg IMAGE_VERSION="${IMAGE_VERSION}" \
+--build-arg VCS_REF="${VCS_REF}" \
+--build-arg VCS_URL="${VCS_URL}" \
+--build-arg GIT_NOT_CLEAN_CHECK="${GIT_NOT_CLEAN_CHECK}" \
+--build-arg BUILD_DATE=`date -u +"%Y-%m-%dT%H:%M:%SZ"` \
+--build-arg DOCKERFILE="${BUILD_PATH}${TMP_DF}" \
+`pwd`
+
+else
+
+sed "s@^FROM  *\([^ :#][^ :#]*\) *\$@FROM \1:${IMAGE_VERSION}@g" "${DF}" | \
+docker build \
+      --tag "${IMAGE_NAME}" \
+      --build-arg IMAGE_VERSION="${IMAGE_VERSION}" \
+      --build-arg VCS_REF="${VCS_REF}" \
+      --build-arg VCS_URL="${VCS_URL}" \
+      --build-arg GIT_NOT_CLEAN_CHECK="${GIT_NOT_CLEAN_CHECK}" \
+      --build-arg DOCKERFILE="${BUILD_PATH}${TMP_DF}" \
+      --build-arg BUILD_DATE=`date -u +"%Y-%m-%dT%H:%M:%SZ"` - 
+
+fi
+
+#docker tag $IMAGE_NAME $DOCKER_REPO:$SOURCE_COMMIT
+#docker push $DOCKER_REPO:$SOURCE_COMMIT
+
+exit $?
+
+

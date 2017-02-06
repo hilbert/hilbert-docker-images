@@ -1,5 +1,5 @@
-#! /bin/bash
+#! /bin/sh
 
 # ubuntu/debian
-DEBIAN_FRONTEND=noninteractive apt-get -y -q update --force-yes "$@"
+DEBIAN_FRONTEND=noninteractive apt-get -y -q update -qqy --force-yes "$@"
 

@@ -1,16 +1,10 @@
-FROM malex984/dockapp:base
-# FROM debian:sid
+FROM hilbert/base
+#####~~debian:sid~~
 
-MAINTAINER Oleksandr Motsak <malex984@googlemail.com>
+MAINTAINER Oleksandr Motsak <malex984+hilbert.cups@gmail.com>
 
 # Install cups
-RUN DEBIAN_FRONTEND=noninteractive apt-get -y -q update && \
-    DEBIAN_FRONTEND=noninteractive apt-get -q -y install \
-                    --no-install-recommends \
-                    cups cups-pdf whois cups-bsd && \
-    DEBIAN_FRONTEND=noninteractive apt-get clean && \
-    rm -rf /var/lib/apt/lists/* /tmp/* /var/tmp/*
-
+RUN update.sh && install.sh cups cups-pdf whois cups-bsd && clean.sh
 # cups-bsd for lp* tools!
 
 # Disable some cups backend that are unusable within a container
@@ -42,3 +36,20 @@ EXPOSE 631
 # CMD ["/usr/local/bin/start_cups.sh"]
 
 
+
+ARG IMAGE_VERSION=latest
+ARG GIT_NOT_CLEAN_CHECK
+# Build-time metadata as defined at http://label-schema.org
+ARG BUILD_DATE=someday
+ARG VCS_REF=HEAD
+ARG VCS_URL="https://github.com/hilbert/hilbert-docker-images"
+
+ARG DOCKERFILE="/images/cups/Dockerfile"
+LABEL org.label-schema.description="testing CUPS server" \
+      org.label-schema.build-date="${BUILD_DATE}" \
+      org.label-schema.vcs-ref="${VCS_REF}" \
+      org.label-schema.vcs-url="${VCS_URL}" \
+      org.label-schema.version="${IMAGE_VERSION}" \
+      com.microscaling.docker.dockerfile="${DOCKERFILE}" \
+      IMAGE_VERSION="${IMAGE_VERSION}" \
+      GIT_NOT_CLEAN_CHECK="${GIT_NOT_CLEAN_CHECK}"

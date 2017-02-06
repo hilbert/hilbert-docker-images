@@ -15,7 +15,7 @@ RUNTERM=-it -a stdin -a stdout -a stderr -P \
 
 ### TODO: switch to remote docker / networking!?
 
-OPTS=--skip-startup-files --no-kill-all-on-exit --quiet --skip-runit
+OPTS=/sbin/my_init --skip-startup-files --quiet --skip-runit
 
 check: $(TS)
 	### [ -z "${DISPLAY}" ] && exit 1

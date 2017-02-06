@@ -3,10 +3,6 @@
 # NOTE: just for testing:
 ### gcc --static event.c -o event || exit 1
 
-if [ -z "$CFG_DIR" ]; then
-    export CFG_DIR="$HOME/.config/dockapp"
-fi
-
 OLDDIR="${PWD}"
 SELFDIR=`dirname "$0"`
 cd "${SELFDIR}"

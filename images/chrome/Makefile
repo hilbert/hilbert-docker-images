@@ -15,10 +15,10 @@ APP_ID=browser_app
 
 # -it -a stdin -a stdout -a stderr 
 # --privileged
-RUNTERM=--ipc=host --net=host --pid=host -e GOOGLE_CHROME=$(GOOGLE_CHROME) 
+RUNTERM=--ipc=host --net=host -e GOOGLE_CHROME=$(GOOGLE_CHROME) 
 
 # --no-kill-all-on-exit 
-OPTS=--skip-startup-files --quiet --skip-runit
+OPTS=/sbin/my_init --skip-startup-files --quiet --skip-runit
 
 check: $(TS)
 	### [ -z "${DISPLAY}" ] && exit 1

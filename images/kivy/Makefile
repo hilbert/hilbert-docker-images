@@ -9,9 +9,9 @@ ARGS=/usr/local/src/Deflectouch/run.sh
 PA_SETTING= -v "/run/user/`id -u`/pulse:/run/pulse" -e PULSE_SERVER=/run/pulse/native \
             -v ${HOME}/.config/pulse/cookie:/run/pulse_cookie -e PULSE_COOKIE=/run/pulse_cookie
 
-RUNTERM= -it -a stdin -a stdout -a stderr --ipc=host --privileged \
-         --net=host --pid=host -e DISPLAY -v /tmp/:/tmp/:rw ${PA_SETTING}
-OPTS=--skip-startup-files --no-kill-all-on-exit --quiet --skip-runit
+RUNTERM= -it -a stdin -a stdout -a stderr --ipc=host \
+         --net=host -e DISPLAY -v /tmp/:/tmp/:rw ${PA_SETTING}
+OPTS=/sbin/my_init --skip-startup-files --quiet --skip-runit
 
 check: $(TS)
 	### [ -z "${DISPLAY}" ] && exit 1

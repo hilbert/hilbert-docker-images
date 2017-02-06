@@ -15,8 +15,7 @@ if [ -z "$ARGS" ]; then # cups play surfer iceweasel skype q3 xbmc up
 # 
 fi
 
-U=malex984
-I=dockapp
+U=hilbert
 
 docker pull phusion/baseimage:0.9.18
 
@@ -32,7 +31,7 @@ do
   echo
   echo
   echo
-  echo "Building $d -> $U/$I:$d...."
+  echo "Building $d -> $U/$d...."
   cd $d
   
   cat "./Dockerfile"
@@ -45,14 +44,14 @@ do
   echo "Building '$d'..."
 
   df -h
-  make -C $PWD || docker build --pull=false --force-rm=true --rm=true -t "$U/$I:$d" "." || exit 1
+  make -C $PWD || docker build --pull=false --force-rm=true --rm=true -t "$U/$d" "." || exit 1
   docker rmi $(docker images -q -f dangling=true)
   ls -al /dev/pts/ptmx
   ls -al /dev/ptmx
   df -h
 #  chmod a+rwx /dev/pts/ptmx
   echo "Pushing..."
-#  docker push "$U/$I:$d"
+#  docker push "$U/$d"
   make -C $PWD push 
   cd .. 
 done

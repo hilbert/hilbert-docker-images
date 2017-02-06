@@ -1,21 +1,14 @@
-FROM malex984/dockapp:gui
+FROM hilbert/gui
 
-MAINTAINER Oleksandr Motsak <malex984@googlemail.com>
+MAINTAINER Oleksandr Motsak <malex984+hilbert.test@gmail.com>
 
-ENV LIBGL_DEBUG=verbose
+ENV LIBGL_DEBUG verbose
 # ENV XLIB_SKIP_ARGB_VISUALS 1
 
 # set the following if any QT GUI look like an empty rectangular window
 # ENV QT_X11_NO_MITSHM 1
 
-
-RUN update.sh && \
-    install.sh \
-          --no-install-recommends \
-          libgles1-mesa libgles2-mesa libegl1-mesa-drivers mesa-vdpau-drivers \
-	  freeglut3 nux-tools mesa-utils pciutils \
-	  glmark2 libxv1 g3dviewer libcanberra-gtk3-module && \
-    clean.sh
+RUN update.sh && install.sh glmark2 g3dviewer nux-tools && clean.sh
 
 # build-essential
 #  xkeyboard-config xkbcomp
@@ -70,5 +63,21 @@ RUN tar -xjvf /usr/src/GpuTest_Linux_x64_0.7.0.tar.bz2 -C /usr/src/ && ln -s /us
 
 COPY bm_gpu.sh /usr/src/
 
-#  xpra??
+#  xpratest
 
+ARG IMAGE_VERSION=latest
+ARG GIT_NOT_CLEAN_CHECK
+# Build-time metadata as defined at http://label-schema.org
+ARG BUILD_DATE=someday
+ARG VCS_REF=HEAD
+ARG VCS_URL="https://github.com/hilbert/hilbert-docker-images"
+
+ARG DOCKERFILE="/images/test/Dockerfile"
+LABEL org.label-schema.description="Applications and scripts for testing Graphics & GPU" \
+      org.label-schema.build-date="${BUILD_DATE}" \
+      org.label-schema.vcs-ref="${VCS_REF}" \
+      org.label-schema.vcs-url="${VCS_URL}" \
+      org.label-schema.version="${IMAGE_VERSION}" \
+      com.microscaling.docker.dockerfile="${DOCKERFILE}" \
+      IMAGE_VERSION="${IMAGE_VERSION}" \
+      GIT_NOT_CLEAN_CHECK="${GIT_NOT_CLEAN_CHECK}"

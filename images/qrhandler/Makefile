@@ -6,8 +6,8 @@ include ../Makefile.inc
 CMD=qrhandler.sh
 QR_DEVICE_ID=AT Translated Set 2 keyboard
 
-RUNTERM=-it -a stdin -a stdout -a stderr --ipc=host --privileged --net=host --pid=host
-OPTS=--skip-startup-files --no-kill-all-on-exit --quiet --skip-runit
+RUNTERM=-it -a stdin -a stdout -a stderr --ipc=host --net=host
+OPTS=/sbin/my_init --skip-startup-files --quiet --skip-runit
 
 check: $(TS)
 	### [ -z "${DISPLAY}" ] && exit 1

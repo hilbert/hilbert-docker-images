@@ -1,5 +1,7 @@
 #! /bin/bash
-# set -e
+
+set -v
+set -x
 
 ARGS="$@"
 
@@ -59,15 +61,20 @@ fi
 trap 'kill ${!}; hb_finish' EXIT SIGTERM
 
 #### Application starts here:
+echo "Starting in background: [/bin/bash -c \"$ARGS\"]... and waiting"
 /bin/bash -c "$ARGS" &
 pid="$!"
 
+echo "=> PID: $pid"
+
 # wait indefinetely
 # true
-while ps -o pid | grep -q "^[[:space:]]*"$pid"[[:space:]]*$" >/dev/null 2>&1
+while ps -o pid | grep -q "^[[:space:]]*"$pid"[[:space:]]*$"
 do
+  echo "[loop] waiting for live process [$pid]..."
   tail -f /dev/null & wait ${!}
 done
 
+echo "[$pid] seems to be dead now... sending [hb_done]!"
 HB "hb_done" "1"
 exit
