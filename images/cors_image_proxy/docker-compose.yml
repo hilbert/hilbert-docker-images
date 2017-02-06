@@ -1,0 +1,28 @@
+version: '2.1'
+services:
+  cors_image_proxy:
+    labels:
+     - "is_top_app=0"
+    build: .
+    image: hilbert/cors_image_proxy:${IMAGE_VERSION:-latest}
+    network_mode: host
+    privileged: false
+    stdin_open: false
+    tty: false
+    volumes:
+     - /etc/localtime:/etc/localtime:ro
+    environment:
+     - HOME=/root
+    entrypoint:
+     - /sbin/my_init
+     - --skip-runit
+     - --skip-startup-files
+     - --
+    expose: 
+     - 9000
+     - 9999
+    restart: on-failure:5
+#    restart: always
+    command:
+     - /usr/local/run.sh
+#     - --test=1
