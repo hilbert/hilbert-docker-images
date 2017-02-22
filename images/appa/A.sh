@@ -123,7 +123,7 @@ else
       echo "ERROR: no more heartbeat server found!" 1>&2
       break
     else
-      echo "Heartbeat server init response: $hb"
+      echo "Heartbeat server ping/pong response: $hb"
     fi
     sleep $SLEEP_TIME
    done

@@ -8,7 +8,7 @@ RUN update.sh && \
     pip3 install --upgrade pip && pip install --upgrade setuptools && \
     pip install dill semantic_version ruamel.yaml argcomplete && \
     clean.sh && \
-    rm -f /etc/nginx/sites-enabled/default /etc/nginx/sites-available/default /root/.ssh
+    rm -fR /etc/nginx/sites-enabled/default /etc/nginx/sites-available/default /root/.ssh
 
 # tell Docker which port is exposed by the container
 # EXPOSE 8000
