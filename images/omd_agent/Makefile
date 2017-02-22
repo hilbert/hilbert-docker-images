@@ -18,3 +18,4 @@ check: $(TS)
 	docker run --rm ${RUNTERM} --label is_top_app=1 $(IMG) ${OPTS} -- ${CMD}
 
 
+build: build_full

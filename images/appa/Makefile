@@ -19,3 +19,5 @@ check: $(TS)
 check_bg: $(TS)
 	docker run -d -e APP_ID=AA_BG --label is_top_app=1 --net=host $(IMG) ${OPTS} -- ${CMD} ${ARGS}
 
+
+build: build_full

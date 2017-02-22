@@ -6,6 +6,8 @@ RUNTERM=-it -a stdin -a stdout -a stderr
 # -p 8077:8066
 OPTS=/sbin/my_init --skip-startup-files --skip-runit
 
+##TAG=titan.h-its.org:5555/${IMG}
+
 # CMD=bash
 RUN=/usr/local/run.sh
 CMD=$(RUN)
@@ -30,8 +32,11 @@ stop: $(TS)
 	docker-compose -p $(COMPOSE_PROJECT_NAME) kill -s SIGKILL ${APP}
 	docker-compose -p $(COMPOSE_PROJECT_NAME) rm -f ${APP}
 
+build: build_full
+
 #COMPOSE_BUILD_OPTS=--force-rm
-#build: ${DF} ${ACOPYFILES} ${ACOPYFILES2}
+
+#build_compose: ${DF} ${ACOPYFILES} ${ACOPYFILES2}
 #	$(RM) -f ${TS}
 #	$(COMPOSE) -p $(COMPOSE_PROJECT_NAME) build ${COMPOSE_BUILD_OPTS} ${APP}
 #	$(DOCKER) tag "${IMG}" "${TAG}"

@@ -23,3 +23,5 @@ check: $(TS)
 	docker run -rm ${RUNTERM} --label is_top_app=0 -v /tmp/:/tmp/:rw $(IMG) ${OPTS} -- ${CMD}
 
 # -e CUPS_USER_ADMIN=test0 -e CUPS_USER_PASSWORD=test0 -p 6631:631/tcp # unused together with the cups server itself
+
+build: build_full

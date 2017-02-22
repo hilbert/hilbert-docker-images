@@ -19,3 +19,5 @@ check: $(TS)
 	docker ps -a
 	docker run --rm -e XAUTHORITY -e DISPLAY ${RUNTERM} --label is_top_app=0 $(IMG) ${OPTS} -- ${CMD} ; echo $$? > .returncode
 	cat .returncode && rm .returncode
+
+build: build_full

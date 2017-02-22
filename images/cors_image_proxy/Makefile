@@ -35,3 +35,4 @@ stop: $(TS)
 	docker-compose -p $(COMPOSE_PROJECT_NAME) kill -s SIGKILL ${APP}
 	docker-compose -p $(COMPOSE_PROJECT_NAME) rm -f ${APP}
 
+build: build_full

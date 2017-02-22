@@ -22,3 +22,5 @@ check: $(TS)
 	docker run --rm ${RUNTERM} --label is_top_app=1 $(IMG) ${OPTS} -- ${CMD} ${ARGS}
 	ls -al /dev/pts/ptmx 
 	: chmod a+rw /dev/pts/ptmx
+
+build: build_full

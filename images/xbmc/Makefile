@@ -12,3 +12,5 @@ check: $(TS)
 	xhost + || exit 1
 	docker ps -a
 	docker run --rm -e DISPLAY ${RUNTERM} --label is_top_app=1 -v /tmp/:/tmp/:rw $(IMG) ${OPTS} -- ${CMD}
+
+build: build_full

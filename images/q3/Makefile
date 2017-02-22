@@ -17,3 +17,5 @@ check: $(TS)
 	docker run --rm -e DISPLAY ${RUNTERM} --label is_top_app=1 -v /tmp/:/tmp/:rw $(IMG) ${OPTS} -- ${CMD} "${ARGS}" || true
 	ls -al /dev/pts/ptmx 
 	: chmod a+rw /dev/pts/ptmx
+
+build: build_full

@@ -10,3 +10,5 @@ CMD=soundtest.sh
 check: $(TS)
 	docker run -e DISPLAY --rm ${RUNTERM} --label is_top_app=1 --net=none -v /tmp/:/tmp/:rw $(IMG) ${OPTS} -- ${CMD}
 
+
+build: build_full

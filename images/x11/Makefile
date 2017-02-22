@@ -21,3 +21,5 @@ check: $(TS)
 	docker logs xxx 2>&1 | grep DISPLAY
 	xterm -display `docker logs xxx 2>&1 | grep DISPLAY_NUM | sed s@DISPLAY_NUM@@g` -e bash -c 'docker logs xxx; sleep 9'
 	docker rm -vf xxx
+
+build: build_full

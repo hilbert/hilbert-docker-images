@@ -15,3 +15,5 @@ check: $(TS)
 	docker run --rm ${RUNTERM} -v /tmp/:/tmp/:rw $(IMG) ${OPTS} -- ${CMD} ${ARGS} || true
 	ls -al /dev/pts/ptmx
 	: chmod a+rw /dev/pts/ptmx
+
+build: build_full

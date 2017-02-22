@@ -22,3 +22,5 @@ check: $(TS)
 #$(APP).list: txt2jpg.sh
 #	./txt2jpg.sh $(CH) > $(APP).list
 
+
+build: build_full

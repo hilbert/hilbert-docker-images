@@ -9,3 +9,5 @@ CMD=bash -c 'setup_ogl.sh /tmp/OGL.tgz; echo "Sleeping..."; sleep 3; echo "All i
 check: $(TS)
 	docker run --rm ${RUNTERM} --label is_top_app=1 -v /tmp/:/tmp/:rw $(IMG) ${OPTS} -- ${CMD}
 
+
+build: build_full

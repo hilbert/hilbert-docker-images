@@ -13,3 +13,4 @@ CMD=bash -c 'omd status; sleep 1; omd start; omd config default show; sleep 5; o
 check: $(TS)
 	docker run --rm ${RUNTERM} --label is_top_app=0 $(IMG) ${OPTS} -- ${CMD}
 
+build: build_full

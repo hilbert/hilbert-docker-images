@@ -17,12 +17,18 @@ appchoo main demo q3 cups play test skype xbmc mywebapp
 ###-$(RM) -f $(EXE) $(OBJS) $(OBJLIBS)
 
 build: 
-	-for d in $(DIRS); do (cd $$d; $(MAKE) $@ || exit 1); done
+	-for d in $(DIRS); do (cd $$d; $(MAKE) build_full || exit 1); done
 
 cleanup: 
 	-for d in $(DIRS); do (cd $$d; $(MAKE) $@ || exit 1); done
 
 pull:
+	-for d in $(DIRS); do (cd $$d; $(MAKE) $@ || exit 1); done
+
+tag:
+	-for d in $(DIRS); do (cd $$d; $(MAKE) $@ || exit 1); done
+
+push:
 	-for d in $(DIRS); do (cd $$d; $(MAKE) $@ || exit 1); done
 
 

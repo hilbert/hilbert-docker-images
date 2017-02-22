@@ -54,3 +54,5 @@ clean:
 	docker rm -vf $C || true
 	docker rmi -f --no-prune=false $D || true
 	docker images -q -f dangling=true | xargs docker rmi || true
+
+build: build_full

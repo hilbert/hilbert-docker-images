@@ -14,3 +14,5 @@ OPTS=/sbin/my_init --skip-startup-files --quiet --skip-runit
 
 check: $(TS)
 	docker run --rm ${RUNTERM} $(IMG) ${OPTS} -- ${CMD}
+
+build: build_full

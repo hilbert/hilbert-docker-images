@@ -22,3 +22,5 @@ check: $(TS)
 	docker ps -a
 	docker run --rm ${RUNTERM} --label is_top_app=0 $(IMG) ${OPTS} -- ${CMD}
 
+
+build: build_full

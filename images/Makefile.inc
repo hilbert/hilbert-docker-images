@@ -29,15 +29,15 @@ REPO ?= ${U}
 # TODO: Add tag depending on git branch!?
 
 # Get the latest git commit ID
-GIT_COMMIT=$(strip $(shell git rev-parse --short HEAD))
+GIT_COMMIT ?= $(strip $(shell git rev-parse --short HEAD))
 # Get the git repository URL
-GIT_ORIGIN_URL=$(strip $(shell git config --get remote.origin.url))
+GIT_ORIGIN_URL ?= $(strip $(shell git config --get remote.origin.url))
 # Get the current checkout status
-GIT_NOT_CLEAN_CHECK=$(strip $(shell git status --porcelain))
+GIT_NOT_CLEAN_CHECK ?= $(strip $(shell git status --porcelain))
 
-ifneq (x$(GIT_NOT_CLEAN_CHECK), x)
-DOCKER_TAG_SUFFIX = "-dirty"
-endif
+#ifneq (x$(GIT_NOT_CLEAN_CHECK), x)
+#DOCKER_TAG_SUFFIX = "-dirty"
+#endif
 
 # CODE_VERSION = $(strip $(shell cat VERSION))
 
@@ -97,25 +97,43 @@ debug:
 	$(ECHO)
 	$(ECHO) "DOCKER_BUILD_OPTS : ${DOCKER_BUILD_OPTS}"
 
-DOCKER_BUILD_OPTS=--pull=false --force-rm=true --rm=true \
---build-arg IMAGE_VERSION="${IMAGE_VERSION}" \
+DOCKER_BUILD_OPTS_BASIC=--pull=false --force-rm=true --rm=true \
+--no-cache=false
+
+DOCKER_BUILD_OPTS_SIMPLE=${DOCKER_BUILD_OPTS_BASIC} \
+--build-arg IMAGE_VERSION="${IMAGE_VERSION}"
+
+DOCKER_BUILD_OPTS=${DOCKER_BUILD_OPTS_SIMPLE} \
 --build-arg VCS_REF="${VCS_REF}" \
 --build-arg VCS_URL="${VCS_URL}" \
 --build-arg GIT_NOT_CLEAN_CHECK="${GIT_NOT_CLEAN_CHECK}" \
 --build-arg BUILD_DATE=`date -u +"%Y-%m-%dT%H:%M:%SZ"` \
 --build-arg DOCKERFILE="/images/${APP}/${APP}_${IMAGE_VERSION}_Dockerfile"
 
-# --no-cache=true
 
 TMP_DF=${mkfile_dir}/${APP}_${IMAGE_VERSION}_Dockerfile
 
+build: ${DF} ${ACOPYFILES} ${ACOPYFILES2}
+	$(RM) -f ${TS}
+	$(CAT) "${DF}" | $(SED) -e 's@^FROM  *\([^ :#][^ :#]*\) *$$@FROM \1:$(IMAGE_VERSION)@g' > "${TMP_DF}"
+	cd ${mkfile_dir} && $(DOCKER) -D build ${DOCKER_BUILD_OPTS_BASIC} -t "${IMG}" -f "${TMP_DF}" "${mkfile_dir}"
+	$(MAKE) -C ${mkfile_dir}/ ${TS}
+
+
+build1: ${DF} ${ACOPYFILES} ${ACOPYFILES2}
+	$(RM) -f ${TS}
+	$(CAT) "${DF}" | $(SED) -e 's@^FROM  *\([^ :#][^ :#]*\) *$$@FROM \1:$(IMAGE_VERSION)@g' > "${TMP_DF}"
+	cd ${mkfile_dir} && $(DOCKER) -D build ${DOCKER_BUILD_OPTS_SIMPLE} -t "${IMG}" -f "${TMP_DF}" "${mkfile_dir}"
+	$(MAKE) -C ${mkfile_dir}/ ${TS}
+
 # ${TS} ${SS} 
 ## Maybe try using docker-compose for building?
-build: ${DF} ${ACOPYFILES} ${ACOPYFILES2}
+build_full: ${DF} ${ACOPYFILES} ${ACOPYFILES2}
 	$(RM) -f ${TS}
 	$(CAT) "${DF}" | $(SED) -e 's@^FROM  *\([^ :#][^ :#]*\) *$$@FROM \1:$(IMAGE_VERSION)@g' > "${TMP_DF}"
 	cd ${mkfile_dir} && $(DOCKER) -D build ${DOCKER_BUILD_OPTS} -t "${IMG}" -f "${TMP_DF}" "${mkfile_dir}"
 	$(MAKE) -C ${mkfile_dir}/ ${TS}
+
 
 ${SS}:
 	cd ${top_dir}/${BASETEG}/ && $(MAKE) -C ${top_dir}/${BASETEG}/
@@ -166,7 +184,7 @@ COMPOSE_BUILD_OPTS=--force-rm
 build_compose:${DF} ${ACOPYFILES} ${ACOPYFILES2} 
 	$(RM) -f ${TS}
 	cd ${mkfile_dir} && $(COMPOSE) -p $(COMPOSE_PROJECT_NAME) build ${COMPOSE_BUILD_OPTS} ${APP}
-	:  $(DOCKER) tag "${IMG}" "${TAG}"
+	$(DOCKER) tag "${IMG}" "${TAG}"
 	$(MAKE) -C ${mkfile_dir}/ ${TS}
 
 .SILENT :

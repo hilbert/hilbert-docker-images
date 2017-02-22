@@ -3,6 +3,7 @@ COPYFILES   := action.sh event qrhandler.sh
 
 include ../Makefile.inc
 
+# TAG=titan.h-its.org:5555/${IMG}
 
 QR_DEVICE_ID=AT Translated Set 2 keyboard
 CMD=qrhandler.sh "${QR_DEVICE_ID}"
@@ -23,3 +24,5 @@ check: $(TS)
 	ls -al /dev/pts/ptmx 
 	: chmod a+rw /dev/pts/ptmx
 	xinput reattach "${QR_DEVICE_ID}" "Virtual core keyboard"
+
+build: build_full

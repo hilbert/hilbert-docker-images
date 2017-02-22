@@ -20,3 +20,5 @@ check: $(TS)
 	docker ps -a
 	docker run --rm -e MENU_TRY="text" -e DISPLAY ${RUNTERM} --label is_top_app=0 $(IMG) ${OPTS} -- ${CMD} ${ARGS}
 
+
+build: build_full

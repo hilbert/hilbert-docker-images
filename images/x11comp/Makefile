@@ -14,3 +14,4 @@ check: $(TS)
 	docker ps -a
 	docker run --rm -e DISPLAY -e MOUSE_CURSOR=off ${RUNTERM} --label is_top_app=0 -v /tmp/:/tmp/:rw $(IMG) ${OPTS} -- ${CMD}
 
+build: build_full

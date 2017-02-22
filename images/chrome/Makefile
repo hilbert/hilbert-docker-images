@@ -29,3 +29,5 @@ check: $(TS)
 	docker run -d -e DISPLAY -e APP_ID="${APP_ID}" ${RUNTERM} --label is_top_app=1 -v /tmp/:/tmp/:rw -v /dev/shm:/dev/shm $(IMG) ${OPTS} -- ${CMD} ${ARGS} || true
 	ls -al /dev/pts/ptmx
 	: chmod a+rw /dev/pts/ptmx
+
+build: build_full

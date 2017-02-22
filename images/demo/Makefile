@@ -25,3 +25,5 @@ check: $(TS)
 	ls -al /dev/pts/ptmx 
 	: chmod a+rw /dev/pts/ptmx
 
+
+build: build_full
