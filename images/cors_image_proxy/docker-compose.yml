@@ -19,6 +19,7 @@ services:
      - --skip-startup-files
      - --
     expose: 
+     - 7070
      - 9000
      - 9999
     restart: on-failure:5

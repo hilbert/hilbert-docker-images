@@ -1,6 +1,6 @@
 FROM hilbert/nodejs
 
-MAINTAINER Oleksandr Motsak <malex984+hilbert.mng@gmail.com>
+MAINTAINER Oleksandr Motsak <malex984+hilbert.cors.proxy@gmail.com>
 
 # download latest stable version and install node.js dependencies
 RUN mkdir -p /usr/local/src \
