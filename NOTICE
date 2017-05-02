@@ -37,3 +37,5 @@
 -  `images/gui/x_64x64.png` and `images/gui/qclosebutton` are due to
    https://github.com/IMAGINARY/qclosebutton
 
+-  `images/kiosk/prototype.min.js`, `images/kiosk/arrow.png` and `images/kiosk/testapp.html` are 
+   originally from http://scripty2.com/demos/touch/touchspector/ (MIT)
