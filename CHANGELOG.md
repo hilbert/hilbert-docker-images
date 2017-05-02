@@ -16,6 +16,7 @@
 - Restructurization/migration of older `malex984/dockapp:*` to `hilbert/*`
 - Migration of docker images to `hilbert/hilbert-docker-images`
 - Change of hierarchy of images
+- Major Kiosk update
 
 
 ### Security 
