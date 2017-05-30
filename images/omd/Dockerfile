@@ -5,21 +5,33 @@ MAINTAINER Oleksandr Motsak <malex984+hilbert.omd@gmail.com>
 # Install OMD, see http://labs.consol.de/OMD/
 RUN gpg --keyserver keys.gnupg.net --recv-keys F8C1CA08A57B9ED7 && \
     gpg --armor --export F8C1CA08A57B9ED7 | apt-key add - && \
-    echo 'deb http://labs.consol.de/repo/stable/ubuntu trusty main' >> /etc/apt/sources.list && \
-    update.sh && install.sh \
-           libpython2.7 omd net-tools netcat xinetd at \
-    && clean.sh
+    echo 'deb http://labs.consol.de/repo/stable/ubuntu trusty main' >> /etc/apt/sources.list
+    
+RUN update.sh \
+&& install.sh \
+    ssl-cert libpython2.7 net-tools netcat xinetd at \
+    time traceroute libsnmp-python dialog dnsutils \
+    fping graphviz libapache2-mod-fcgid libapache2-mod-proxy-html \
+    apache2-mpm-prefork apache2-utils \
+    libboost-program-options1.54.0 libboost-system1.54.0 libdbi1 \
+    libevent-1.4-2 libnet-snmp-perl libpango1.0-0 libreadline5 \
+    libsnmp-perl mysql-server patch php5-cli \
+    php5-cgi libradiusclient-ng2 php5-gd php5-mcrypt \
+    php5-sqlite php-pear pyro rsync smbclient snmp unzip xvfb python-ldap \
+&& wget "http://files.omdistro.org/releases/1.30/omd-1.30.trusty.amd64.deb" -P /tmp/ \
+&& dpkg -i /tmp/omd-1.30.trusty.amd64.deb \
+&& install.sh -fy \
+&& clean.sh
+    
 
 #### due to http://www.monitoring-portal.org/wbb/index.php?page=Thread&threadID=32891
 #### http://labs.consol.de/repo/testing/ubuntu (instead of stable) 
 #### is supposed to provide Icinga 2...
 
+
 # Install the agent to monitor localhost
 ## http://mathias-kettner.de/download/check-mk-agent_1.2.4p5-2_all.deb
-#RUN wget https://mathias-kettner.de/support/1.2.6p12/check-mk-raw-1.2.6p12_0.trusty_amd64.deb -P /tmp/
-#RUN dpkg -i /tmp/check-mk-raw-1.2.6p12_0.trusty_amd64.deb
 ## check-mk-agent_1.2.4p5-2_all.deb
-
 
 
 RUN echo yes | omd setup
