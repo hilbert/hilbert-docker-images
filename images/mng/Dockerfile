@@ -4,7 +4,7 @@ MAINTAINER Oleksandr Motsak <malex984+hilbert.mng@gmail.com>
 
 # install dependencies
 RUN update.sh && \
-    install.sh nginx rsync lftp wakeonlan python3-pip && \
+    install.sh nginx rsync lftp wakeonlan python3-pip openssh-client && \
     pip3 install --upgrade pip && pip install --upgrade setuptools && \
     pip install dill semantic_version ruamel.yaml argcomplete && \
     clean.sh && \
