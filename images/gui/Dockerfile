@@ -8,7 +8,8 @@ MAINTAINER Oleksandr Motsak <malex984+hilbert.gui@gmail.com>
 # set the following if any QT GUI look like an empty rectangular window
 # ENV QT_X11_NO_MITSHM 1
 
-RUN update.sh \
+RUN DEBIAN_FRONTEND=noninteractive echo|add-apt-repository ppa:graphics-drivers/ppa \
+ && update.sh \
  && install.sh \
        alsa alsa-tools alsa-utils alsamixergui pulseaudio libasound2 \
        xauth xterm x11-apps unclutter xdotool xinput \
@@ -28,6 +29,7 @@ RUN update.sh \
        libqt4-core libqt4-gui \
        python3-software-properties software-properties-common python3-pip \
  && pip3 install --upgrade pip && pip install --upgrade setuptools \
+ && upgrade.sh \
  && clean.sh
 
 
@@ -43,6 +45,7 @@ RUN ln -s /usr/src/xfullscreen/xfullscreen /usr/local/bin/
 COPY qclosebutton launch.sh x_64x64.png /usr/local/bin/
 # NOTE: qclosebutton is a blob for now (building requires more packages... see :appchoo)
 
+####################################################################################################
 
 ARG IMAGE_VERSION=latest
 ARG GIT_NOT_CLEAN_CHECK

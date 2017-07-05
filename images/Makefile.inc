@@ -15,6 +15,9 @@ COMPOSE?= docker-compose
 #COMPOSE_PROJECT_NAME ?= dockapp
 COMPOSE_PROJECT_NAME ?= hilbert
 
+# https://stackoverflow.com/a/24472124
+#PRE := $(shell rename : @COLON@ *)
+
 # Makefile.inc is expected to be on the top level!
 top_dir       :=$(dir $(abspath $(lastword $(MAKEFILE_LIST))))
 #top_dir_name :=$(notdir $(patsubst %/,%,$(mkp))) # $(CURDIR)
@@ -59,12 +62,12 @@ IMG  ?= ${REPO}/${APP}:${IMAGE_VERSION}
 REGISTRY?=imaginary.mfo.de:5000
 TAG  ?= ${REGISTRY}/${U}/${APP}:${IMAGE_VERSION}
 
-DF     :=${mkfile_dir}/Dockerfile
+DF := ${mkfile_dir}/Dockerfile
 
 ### Parsing parts of Dockerfile:
-BASE   :=$(shell $(GREP) -m 1 -iE '^ *FROM' ${DF} | $(SED) -e 's@^ *FROM  *@@g' -e 's@[:/ ]@_@g')
-BASETEG:=$(shell $(GREP) -m 1 -iE '^ *FROM' ${DF} | $(SED) -e 's@^ *FROM  *@@g' -e 's@^.*/@@g')
-COPYFILES2 :=$(shell $(GREP) -iE '^ *COPY ' ${DF} | $(SED) -e 's@^ *COPY  *@@g' -e 's@ /.*@@g' | xargs -r)
+BASE   :=$(shell $(GREP) -m 1 -iE '^ *FROM' "${DF}" | $(SED) -e 's@^ *FROM  *@@g' -e 's@[:/ ]@_@g')
+BASETEG:=$(shell $(GREP) -m 1 -iE '^ *FROM' "${DF}" | $(SED) -e 's@^ *FROM  *@@g' -e 's@^.*/@@g')
+COPYFILES2 :=$(shell $(GREP) -iE '^ *COPY ' "${DF}" | $(SED) -e 's@^ *COPY  *@@g' -e 's@ /.*@@g' | xargs -r)
 
 # Absolute path to necessary local files
 ACOPYFILES :=$(patsubst %,${mkfile_dir}/%,${COPYFILES})
@@ -73,6 +76,7 @@ ACOPYFILES2:=$(patsubst %,${mkfile_dir}/%,${COPYFILES2})
 TS := ${top_dir}/${U}_${APP}_${IMAGE_VERSION}.timestamp
 SS := ${top_dir}/${BASE}.timestamp
 
+# POST = $(shell rename @COLON@ : *)
 
 all: show debug build prune show
 
@@ -113,47 +117,59 @@ DOCKER_BUILD_OPTS=${DOCKER_BUILD_OPTS_SIMPLE} \
 
 TMP_DF=${mkfile_dir}/${APP}_${IMAGE_VERSION}_Dockerfile
 
-build: ${DF} ${ACOPYFILES} ${ACOPYFILES2}
-	$(RM) -f ${TS}
+build: 
+	$(RM) -f "${TS}"
 	$(CAT) "${DF}" | $(SED) -e 's@^FROM  *\([^ :#][^ :#]*\) *$$@FROM \1:$(IMAGE_VERSION)@g' > "${TMP_DF}"
 	cd ${mkfile_dir} && $(DOCKER) -D build ${DOCKER_BUILD_OPTS_BASIC} -t "${IMG}" -f "${TMP_DF}" "${mkfile_dir}"
-	$(MAKE) -C ${mkfile_dir}/ ${TS}
+	$(DOCKER) images | $(GREP) -E "^${U}/${APP}  *" > "${TS}"
+#	$(MAKE) -C ${mkfile_dir}/ "${TS}"
 
-
-build1: ${DF} ${ACOPYFILES} ${ACOPYFILES2}
-	$(RM) -f ${TS}
+# "${ACOPYFILES}" "${ACOPYFILES2}"
+# "${DF}"
+build1: 
+	$(RM) -f "${TS}"
 	$(CAT) "${DF}" | $(SED) -e 's@^FROM  *\([^ :#][^ :#]*\) *$$@FROM \1:$(IMAGE_VERSION)@g' > "${TMP_DF}"
 	cd ${mkfile_dir} && $(DOCKER) -D build ${DOCKER_BUILD_OPTS_SIMPLE} -t "${IMG}" -f "${TMP_DF}" "${mkfile_dir}"
-	$(MAKE) -C ${mkfile_dir}/ ${TS}
+	$(DOCKER) images | $(GREP) -E "^${U}/${APP}  *" > "${TS}"
+#	$(MAKE) -C ${mkfile_dir}/ "${TS}"
 
 # ${TS} ${SS} 
 ## Maybe try using docker-compose for building?
-build_full: ${DF} ${ACOPYFILES} ${ACOPYFILES2}
-	$(RM) -f ${TS}
+build_full:
+	$(RM) -f "${TS}"
 	$(CAT) "${DF}" | $(SED) -e 's@^FROM  *\([^ :#][^ :#]*\) *$$@FROM \1:$(IMAGE_VERSION)@g' > "${TMP_DF}"
 	cd ${mkfile_dir} && $(DOCKER) -D build ${DOCKER_BUILD_OPTS} -t "${IMG}" -f "${TMP_DF}" "${mkfile_dir}"
-	$(MAKE) -C ${mkfile_dir}/ ${TS}
+	$(DOCKER) images | $(GREP) -E "^${U}/${APP}  *" > "${TS}"
+#	$(MAKE) -C ${mkfile_dir}/ "${TS}"
 
 
-${SS}:
+"${SS}":
 	cd ${top_dir}/${BASETEG}/ && $(MAKE) -C ${top_dir}/${BASETEG}/
 
-${top_dir}/hilbert_baseimage_${IMAGE_VERSION}.timestamp:
+"${top_dir}/hilbert_baseimage_${IMAGE_VERSION}.timestamp":
 	$(DOCKER) pull 'hilbert/baseimage:${IMAGE_VERSION}'
 	$(DOCKER) images | $(GREP) -E 'hilbert[\/]baseimage *[a-z]* ' > $@
 
 ${TS}:
-	$(DOCKER) images | $(GREP) -E "^${U}/${APP}  *" > $@
+	$(DOCKER) images | $(GREP) -E "^${U}/${APP}  *" > "$@"
+	$(ECHO) "Created timestamp '${TS}' for image '${U}/${APP}'"
+
 #	${TS}
 # ${SS} 
-rebuild: ${DF} ${ACOPYFILES} ${ACOPYFILES2} ${mkfile_dir}/Makefile $(abspath $(lastword $(MAKEFILE_LIST)))
-	$(RM) -f ${TS}
-	$(MAKE) -C ${mkfile_dir}/ ${TS}
+# "${DF}" "${ACOPYFILES}" "${ACOPYFILES2}" "${mkfile_dir}/Makefile" "$(abspath $(lastword $(MAKEFILE_LIST)))"
+rebuild: 
+	$(RM) -f "${TS}"
+	$(MAKE) -C ${mkfile_dir}/ "${TS}"
 
-test: $(TS) check
+test: ${TS} check
 
 tag: ${TS}
 	$(DOCKER) tag "${IMG}" "${TAG}"
+	$(ECHO) "Created tag '${TAG}' for image '${IMG}'"
+
+untag: ${TS}
+	$(DOCKER) rmi "${TAG}"
+	$(ECHO) "removed tag '${TAG}'"
 
 push: ${TS}
 	$(DOCKER) push "${TAG}"
@@ -162,15 +178,15 @@ push: ${TS}
 pull:
 	$(DOCKER) pull "${IMG}"
 	: $(DOCKER) tag "${IMG}" "${TAG}"
-	$(MAKE) -C ${mkfile_dir}/ ${TS}
+	$(MAKE) -C ${mkfile_dir}/ "${TS}"
 
 fix:
-	$(MAKE) -C ${mkfile_dir}/ ${TS}
+	$(MAKE) -C ${mkfile_dir}/ "${TS}"
 
 cleanup:
 	(cd ${make_dir}; $(MAKE) -i -k -C ${make_dir} clean || true; cd - )
 	$(DOCKER) rmi "${IMG}"
-	$(RM) -f ${TS}
+	$(RM) -f "${TS}"
 
 prune:
 	$(DOCKER) images -f "dangling=true" -q | xargs -r $(DOCKER) rmi
@@ -181,10 +197,11 @@ prune:
 
 COMPOSE_BUILD_OPTS=--force-rm
 
-build_compose:${DF} ${ACOPYFILES} ${ACOPYFILES2} 
-	$(RM) -f ${TS}
+# "${DF}" "${ACOPYFILES}" "${ACOPYFILES2}" 
+build_compose: 
+	$(RM) -f "${TS}"
 	cd ${mkfile_dir} && $(COMPOSE) -p $(COMPOSE_PROJECT_NAME) build ${COMPOSE_BUILD_OPTS} ${APP}
 	$(DOCKER) tag "${IMG}" "${TAG}"
-	$(MAKE) -C ${mkfile_dir}/ ${TS}
+	$(MAKE) -C ${mkfile_dir}/ "${TS}"
 
 .SILENT :
