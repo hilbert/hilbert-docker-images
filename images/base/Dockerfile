@@ -8,7 +8,7 @@ COPY update.sh install.sh upgrade.sh clean.sh /usr/local/bin/
 # Update & Install & Clean up APT
 # Not: please if possible add all the packages to the following single install command!
 RUN update.sh && upgrade.sh \
- && install.sh bash wget curl git cups-bsd p7zip-full pciutils bzip2 \
+ && install.sh bash wget curl git cups-bsd p7zip-full pciutils bzip2 ca-certificates \
  && clean.sh
 
 # dist-upgrade ?

@@ -3,8 +3,6 @@ FROM hilbert/gui
 
 MAINTAINER Oleksandr Motsak <malex984+hilbert.cuda.runtime@gmail.com>
 
-LABEL com.nvidia.volumes.needed="nvidia_driver"
-
 RUN NVIDIA_GPGKEY_SUM=d1be581509378368edeec8c1eb2958702feedf3bc3d17011adbf24efacce4ab5 && \
     NVIDIA_GPGKEY_FPR=ae09fe4bbd223a84b2ccfce3f60f4b3d7fa2af80 && \
     apt-key adv --fetch-keys http://developer.download.nvidia.com/compute/cuda/repos/ubuntu1404/x86_64/7fa2af80.pub && \
@@ -25,18 +23,11 @@ RUN update.sh && install.sh \
         cuda-cusparse-$CUDA_PKG_VERSION \
         cuda-npp-$CUDA_PKG_VERSION \
         cuda-cudart-$CUDA_PKG_VERSION \
-        freeglut3 libglew1.10 libglu1-mesa libx11-6 libxau6 libxcb1 libxdmcp6 libxext6 libxi6 libxxf86vm1 \
 && ln -s cuda-7.5 /usr/local/cuda \
 && rm -rf /var/lib/apt/lists/*
 
-RUN echo "/usr/local/cuda/lib64" >> /etc/ld.so.conf.d/cuda.conf && \
-    ldconfig
-
-RUN echo "/usr/local/nvidia/lib" >> /etc/ld.so.conf.d/nvidia.conf && \
-    echo "/usr/local/nvidia/lib64" >> /etc/ld.so.conf.d/nvidia.conf
-
-ENV PATH /usr/local/nvidia/bin:/usr/local/cuda/bin:${PATH}
-ENV LD_LIBRARY_PATH /usr/local/nvidia/lib:/usr/local/nvidia/lib64
+ENV PATH /usr/local/cuda/bin:${PATH}
+RUN echo "/usr/local/cuda/lib64" >> /etc/ld.so.conf.d/cuda.conf && ldconfig
 
 ##########################################################################
 ARG IMAGE_VERSION=latest
