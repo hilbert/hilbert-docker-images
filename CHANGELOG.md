@@ -10,13 +10,14 @@
 - Each Docker Image is now in separate Docker Hub repository with automatic building (=> there may be different image versions, e.g. `latest` and `devel`)
 - Added micro badges and additional image labels
 - Added docker hooks to enable dynamic base image specification (`FROM ...:**SAME_TAG**`)
-
+- Added support for NVidia drivers (via `nvidia-docker) into `hilbert/gui`
+- Added two CUDA-related images: runtime with CUDA 7.5 and corresponding development environment
 
 ### Changed
 - Restructurization/migration of older `malex984/dockapp:*` to `hilbert/*`
 - Migration of docker images to `hilbert/hilbert-docker-images`
 - Change of hierarchy of images
-- Major Kiosk update
+- Several major Kiosk updates (incl. Testapp)
 
 
 ### Security 
