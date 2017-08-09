@@ -40,21 +40,21 @@ Image | description
 `hilbert/surfer` | Application: SURFER (1.5.0). Example for installing a .deb package
 `hilbert/qrhandler` | prototype that can grab X11 input device (keyboard) and take screenshots
 `hilbert/play` | contains several media players like `cmus`, `vlc`, `mplayer`, `xine`
-`hilbert/test` | applications and scripts for testing HW & GPU
 `hilbert/alsa` | scripts for testing audio HW using ALSA
 `hilbert/xeyes` | a demo image with simplest X11 client applications (e.g. `xeyes`)
 `hilbert/appchoo` | image is a crude shell menu asking the user to choose an option and returns the choice via the return code (201, 202, 203 etc... ). Depending on `MENU_TRY` it can be either GUI or TEXT style.
 `hilbert/q3` | is a standalone (huge!) image with OpenArena (free version of Quake 3 Arena) which works but FPS was a bit low for me :( ALSA sound was good!
 `hilbert/skype` | propriatory 32-bit application runs using apulse (emulation of pulseaudio via ALSA), it may also be able to capture video if you are lucky with your camera, its drivers and settings... It starts fine with working sound input/output but may refuse working after a while... :(
-`hilbert/x11` | is a basis for Xorg/Xephyr service
-`hilbert/dummy` | is used for running X11 and HW customization for GPU (OpenGL-library)
 `hilbert/cups` | is supposed to run CUPS server (:6631) - seems to start but has to be thoughly tested.
 `hilbert/xbmc` | Application: Kodi media center
 `hilbert/demo` | legacy prototype Demo: provides a choice menu with a selection of sample GUI application
 `hilbert/main` | legacy technical Demo
+`hilbert/x11` | is a basis for Xorg/Xephyr service
+`hilbert/dummy` | DEPRECATED! Was used for running X11 and HW customization for GPU (OpenGL-library). Please use `nvidia-docker` instead.
+`hilbert/test` | applications and scripts for testing HW & GPU
+`hilbert/cuda_devel` | [![](https://images.microbadger.com/badges/image/hilbert/cuda_devel.svg)](https://microbadger.com/images/hilbert/cuda_devel "Get your own image badge on microbadger.com") [![](https://images.microbadger.com/badges/version/hilbert/cuda_devel.svg)](https://microbadger.com/images/hilbert/cuda_devel "Get your own version badge on microbadger.com") Base for OpenGL+CUDA development
 
-
-NOTE: Some applications may need further services (applications) to run in background.
+NOTE: Some applications may need further services (applications) to run in background
 
 # Dockerization within this framework (cheatsheet?) - what to run and how?
 
