@@ -15,7 +15,7 @@ RUN update.sh \
        alsa alsa-tools alsa-utils alsamixergui pulseaudio libasound2 pavucontrol \
        xauth xterm x11-apps unclutter xdotool xinput wmctrl x11-xserver-utils arandr \
        libx11-6 libxau6 libxcb1 libxdmcp6 libxext6 libxi6 libxxf86vm1 libxcomposite1 libxdamage1 libxfixes3 libxmu6 libxt6 libxv1 \
-       libglew1.10 libglu1 freeglut3 \
+       libglew1.10 libglu1 freeglut3 libvdpau-va-gl1 \
        libglapi-mesa libglu1-mesa libgles1-mesa libgles2-mesa libgl1-mesa-dri libgl1-mesa-glx libegl1-mesa-drivers mesa-vdpau-drivers mesa-utils \
        mtdev-tools libmtdev-dev libmtdev1 \
        gstreamer1.0-plugins-bad gstreamer1.0-nice gstreamer1.0-plugins-good gstreamer1.0-plugins-base \
