@@ -16,19 +16,13 @@ appchoo main demo q3 cups play test skype xbmc mywebapp
 #$(ECHO) cleaning up in .
 ###-$(RM) -f $(EXE) $(OBJS) $(OBJLIBS)
 
-build: 
-	-for d in $(DIRS); do (cd $$d; $(MAKE) build_full || exit 1); done
-
-cleanup: 
-	-for d in $(DIRS); do (cd $$d; $(MAKE) $@ || exit 1); done
-
-pull:
-	-for d in $(DIRS); do (cd $$d; $(MAKE) $@ || exit 1); done
-
 tag:
 	-for d in $(DIRS); do (cd $$d; $(MAKE) $@ || exit 1); done
 
-push:
+pull, push, build, cleanup:
+	-for d in $(DIRS); do (cd $$d; $(MAKE) $@ || exit 1); done
+
+savetar, loadtar, savegz, loadgz, savebz2, loadbz2:
 	-for d in $(DIRS); do (cd $$d; $(MAKE) $@ || exit 1); done
 
 

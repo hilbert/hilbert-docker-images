@@ -9,6 +9,11 @@ GREP   ?= grep
 SED    ?= sed
 MAKE   ?= make
 TR     ?= tr
+XZ     ?= xz
+GZIP   ?= gzip
+BZIP2  ?= bzip2
+GUNZIP ?= gunzip
+BUNZIP2?= bunzip2
 DOCKER ?= docker
 COMPOSE?= docker-compose
 
@@ -61,6 +66,11 @@ APP  ?= $(shell $(ECHO) "${current_dir}" | $(SED) -e 's@[\-]@_@g' | $(TR) '[:upp
 IMG  ?= ${REPO}/${APP}:${IMAGE_VERSION}
 REGISTRY?=imaginary.mfo.de:5000
 TAG  ?= ${REGISTRY}/${U}/${APP}:${IMAGE_VERSION}
+
+IMG_TAR ?= ${REPO}.${APP}.${IMAGE_VERSION}.docker_image_tarball
+IMG_GZ  ?= ${IMG_TAR}.gz
+IMG_BZ2 ?= ${IMG_TAR}.bz2
+IMG_XZ  ?= ${IMG_TAR}.xz
 
 DF := ${mkfile_dir}/Dockerfile
 
@@ -173,6 +183,37 @@ untag: ${TS}
 
 push: ${TS}
 	$(DOCKER) push "${TAG}"
+
+
+# SAVE
+savetar: ${TS}
+	$(DOCKER) save "${IMG}" -o "${IMG_TAR}"
+
+loadtar: ${IMG_TAR}
+	$(DOCKER) load -i "${IMG_TAR}"
+	$(MAKE) -C ${mkfile_dir}/ "${TS}"
+
+savegz: ${TS}
+	$(DOCKER) save "${IMG}" | $(GZIP) -c -9 > "${IMG_GZ}"
+
+loadgz: ${IMG_GZ}
+	$(GUNZIP) -c "${IMG_GZ}" | $(DOCKER) load
+	$(MAKE) -C ${mkfile_dir}/ "${TS}"
+
+savebz2: ${TS}
+	$(DOCKER) save "${IMG}" | $(BZIP2) -z -c -9> "${IMG_BZ2}"
+
+loadbz2: ${IMG_BZ2}
+	$(BUNZIP2) -d -c "${IMG_BZ2}" | $(DOCKER) load
+	$(MAKE) -C ${mkfile_dir}/ "${TS}"
+
+savexz: ${TS}
+	$(DOCKER) save "${IMG}" | $(XZ) -z -9 -e -c - > "${IMG_XZ}"
+
+loadxz: ${IMG_XZ}
+	$(XZ) -d -c "${IMG_XZ}" | $(DOCKER) load
+	$(MAKE) -C ${mkfile_dir}/ "${TS}"
+
 
 # ${SS}
 pull:
