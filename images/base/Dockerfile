@@ -23,7 +23,7 @@ RUN update.sh && upgrade.sh \
 ### VOLUME $HOME # ?
 # WORKDIR $HOME
 
-COPY setup_ogl.sh hb.sh hb_wrapper.sh config_cups.sh /usr/local/bin/
+COPY setup_ogl.sh hb.sh hb_wrapper.sh hb_dummy.sh config_cups.sh /usr/local/bin/
 #RUN chmod +x /usr/local/bin/config_cups.sh
 
 # RUN locale-gen de_DE.utf8 && locale-gen ru_RU.utf8
