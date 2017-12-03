@@ -1,0 +1,8 @@
+export SHOW_CLOSE_BUTTON="${SHOW_CLOSE_BUTTON:-0}"
+export BROWSER="${BROWSER:-/opt/kiosk.sh}"
+# /usr/bin/firefox
+export LANGUAGE="${LANGUAGE:-de}"
+export LANG="${LANG:-de}"
+# de,ru,fr etc.
+export MOUSE_CURSOR="${MOUSE_CURSOR:-1}"
+# 0 - to hide
