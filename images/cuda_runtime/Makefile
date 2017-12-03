@@ -9,8 +9,9 @@ OPTS=/sbin/my_init --skip-startup-files --quiet --skip-runit
 
 check: $(TS)
 	### [ -z "${DISPLAY}" ] && exit 1
-	xhost + || exit 1
+	xhost +si:localuser:root || exit 1
 	docker ps -a
 	nvidia-docker run --rm -e DISPLAY ${RUNTERM} --label is_top_app=1 -v /tmp/:/tmp/:rw $(IMG) ${OPTS} -- ${CMD}
+	xhost -si:localuser:root || exit 1
 
 build: build_full
