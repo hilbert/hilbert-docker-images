@@ -10,7 +10,7 @@ MAINTAINER Oleksandr Motsak <malex984+hilbert.gui@gmail.com>
 
 RUN update.sh \
  && install.sh python3-software-properties software-properties-common python3-pip dbus \
- && DEBIAN_FRONTEND=noninteractive echo|add-apt-repository ppa:graphics-drivers/ppa \
+ && DEBIAN_FRONTEND=noninteractive echo|add-apt-repository ppa:graphics-drivers/ppa && update.sh \
  && install.sh \
        alsa alsa-tools alsa-utils alsamixergui pulseaudio libasound2 pavucontrol \
        xauth xterm x11-apps unclutter xdotool xinput wmctrl x11-xserver-utils x11-utils arandr \
