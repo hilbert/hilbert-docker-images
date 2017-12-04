@@ -23,6 +23,23 @@ RUN update.sh && upgrade.sh \
 ### VOLUME $HOME # ?
 # WORKDIR $HOME
 
+# dist-upgrade ?
+ENV UID=1000
+ENV GROUPS=1000
+ENV USER=kiosk
+
+### RUN groupadd -r ur && useradd -r -g ur ur
+RUN groupadd -f -g $GROUPS $USER \
+ && adduser --disabled-login --uid $UID --gid $GROUPS --gecos 'non-root-user' $USER \
+ && usermod -a -G sudo $USER \
+ && mkdir -p /etc/sudoers.d \
+ && echo "$USER ALL=(ALL) NOPASSWD: ALL" > /etc/sudoers.d/$USER \
+ && chmod 0440 /etc/sudoers.d/$USER
+
+#ENV HOME /home/$USER
+#USER $USER
+#WORKDIR $HOME
+
 COPY setup_ogl.sh hb.sh hb_wrapper.sh hb_dummy.sh config_cups.sh /usr/local/bin/
 #RUN chmod +x /usr/local/bin/config_cups.sh
 
