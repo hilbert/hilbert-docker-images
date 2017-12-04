@@ -23,7 +23,26 @@ RUN update.sh \
 #libopenmpi1.6 libalberta2 libumfpack5.6.2 libsuperlu3 libgmp10 libgmpxx4ldbl libmetis5 
 #rsh-client openssh-client openmpi-bin 
 
+# dist-upgrade ?
+ENV UID=1000
+ENV GROUPS=1000
+ENV USER=kiosk
+
+
+### RUN groupadd -r ur && useradd -r -g ur ur
+RUN groupadd -f -g $GROUPS $USER \
+ && adduser --disabled-login --uid $UID --gid $GROUPS --gecos 'non-root-user' $USER \
+ && usermod -a -G sudo $USER \
+ && mkdir -p /etc/sudoers.d \
+ && echo "$USER ALL=(ALL) NOPASSWD: ALL" > /etc/sudoers.d/$USER \
+ && chmod 0440 /etc/sudoers.d/$USER
+
+USER $USER
+ENV HOME /home/$USER
+WORKDIR $HOME
+
 COPY dune-ash.sh /opt/
+COPY hb_dummy.sh hb.sh /usr/local/bin/
 
 ## for nvidia-docker:
 ENV CUDA_VERSION 7.5.18

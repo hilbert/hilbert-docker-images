@@ -5,8 +5,8 @@ include ../Makefile.inc
 CMD=/opt/dune-ash.sh
 ARGS=
 
-## --privileged
-RUNTERM=-it -a stdin -a stdout -a stderr --ipc=host --net=host -v /tmp/:/tmp/:rw -v /dev/dri/:/dev/dri/:rw
+RUNTERM=-it -a stdin -a stdout -a stderr --ipc=host --net=host -v /tmp/:/tmp/:rw 
+# --privileged
 OPTS=
 # /sbin/my_init --skip-startup-files --quiet --skip-runit --
 

@@ -20,6 +20,7 @@ else
    ARG+=" ui.allowquit:false "
 fi
 
+### sudo -n -u kiosk -g kiosk 
 exec dune-ash-ui $ARG "$@"
 #/opt/launch.sh 
 
