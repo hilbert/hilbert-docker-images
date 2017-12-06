@@ -4,5 +4,5 @@ export BROWSER="${BROWSER:-/opt/kiosk.sh}"
 export LANGUAGE="${LANGUAGE:-de}"
 export LANG="${LANG:-de}"
 # de,ru,fr etc.
-export MOUSE_CURSOR="${MOUSE_CURSOR:-1}"
+export HIDE_MOUSE_CURSOR="${HIDE_MOUSE_CURSOR:-0}"
 # 0 - to hide

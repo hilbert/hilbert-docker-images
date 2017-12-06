@@ -19,6 +19,14 @@ if [[ "${SHOW_CLOSE_BUTTON}" = "1" ]]; then
   exec "${BASE}/qclosebutton" "${BASE}/x_64x64.png" ${ARGS}
 fi
 
+
+#### hide mouse cursor
+if [[ "${HIDE_MOUSE_CURSOR}" = "1" ]]; then 
+  /usr/bin/unclutter -idle 0.1 -root &
+  UC_ID=$!
+fi
+
+
 # [[ "${SHOW_CLOSE_BUTTON}" = "0" ]] && 
 exec ${ARGS}
 

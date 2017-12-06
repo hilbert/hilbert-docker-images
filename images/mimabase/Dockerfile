@@ -19,16 +19,19 @@ RUN wget -q -O - https://dl-ssl.google.com/linux/linux_signing_key.pub | apt-key
  && echo "deb http://dl.google.com/linux/chrome/deb/ stable main" >> /etc/apt/sources.list.d/google.list \
  && apt-add-repository --yes ppa:ubuntu-mozilla-security/ppa \
  && update.sh \
- && install.sh chromium-codecs-ffmpeg-extra google-chrome-stable firefox nginx \
+ && install.sh chromium-codecs-ffmpeg-extra firefox nginx \
                gconf2 gconf-service libnotify4 libappindicator1 libxtst6 libnss3 \
- && wget -q "https://cloud.imaginary.org/index.php/s/I1gDtzfgT476WxC/download" -O /tmp/kiosk-browser.deb \
+ && wget -q "https://cloud.imaginary.org/index.php/s/JRd3Ob5yz86SUka/download" -O /tmp/kiosk-browser.deb \
  && dpkg -i /tmp/kiosk-browser.deb \
  && wget -q "https://launchpad.net/~ubuntu-mozilla-security/+archive/ubuntu/ppa/+build/13537990/+files/firefox_56.0+build6-0ubuntu0.14.04.2_amd64.deb"  -O /tmp/firefox.deb \
  && dpkg -i /tmp/firefox.deb \
- && wget -q "https://sjmulder.nl/dl/chrome/chrome64_51.0.2704.84.deb" -O /tmp/chrome.deb \
- && dpkg -i /tmp/chrome.deb \
  && install.sh -fy \
  && clean.sh && mkdir -p /opt
+########### https://www.slimjet.com/chrome/download-chrome.php?file=lnx%2Fchrome64_51.0.2704.84.deb
+
+## google-chrome-stable 
+# && wget -q "https://sjmulder.nl/dl/chrome/chrome64_51.0.2704.84.deb" -O /tmp/chrome.deb \
+# && dpkg -i /tmp/chrome.deb \
 
 
 #########################################
@@ -48,8 +51,9 @@ COPY .show_close_button /root/
 #RUN mkdir -p /root/.mozilla
 #COPY .mozilla /root/.mozilla/
 
-ADD https://cloud.imaginary.org/index.php/s/e65pmGhOyDEnxTh/download /tmp/ff.tar.bz2
-RUN tar xjvf /tmp/ff.tar.bz2 -C /root/
+#ADD https://cloud.imaginary.org/index.php/s/e65pmGhOyDEnxTh/download /tmp/ff.tar.bz2
+ADD https://cloud.imaginary.org/index.php/s/B0G13fyRSStI26y/download /tmp/ff.tar.gz
+RUN tar xzvf /tmp/ff.tar.gz -C /root/
 
 COPY firefox.sh browser.sh kiosk.sh launch.sh run.sh /opt/
 
@@ -106,8 +110,6 @@ RUN git clone --depth 1 -b 'master' https://github.com/IMAGINARY/applauncher2.gi
 
 ## COPY dune-ash.tar.bz2 /tmp/
 ## RUN tar xjvf /tmp/dune-ash.tar.bz2 -C /opt/
-
-
 
 ARG IMAGE_VERSION=latest
 ARG GIT_NOT_CLEAN_CHECK
