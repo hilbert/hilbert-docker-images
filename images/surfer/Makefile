@@ -2,7 +2,7 @@ mkfile_path := $(abspath $(lastword $(MAKEFILE_LIST)))
 COPYFILES   := 
 include ../Makefile.inc
 
-CMD=launch.sh /opt/SURFER/SURFER
+CMD=/opt/SURFER/SURFER -f --kiosk --disable PRINT
 
 RUNTERM=-it -a stdin -a stdout -a stderr --ipc=host --net=host
 OPTS=/sbin/my_init --skip-startup-files --quiet --skip-runit

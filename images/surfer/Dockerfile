@@ -3,16 +3,18 @@ FROM hilbert/gui
 MAINTAINER Oleksandr Motsak <malex984+hilbert.surfer@gmail.com>
 
 #ADD https://imaginary.org/sites/default/files/surfer-1.2.4.x86_64.deb /tmp/surfer.deb
-ADD https://imaginary.org/sites/default/files/surfer-1.7.0.x86_64.deb /tmp/surfer.deb
+#ADD https://imaginary.org/sites/default/files/surfer-1.7.0.x86_64.deb /tmp/surfer.deb
 
 RUN update.sh \
- && install.sh fonts-wqy-microhei \
+ && install.sh fonts-wqy-microhei libxslt1.1 \
+ && wget -q "https://cloud.imaginary.org/index.php/s/9ZLTBdiVtY7pbMb/download" -O /tmp/surfer.deb \
+ && mkdir -p /usr/share/desktop-directories/ \
  && dpkg -i /tmp/surfer.deb \
  && install.sh -fy \
  && clean.sh
 
-RUN touch /root/.javafx_eula_accepted
-COPY .fxsurfer /root/
+#RUN touch /root/.javafx_eula_accepted
+#COPY .fxsurfer /root/
 
 
 ARG IMAGE_VERSION=latest
