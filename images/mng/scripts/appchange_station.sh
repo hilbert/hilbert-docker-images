@@ -70,14 +70,20 @@ if [ "$last_rc" -ne "0" ]; then
 fi
 
 echo "Finished changing top app of $station_id"
+station_address=$("${HILBERT_CLI_PATH}/hilbert" -q cfg_query --configfile "${HILBERT_SERVER_CONFIG_PATH}" -c -f plain -o "Stations/${station_id}/address" | head -n 1)
 
-sleep 1
+## NOTE: Try to force OMD/CheckMK recheck of the altered station
+sleep 2
 echo "COMMAND [$(date +%s)] START_EXECUTING_SVC_CHECKS" | nc localhost 6557
-sleep 1
+sleep 2
 echo "COMMAND [$(date +%s)] SCHEDULE_FORCED_SVC_CHECK;${station_id};Check_MK inventory;$(date +%s)" | nc localhost 6557
-sleep 1
-
-station_address=$("${HILBERT_CLI_PATH}/hilbert" -q cfg_query --configfile "${HILBERT_SERVER_CONFIG_PATH}" -o "Stations/${station_id}/address" | head -n 1)
+sleep 2
+echo "COMMAND [$(date +%s)] SCHEDULE_FORCED_SVC_CHECK;${station_address};Check_MK inventory;$(date +%s)" | nc localhost 6557
+#sleep 2
+#echo "COMMAND [$(date +%s)] START_EXECUTING_SVC_CHECKS" | nc localhost 6557
+sleep 2
+echo "COMMAND [$(date +%s)] SCHEDULE_FORCED_SVC_CHECK;${station_id};Check_MK inventory;$(date +%s)" | nc localhost 6557
+sleep 2
 echo "COMMAND [$(date +%s)] SCHEDULE_FORCED_SVC_CHECK;${station_address};Check_MK inventory;$(date +%s)" | nc localhost 6557
 
 exit 0

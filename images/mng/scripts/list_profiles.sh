@@ -45,4 +45,4 @@ if [ ! -r "${HILBERT_SERVER_CONFIG_PATH}" ]; then
     exit 1
 fi
 
-exec "${HILBERT_CLI_PATH}/hilbert" -q list_profiles --configfile "${HILBERT_SERVER_CONFIG_PATH}" --format dashboard
+exec "${HILBERT_CLI_PATH}/hilbert" -q cfg_query --configfile "${HILBERT_SERVER_CONFIG_PATH}" --format json --compact --object 'Profiles/all'
