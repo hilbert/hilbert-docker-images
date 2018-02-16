@@ -16,18 +16,17 @@ MAINTAINER Oleksandr Motsak <malex984+hilbert.kiosk@gmail.com>
 # Legacy Kiosk Browser: 0.9.0 # https://cloud.imaginary.org/index.php/s/gwqWQbWu4xTsoQ8
 RUN update.sh \
  && install.sh gconf2 gconf-service libnotify4 libappindicator1 libxtst6 libnss3 \
- && wget -q "https://cloud.imaginary.org/index.php/s/gwqWQbWu4xTsoQ8/download" -O /tmp/kiosk-browser.deb \
+ && wget -q "https://cloud.imaginary.org/index.php/s/N8lv9jzqUoXh3cB/download" -O /tmp/kiosk-browser.deb \
  && dpkg -i /tmp/kiosk-browser.deb \
  && install.sh -fy \
- && clean.sh \
- && mv /opt/kiosk-browser /opt/kiosk-browser.0.9.0
+ && clean.sh # && mv /opt/kiosk-browser /opt/kiosk-browser.0.9.0
 
 # Latest Kiosk Browser:
-RUN update.sh \
- && wget -q "https://cloud.imaginary.org/index.php/s/I1gDtzfgT476WxC/download" -O /tmp/kiosk-browser.deb \
- && dpkg -i /tmp/kiosk-browser.deb \
- && install.sh -fy \
- && clean.sh
+#RUN update.sh \
+# && wget -q "https://cloud.imaginary.org/index.php/s/I1gDtzfgT476WxC/download" -O /tmp/kiosk-browser.deb \
+# && dpkg -i /tmp/kiosk-browser.deb \
+# && install.sh -fy \
+# && clean.sh
 
 #RUN npm install electron-prebuilt -g 
 ## && npm install asar -g && \
@@ -39,14 +38,21 @@ RUN update.sh \
 #COPY package.json /usr/local/src/kiosk/
 #RUN cd /usr/local/src/kiosk && npm install electron-prebuilt --save-dev && npm install yargs --save-dev
 
-COPY browser.sh run.sh kiosk.sh testapp.sh /usr/local/bin/
+#ADD https://raw.githubusercontent.com/hilbert/hilbert-heartbeat/devel/client/web/hilbert-heartbeat.js /usr/local/share/hilbert-heartbeat.js
+#ADD https://raw.githubusercontent.com/hilbert/hilbert-heartbeat/3c5eefdbc197e8f6a8d3a3f63e424bd2b45c9ee6/client/web/hilbert-heartbeat.js /usr/local/share/_hilbert-heartbeat.js
+
+COPY hilbert-heartbeat.js /usr/local/share/hilbert-heartbeat.js
+ENV HB_LIBRARY_FILE /usr/local/share/hilbert-heartbeat.js
+
+# TODO: add those scripts from Kiosk repository (when it will be public)!?
+COPY browser.sh run.sh kiosk.sh testapp.sh hb_preload.sh /usr/local/bin/
 
 # ONBUILD COPY package.json index.html main.js /usr/src/kiosk/
 # CMD [ "npm", "start" ]
 # CMD [ "launch.sh", "/usr/src/kiosk/run.sh" ] ## kiosk
 # /usr/local/src/kiosk/run.sh # !
 
-
+RUN mkdir -p /root/.config/kiosk-browser/
 
 
 ARG IMAGE_VERSION=latest
@@ -57,7 +63,7 @@ ARG VCS_REF=HEAD
 ARG VCS_URL="https://github.com/hilbert/hilbert-docker-images"
 
 ARG DOCKERFILE="/images/kiosk/Dockerfile"
-LABEL org.label-schema.description="Kiosk-mode browser using Electron. Base for WebBrowser-related images (as well as hilbert/gui)" \
+LABEL org.label-schema.description="Kiosk-mode browser using Electron. Base for WebBrowser-related images (as well as hilbert/gui). See https://github.com/IMAGINARY/kiosk-browser" \
       org.label-schema.build-date="${BUILD_DATE}" \
       org.label-schema.vcs-ref="${VCS_REF}" \
       org.label-schema.vcs-url="${VCS_URL}" \
