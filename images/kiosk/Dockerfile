@@ -57,7 +57,7 @@ ARG VCS_REF=HEAD
 ARG VCS_URL="https://github.com/hilbert/hilbert-docker-images"
 
 ARG DOCKERFILE="/images/kiosk/Dockerfile"
-LABEL org.label-schema.description="Kiosk-mode browser using Electron. Base for WebBrowser-related images (as well as hilbert/gui)" \
+LABEL org.label-schema.description="Kiosk-mode browser using Electron. Base for WebBrowser-related images (as well as hilbert/gui). See https://github.com/IMAGINARY/kiosk-browser" \
       org.label-schema.build-date="${BUILD_DATE}" \
       org.label-schema.vcs-ref="${VCS_REF}" \
       org.label-schema.vcs-url="${VCS_URL}" \
