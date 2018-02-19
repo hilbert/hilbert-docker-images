@@ -16,18 +16,17 @@ MAINTAINER Oleksandr Motsak <malex984+hilbert.kiosk@gmail.com>
 # Legacy Kiosk Browser: 0.9.0 # https://cloud.imaginary.org/index.php/s/gwqWQbWu4xTsoQ8
 RUN update.sh \
  && install.sh gconf2 gconf-service libnotify4 libappindicator1 libxtst6 libnss3 \
- && wget -q "https://cloud.imaginary.org/index.php/s/gwqWQbWu4xTsoQ8/download" -O /tmp/kiosk-browser.deb \
+ && wget -q "https://cloud.imaginary.org/index.php/s/VywtP8uJ5opDYvJ/download?path=%2F&files=kiosk-browser_0.9.8_amd64.deb" -O /tmp/kiosk-browser.deb \
  && dpkg -i /tmp/kiosk-browser.deb \
  && install.sh -fy \
- && clean.sh \
- && mv /opt/kiosk-browser /opt/kiosk-browser.0.9.0
+ && clean.sh # && mv /opt/kiosk-browser /opt/kiosk-browser.0.9.0
 
 # Latest Kiosk Browser:
-RUN update.sh \
- && wget -q "https://cloud.imaginary.org/index.php/s/I1gDtzfgT476WxC/download" -O /tmp/kiosk-browser.deb \
- && dpkg -i /tmp/kiosk-browser.deb \
- && install.sh -fy \
- && clean.sh
+#RUN update.sh \
+# && wget -q "https://cloud.imaginary.org/index.php/s/I1gDtzfgT476WxC/download" -O /tmp/kiosk-browser.deb \
+# && dpkg -i /tmp/kiosk-browser.deb \
+# && install.sh -fy \
+# && clean.sh
 
 #RUN npm install electron-prebuilt -g 
 ## && npm install asar -g && \
