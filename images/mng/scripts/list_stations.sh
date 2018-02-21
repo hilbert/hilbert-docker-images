@@ -45,7 +45,7 @@ if [ ! -r "${HILBERT_SERVER_CONFIG_PATH}" ]; then
     exit 1
 fi
 
-if [[ -z "$@" ]]; then # NOTE: new default output
+if [[ -n "$@" ]]; then # NOTE: old default output 
   exec "${HILBERT_CLI_PATH}/hilbert" -q cfg_query --configfile "${HILBERT_SERVER_CONFIG_PATH}" --format json --compact --object 'Stations/all'
 else
   # NOTE: just for compatibility testing:

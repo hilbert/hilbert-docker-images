@@ -26,7 +26,18 @@ RUN git clone --depth 1 -b 'devel' https://github.com/hilbert/hilbert-cli.git /u
 # Dummy script checker  (instead of full Haskel Suite)
 COPY shellcheck /usr/local/bin/
 COPY config.json /usr/local/hilbert-ui/server/
-COPY scripts /usr/local/hilbert-ui/server/scripts/
+
+#COPY scripts /usr/local/hilbert-ui/server/scripts/
+
+RUN mkdir -p /usr/local/hilbert-ui/server/scripts/
+
+ADD https://raw.githubusercontent.com/hilbert/hilbert-cli/aff706eeea031f928ed1b9a00189a03d01bf271b/server/appchange_station.sh /usr/local/hilbert-ui/server/scripts/appchange_station.sh
+ADD https://raw.githubusercontent.com/hilbert/hilbert-cli/aff706eeea031f928ed1b9a00189a03d01bf271b/server/list_applications.sh /usr/local/hilbert-ui/server/scripts/list_applications.sh
+ADD https://raw.githubusercontent.com/hilbert/hilbert-cli/aff706eeea031f928ed1b9a00189a03d01bf271b/server/list_profiles.sh /usr/local/hilbert-ui/server/scripts/list_profiles.sh
+ADD https://raw.githubusercontent.com/hilbert/hilbert-cli/aff706eeea031f928ed1b9a00189a03d01bf271b/server/list_stations.sh /usr/local/hilbert-ui/server/scripts/list_stations.sh
+
+# NOTE: The following is temporary, only before Dashboard server switches to use hilbert cfg_query directly
+COPY scripts/list_stations.sh /usr/local/hilbert-ui/server/scripts/
 
 # configure nginx
 COPY hilbert-ui /etc/nginx/sites-enabled/
