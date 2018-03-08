@@ -54,6 +54,10 @@ cat << EOF > ${PRELOAD_FILE}
     // wait for the document finish loading and ...
     var webContents = require('electron').remote.getCurrentWindow().webContents;
     webContents.on('did-finish-load',() => {
+        // don't load the library on failed page load
+        if(window.location.href=="data:text/html,chromewebdata")
+            return;
+
         // ... define the heartbeat configuration
         const heartbeatCfg = {
             url: Heartbeat.getPassedUrl('${HB_URL}'),
