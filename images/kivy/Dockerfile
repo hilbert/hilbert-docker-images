@@ -4,10 +4,23 @@ MAINTAINER Oleksandr Motsak <malex984+hilbert.kivy@gmail.com>
 
 # http://kivy.org/docs/installation/installation-linux.html#ubuntu-11-10-or-newer
 
-RUN DEBIAN_FRONTEND=noninteractive apt-key adv --keyserver keyserver.ubuntu.com --recv-keys A863D2D6 && \
-    DEBIAN_FRONTEND=noninteractive echo|add-apt-repository ppa:kivy-team/kivy && \
-    update.sh && install.sh python-kivy python-numpy && clean.sh
+#    DEBIAN_FRONTEND=noninteractive echo|add-apt-repository ppa:kivy-team/kivy && \
+RUN DEBIAN_FRONTEND=noninteractive apt-key adv --keyserver keyserver.ubuntu.com --recv-keys A863D2D6 \
+ && DEBIAN_FRONTEND=noninteractive echo|add-apt-repository ppa:kivy-team/kivy-daily \
+ && update.sh \
+ && install.sh python-kivy python-numpy \
+ && clean.sh
+
 # TODO: python3?
+
+#RUN https://github.com/kivy/kivy/archive/1.10.0.tar.gz
+# git clone http://github.com/kivy/kivy
+# cd kivy
+#sudo apt-get install cython libgstreamer1.0-dev libsdl2-dev libsdl2-ttf-dev libsdl2-image-dev libsdl2-mixer-dev
+# make # make mesabuild # sudo make install
+#sudo apt-get install checkinstall
+#sudo checkinstall python setup.py install
+
 
 RUN git clone https://github.com/stocyr/Deflectouch.git /usr/local/src/Deflectouch/
 COPY run.sh /usr/local/src/Deflectouch/
