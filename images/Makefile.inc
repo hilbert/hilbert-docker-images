@@ -55,6 +55,8 @@ GIT_NOT_CLEAN_CHECK ?= $(strip $(shell git status --porcelain))
 #$(error echo You are trying to push a build based on commit $(GIT_COMMIT) but the tagged release version is $(VERSION_COMMIT))
 #endif
 
+VIDEO_DEVICES ?= `find /dev/ -group video -type c -exec echo -n "--device {} " \; 2>/dev/null`
+AUDIO_DEVICES ?= `find /dev/ -group audio -type c -exec echo -n "--device {} " \; 2>/dev/null`
 
 
 IMAGE_VERSION ?= latest

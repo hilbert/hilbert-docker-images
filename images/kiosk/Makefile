@@ -13,7 +13,7 @@ ARGS=
 # IMG  = ${U}/${APP}:${IMAGE_VERSION}
 # TAG=titan.h-its.org:5555/${IMG}
 # titan.h-its.org:5555/hits/moon:${IMAGE_VERSION:-latest}
-VIDEO_DEVICES=`find /dev/ -group video -type c -exec echo -n "--device {} " \; 2>/dev/null`
+# VIDEO_DEVICES=`find /dev/ -group video -type c -exec echo -n "--device {} " \; 2>/dev/null`
 
 # --ipc=host
 # -v /dev/shm:/dev/shm:rw
