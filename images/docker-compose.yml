@@ -22,7 +22,6 @@ services:
      - CUPS_SERVER
      - ALSA_CARD
      - LANGUAGE
-     - MOUSE_CURSOR
      - CUSTOMIZATION
     entrypoint:
      - /bin/sh
@@ -320,6 +319,9 @@ services:
      - XLIB_SKIP_ARGB_VISUALS=1
      - XAUTHORITY="${XAUTH}"
      - DISPLAY
+     - "HILBERT_MOUSE_CURSOR=off"
+     - "HILBERT_UNCLUTTER_ARGS=-root -idle 0.1"
+##     MOUSE_CURSOR
     stdin_open: false
     tty: false
     entrypoint: 

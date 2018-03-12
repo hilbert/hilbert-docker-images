@@ -1,7 +1,7 @@
 #!/bin/bash
 
-SELFDIR=`dirname "$0"`
-SELFDIR=`cd "$SELFDIR" && pwd`
+SELFDIR="$(dirname "$0")"
+SELFDIR="$(cd "$SELFDIR" && pwd)"
 
 cd "$SELFDIR"
 
@@ -25,19 +25,6 @@ export LANG="en_US.UTF-8"
 export LC_CTYPE="$LANG"
 export LC_ALL="$LANG"
 
-CMD=$1
-
-if [ -z "$CMD" ]; then
-  if [ -z "$DISPLAY" ]; then 
-    CMD=bash
-  else
-    CMD=xterm
-  fi
-  ARGS=""
-else
-  shift
-  ARGS=$@
-fi
 
 # xhost +
 #xcompmgr -fF -I-.002 -O-.003 -D1 &
@@ -48,13 +35,18 @@ fi
 # requires: qclosebutton (qt4-default)
 # xdotool
 
-## http://stackoverflow.com/a/696855
-[[ "${MOUSE_CURSOR}" = "off" ]] && (echo "Hiding the mouse..."; unclutter -idle 0; )
+if [[ "x${HILBERT_MOUSE_CURSOR}" = "xoff" ]]; then
+  : ${HILBERT_UNCLUTTER_ARGS:= -idle 0 -jitter 50 -root}
+  echo "Hiding the mouse via [unclutter ${HILBERT_UNCLUTTER_ARGS}]..."
+  ## http://stackoverflow.com/a/696855
+  ## https://stackoverflow.com/a/13935981
+  unclutter ${HILBERT_UNCLUTTER_ARGS} &
+fi
 
 
 export ALSA_CARD="${HILBERT_ALSA_CARD:-${ALSA_CARD}}"
 
-if [ ! -z "${ALSA_CARD}" ]; then 
+if [[ ! -z "${ALSA_CARD}" ]]; then 
 
 ## if [ ! -f $HOME/.asoundrc ]; then 
 
@@ -74,7 +66,7 @@ ctl.!default {
 }
 EOF
 ## fi
-if [ ! -f "$HOME/.asoundrc" ]; then
+if [[ ! -f "$HOME/.asoundrc" ]]; then
   mv "$HOME/.asoundrc~" "$HOME/.asoundrc"
 fi
 
@@ -83,7 +75,18 @@ fi
 ## TODO: make  qclosebutton and xfullscreen optional!
 # exec qclosebutton "$SELFDIR/x_64x64.png" 
 # exec xfullscreen 
-exec $CMD $ARGS 2>&1
+
+if [[ -z "$*" ]]; then
+  if [[ -z "${DISPLAY}" ]]; then 
+    CMD=bash
+  else
+    CMD=xterm
+  fi
+  exec "${CMD}" 2>&1
+  exit $?
+fi
+
+exec "$@" 2>&1
 exit $?
 
 
