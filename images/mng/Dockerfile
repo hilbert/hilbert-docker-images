@@ -1,8 +1,8 @@
-FROM hilbert/base
+ARG IMAGE_VERSION=someversion
+FROM hilbert/base:${IMAGE_VERSION}
 ###FROM hilbert/nodejs::::
 
 MAINTAINER Oleksandr Motsak <malex984+hilbert.mng@gmail.com>
-###MAINTAINER Oleksandr Motsak <malex984+hilbert.nodejs@gmail.com>
 
 # https://github.com/nodesource/distributions
 
@@ -72,7 +72,6 @@ ENV HOME /root
 
 
 
-ARG IMAGE_VERSION=latest
 ARG GIT_NOT_CLEAN_CHECK
 # Build-time metadata as defined at http://label-schema.org
 ARG BUILD_DATE=someday

@@ -1,4 +1,5 @@
-FROM hilbert/gui
+ARG IMAGE_VERSION=someversion
+FROM hilbert/gui:${IMAGE_VERSION}
 
 MAINTAINER Oleksandr Motsak <malex984+hilbert.mimabase@gmail.com>
 
@@ -111,7 +112,6 @@ RUN git clone --depth 1 -b 'master' https://github.com/IMAGINARY/applauncher2.gi
 ## COPY dune-ash.tar.bz2 /tmp/
 ## RUN tar xjvf /tmp/dune-ash.tar.bz2 -C /opt/
 
-ARG IMAGE_VERSION=latest
 ARG GIT_NOT_CLEAN_CHECK
 # Build-time metadata as defined at http://label-schema.org
 ARG BUILD_DATE=someday

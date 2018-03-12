@@ -1,7 +1,11 @@
-#~~phusion/baseimage:0.9.18~~
+ARG IMAGE_VERSION=someversion
+
 FROM hilbert/baseimage:0.9.19_69a8fc1
 
 MAINTAINER Oleksandr Motsak <malex984+hilbert.base@gmail.com>
+
+#~~phusion/baseimage:0.9.18~~
+#~~hilbert/baseimage:${IMAGE_VERSION}~~
 
 COPY update.sh install.sh upgrade.sh clean.sh /usr/local/bin/
 
@@ -56,7 +60,7 @@ RUN chmod +x /usr/local/bin/*
 ## ENTRYPOINT ["/sbin/my_init"]
 
 
-ARG IMAGE_VERSION=latest
+ARG IMAGE_VERSION=someversion
 # Build-time metadata as defined at http://label-schema.org
 ARG BUILD_DATE=someday
 ARG VCS_REF=HEAD

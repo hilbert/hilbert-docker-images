@@ -1,4 +1,5 @@
-FROM hilbert/nodejs
+ARG IMAGE_VERSION=someversion
+FROM hilbert/nodejs:${IMAGE_VERSION}
 
 MAINTAINER Oleksandr Motsak <malex984+hilbert.cors.proxy@gmail.com>
 
@@ -14,7 +15,6 @@ COPY run.sh /usr/local/
 #EXPOSE 9000
 #EXPOSE 9999
 
-ARG IMAGE_VERSION=latest
 ARG GIT_NOT_CLEAN_CHECK
 ARG BUILD_DATE=someday
 ARG VCS_REF=HEAD

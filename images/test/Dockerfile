@@ -1,4 +1,5 @@
-FROM hilbert/gui
+ARG IMAGE_VERSION=someversion
+FROM hilbert/gui:${IMAGE_VERSION}
 
 MAINTAINER Oleksandr Motsak <malex984+hilbert.test@gmail.com>
 
@@ -65,7 +66,6 @@ COPY bm_gpu.sh /usr/src/
 
 #  xpratest
 
-ARG IMAGE_VERSION=latest
 ARG GIT_NOT_CLEAN_CHECK
 # Build-time metadata as defined at http://label-schema.org
 ARG BUILD_DATE=someday

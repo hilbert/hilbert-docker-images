@@ -1,4 +1,5 @@
-FROM hilbert/dd
+ARG IMAGE_VERSION=someversion
+FROM hilbert/dd:${IMAGE_VERSION}
 
 MAINTAINER Oleksandr Motsak <malex984+hilbert.qrhandler@gmail.com>
 
@@ -8,7 +9,6 @@ RUN update.sh && install.sh xauth x11-utils xinput evemu-tools mtdev-tools scrot
 COPY action.sh event qrhandler.sh get_top.sh /usr/local/bin/
 
 
-ARG IMAGE_VERSION=latest
 ARG GIT_NOT_CLEAN_CHECK
 # Build-time metadata as defined at http://label-schema.org
 ARG BUILD_DATE=someday

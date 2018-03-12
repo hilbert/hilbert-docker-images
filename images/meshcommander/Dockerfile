@@ -1,4 +1,6 @@
-FROM hilbert/nodejs
+ARG IMAGE_VERSION=someversion
+FROM hilbert/nodejs:${IMAGE_VERSION}
+
 # NOTE: taken from https://github.com/vga101/meshcommander and modified to fit Hilbert image hierarchy
 MAINTAINER Oleksandr Motsak <malex984+hilbert.meshcommander@gmail.com>
 
@@ -19,7 +21,6 @@ RUN echo -e '#!/bin/sh\ncd /usr/local/src/meshcommander/MeshCommander/NodeJS/ &&
 #CMD ["/usr/local/bin/runmeshcmdr.sh"]
 
 
-ARG IMAGE_VERSION=latest
 ARG GIT_NOT_CLEAN_CHECK
 # Build-time metadata as defined at http://label-schema.org
 ARG BUILD_DATE=someday

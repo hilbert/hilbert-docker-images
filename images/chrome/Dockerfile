@@ -1,4 +1,5 @@
-FROM hilbert/gui
+ARG IMAGE_VERSION=someversion
+FROM hilbert/gui:${IMAGE_VERSION}
 #< Base image with the necessary libraries for web-browsers:
 
 #! Person responsible for this image:
@@ -24,7 +25,6 @@ COPY browser.sh chrome.sh /usr/local/bin/
 
 
 
-ARG IMAGE_VERSION=latest
 ARG GIT_NOT_CLEAN_CHECK
 # Build-time metadata as defined at http://label-schema.org
 ARG BUILD_DATE=someday

@@ -1,4 +1,5 @@
-FROM hilbert/base
+ARG IMAGE_VERSION=someversion
+FROM hilbert/base:${IMAGE_VERSION}
 
 MAINTAINER Oleksandr Motsak <malex984+hilbert.appchoo@gmail.com>
 
@@ -17,7 +18,6 @@ RUN update.sh && install.sh libsdl-image1.2 libsdl-ttf2.0 libsdl-gfx1.2 && clean
 ### Oh, well... Blobs for now
 COPY appchoo menu.sh txt2jpg.sh FreeMonoBold.ttf /usr/local/bin/
 
-ARG IMAGE_VERSION=latest
 ARG GIT_NOT_CLEAN_CHECK
 # Build-time metadata as defined at http://label-schema.org
 ARG BUILD_DATE=someday

@@ -1,11 +1,11 @@
-FROM hilbert/baseimage
+ARG IMAGE_VERSION=someversion
+FROM hilbert/baseimage:${IMAGE_VERSION}
 
 MAINTAINER Oleksandr Motsak <malex984+hilbert.ptmx@gmail.com>
 
 COPY ptmx.sh /usr/local/bin/
 
 
-ARG IMAGE_VERSION=latest
 # Build-time metadata as defined at http://label-schema.org
 ARG BUILD_DATE=someday
 ARG VCS_REF=HEAD

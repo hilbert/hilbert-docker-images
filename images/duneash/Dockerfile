@@ -50,7 +50,7 @@ LABEL com.nvidia.cuda.version="${CUDA_VERSION}"
 ENV CUDA_PKG_VERSION 7-5=7.5-18
 
 
-ARG IMAGE_VERSION=latest
+ARG IMAGE_VERSION=someversion
 ARG GIT_NOT_CLEAN_CHECK
 # Build-time metadata as defined at http://label-schema.org
 ARG BUILD_DATE=someday

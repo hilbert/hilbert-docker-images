@@ -1,5 +1,6 @@
 # Taken from https://gitlab.com/nvidia/cuda/blob/ubuntu14.04/7.5/devel/Dockerfile
-FROM hilbert/cuda_runtime
+ARG IMAGE_VERSION=someversion
+FROM hilbert/cuda_runtime:${IMAGE_VERSION}
 
 MAINTAINER Oleksandr Motsak <malex984+hilbert.cuda.devel@gmail.com>
 
@@ -29,7 +30,6 @@ RUN update.sh \
 ENV LIBRARY_PATH /usr/local/cuda/lib64/stubs:${LIBRARY_PATH}
 
 ##############################################################################
-ARG IMAGE_VERSION=latest
 ARG GIT_NOT_CLEAN_CHECK
 # Build-time metadata as defined at http://label-schema.org
 ARG BUILD_DATE=someday

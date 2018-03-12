@@ -1,4 +1,5 @@
-FROM hilbert/base
+ARG IMAGE_VERSION=someversion
+FROM hilbert/base:${IMAGE_VERSION}
 #####~~debian:sid~~
 
 MAINTAINER Oleksandr Motsak <malex984+hilbert.cups@gmail.com>
@@ -37,7 +38,6 @@ EXPOSE 631
 
 
 
-ARG IMAGE_VERSION=latest
 ARG GIT_NOT_CLEAN_CHECK
 # Build-time metadata as defined at http://label-schema.org
 ARG BUILD_DATE=someday

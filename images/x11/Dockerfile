@@ -1,4 +1,5 @@
-FROM hilbert/gui
+ARG IMAGE_VERSION=someversion
+FROM hilbert/gui:${IMAGE_VERSION}
 
 MAINTAINER Oleksandr Motsak <malex984+hilbert.x11@gmail.com>
 
@@ -39,7 +40,6 @@ RUN sed -i -e 's@^ *allowed_users=.*$@allowed_users=anybody@g' /etc/X11/Xwrapper
 # git://people.freedesktop.org/~ajax/xcm
 
 
-ARG IMAGE_VERSION=latest
 ARG GIT_NOT_CLEAN_CHECK
 # Build-time metadata as defined at http://label-schema.org
 ARG BUILD_DATE=someday

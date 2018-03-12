@@ -1,4 +1,5 @@
-FROM hilbert/kiosk
+ARG IMAGE_VERSION=someversion
+FROM hilbert/kiosk:${IMAGE_VERSION}
 
 MAINTAINER Oleksandr Motsak <malex984+hilbert.mywebapp@gmail.com>
 RUN mkdir -p /usr/local/src/mywebapp
@@ -6,7 +7,6 @@ COPY test_heartbeatjs.html hb.js /usr/local/src/mywebapp/
 
 
 
-ARG IMAGE_VERSION=latest
 ARG GIT_NOT_CLEAN_CHECK
 # Build-time metadata as defined at http://label-schema.org
 ARG BUILD_DATE=someday

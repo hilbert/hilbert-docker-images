@@ -1,4 +1,5 @@
-FROM hilbert/base
+ARG IMAGE_VERSION=someversion
+FROM hilbert/base:${IMAGE_VERSION}
 
 MAINTAINER Oleksandr Motsak <malex984+hilbert.dd@gmail.com>
 
@@ -35,7 +36,6 @@ ENV DOCKER_API_VERSION 1.24
 
 
 
-ARG IMAGE_VERSION=latest
 ARG GIT_NOT_CLEAN_CHECK
 # Build-time metadata as defined at http://label-schema.org
 ARG BUILD_DATE=someday

@@ -1,8 +1,8 @@
-FROM hilbert/base
+ARG IMAGE_VERSION=someversion
+FROM hilbert/base:${IMAGE_VERSION}
 ### FROM hilbert/dd
 
 MAINTAINER Oleksandr Motsak <malex984+hilbert.omd_agent@gmail.com>
-## MAINTAINER Oleksandr Motsak <malex984+hilbert.dd@gmail.com>
 
 RUN update.sh && \
     curl -sSL https://get.docker.com/gpg | apt-key add - && \
@@ -57,7 +57,6 @@ RUN chmod a+x /usr/local/bin/heartbeat.py /usr/local/lib/nagios/plugins/* /usr/l
 
 
 
-ARG IMAGE_VERSION=latest
 ARG GIT_NOT_CLEAN_CHECK
 # Build-time metadata as defined at http://label-schema.org
 ARG BUILD_DATE=someday

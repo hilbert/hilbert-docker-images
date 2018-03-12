@@ -1,4 +1,5 @@
-FROM hilbert/gui
+ARG IMAGE_VERSION=someversion
+FROM hilbert/gui:${IMAGE_VERSION}
 
 MAINTAINER Oleksandr Motsak <malex984+hilbert.play@gmail.com>
 
@@ -6,7 +7,6 @@ RUN update.sh && install.sh cmus vlc mplayer2 gxine xine-ui && clean.sh
 # mpv?
 
 
-ARG IMAGE_VERSION=latest
 ARG GIT_NOT_CLEAN_CHECK
 # Build-time metadata as defined at http://label-schema.org
 ARG BUILD_DATE=someday

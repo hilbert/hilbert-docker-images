@@ -1,4 +1,5 @@
-FROM hilbert/x11
+ARG IMAGE_VERSION=someversion
+FROM hilbert/x11:${IMAGE_VERSION}
 
 MAINTAINER Oleksandr Motsak <malex984+hilbert.dummy@gmail.com>
 
@@ -11,7 +12,6 @@ COPY test_nv.sh test_vbox.sh setup_nv.sh setup_vb.sh setup_alsa.sh customize.sh 
 
 
 
-ARG IMAGE_VERSION=latest
 ARG GIT_NOT_CLEAN_CHECK
 # Build-time metadata as defined at http://label-schema.org
 ARG BUILD_DATE=someday

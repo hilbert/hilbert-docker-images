@@ -1,11 +1,11 @@
-FROM hilbert/main
+ARG IMAGE_VERSION=someversion
+FROM hilbert/main:${IMAGE_VERSION}
 
 MAINTAINER Oleksandr Motsak <malex984+hilbert.demo@gmail.com>
 
 COPY demo.sh /usr/local/bin/
 
 
-ARG IMAGE_VERSION=latest
 ARG GIT_NOT_CLEAN_CHECK
 # Build-time metadata as defined at http://label-schema.org
 ARG BUILD_DATE=someday

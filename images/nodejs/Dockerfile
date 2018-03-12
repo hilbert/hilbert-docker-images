@@ -1,4 +1,5 @@
-FROM hilbert/base
+ARG IMAGE_VERSION=someversion
+FROM hilbert/base:${IMAGE_VERSION}
 
 MAINTAINER Oleksandr Motsak <malex984+hilbert.nodejs@gmail.com>
 
@@ -26,7 +27,6 @@ RUN update.sh \
 
 
 
-ARG IMAGE_VERSION=latest
 ARG GIT_NOT_CLEAN_CHECK
 # Build-time metadata as defined at http://label-schema.org
 ARG BUILD_DATE=someday
