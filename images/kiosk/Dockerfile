@@ -14,19 +14,13 @@ MAINTAINER Oleksandr Motsak <malex984+hilbert.kiosk@gmail.com>
 
 
 # Legacy Kiosk Browser: 0.9.0 # https://cloud.imaginary.org/index.php/s/gwqWQbWu4xTsoQ8
+
 RUN update.sh \
  && install.sh gconf2 gconf-service libnotify4 libappindicator1 libxtst6 libnss3 \
- && wget -q "https://cloud.imaginary.org/index.php/s/VywtP8uJ5opDYvJ/download?path=%2F&files=kiosk-browser_0.9.8_amd64.deb" -O /tmp/kiosk-browser.deb \
+ && wget -q "https://cloud.imaginary.org/index.php/s/XYH8k1wxxz25d2J/download?path=%2F&files=kiosk-browser_0.9.8_amd64.deb" -O /tmp/kiosk-browser.deb \
  && dpkg -i /tmp/kiosk-browser.deb \
  && install.sh -fy \
  && clean.sh # && mv /opt/kiosk-browser /opt/kiosk-browser.0.9.0
-
-# Latest Kiosk Browser:
-#RUN update.sh \
-# && wget -q "https://cloud.imaginary.org/index.php/s/I1gDtzfgT476WxC/download" -O /tmp/kiosk-browser.deb \
-# && dpkg -i /tmp/kiosk-browser.deb \
-# && install.sh -fy \
-# && clean.sh
 
 #RUN npm install electron-prebuilt -g 
 ## && npm install asar -g && \
@@ -38,8 +32,9 @@ RUN update.sh \
 #COPY package.json /usr/local/src/kiosk/
 #RUN cd /usr/local/src/kiosk && npm install electron-prebuilt --save-dev && npm install yargs --save-dev
 
-#ADD https://raw.githubusercontent.com/hilbert/hilbert-heartbeat/devel/client/web/hilbert-heartbeat.js /usr/local/share/hilbert-heartbeat.js
-ADD https://raw.githubusercontent.com/hilbert/hilbert-heartbeat/4d10301ca06c0bd45039dbe67b111b64a8fda52a/client/web/hilbert-heartbeat.js /usr/local/share/hilbert-heartbeat.js
+#   https://raw.githubusercontent.com/hilbert/hilbert-heartbeat/master/client/js/hilbert-heartbeat.js
+ADD https://raw.githubusercontent.com/hilbert/hilbert-heartbeat/2108824ee24f6896d1bb3437cb94d033a05e3f36/client/js/hilbert-heartbeat.js /usr/local/share/hilbert-heartbeat.js
+
 ENV HB_LIBRARY_FILE /usr/local/share/hilbert-heartbeat.js
 
 COPY browser.sh run.sh kiosk.sh testapp.sh hb_preload.sh /usr/local/bin/
