@@ -131,7 +131,7 @@ TMP_DF=${mkfile_dir}/${APP}_${IMAGE_VERSION}_Dockerfile
 
 build: 
 	$(RM) -f "${TS}"
-	$(CAT) "${DF}" | $(SED) -e 's@^FROM  *\([^ :#][^ :#]*\) *$$@FROM \1:$(IMAGE_VERSION)@g' > "${TMP_DF}"
+	$(CAT) "${DF}" | $(SED) -e 's@^ *FROM  *\(hilbert/[^ :#]*\) *\([#].*\)\?$$@FROM \1:$(IMAGE_VERSION)@gi' > "${TMP_DF}"
 	cd ${mkfile_dir} && $(DOCKER) -D build ${DOCKER_BUILD_OPTS_BASIC} -t "${IMG}" -f "${TMP_DF}" "${mkfile_dir}"
 	$(DOCKER) images | $(GREP) -E "^${U}/${APP}  *" > "${TS}"
 #	$(MAKE) -C ${mkfile_dir}/ "${TS}"
@@ -140,7 +140,7 @@ build:
 # "${DF}"
 build1: 
 	$(RM) -f "${TS}"
-	$(CAT) "${DF}" | $(SED) -e 's@^FROM  *\([^ :#][^ :#]*\) *$$@FROM \1:$(IMAGE_VERSION)@g' > "${TMP_DF}"
+	$(CAT) "${DF}" | $(SED) -e 's@^ *FROM  *\(hilbert/[^ :#]*\) *\([#].*\)\?$$@FROM \1:$(IMAGE_VERSION)@gi' > "${TMP_DF}"
 	cd ${mkfile_dir} && $(DOCKER) -D build ${DOCKER_BUILD_OPTS_SIMPLE} -t "${IMG}" -f "${TMP_DF}" "${mkfile_dir}"
 	$(DOCKER) images | $(GREP) -E "^${U}/${APP}  *" > "${TS}"
 #	$(MAKE) -C ${mkfile_dir}/ "${TS}"
@@ -149,7 +149,7 @@ build1:
 ## Maybe try using docker-compose for building?
 build_full:
 	$(RM) -f "${TS}"
-	$(CAT) "${DF}" | $(SED) -e 's@^FROM  *\([^ :#][^ :#]*\) *$$@FROM \1:$(IMAGE_VERSION)@g' > "${TMP_DF}"
+	$(CAT) "${DF}" | $(SED) -e 's@^ *FROM  *\(hilbert/[^ :#]*\) *\([#].*\)\?$$@FROM \1:$(IMAGE_VERSION)@gi' > "${TMP_DF}"
 	cd ${mkfile_dir} && $(DOCKER) -D build ${DOCKER_BUILD_OPTS} -t "${IMG}" -f "${TMP_DF}" "${mkfile_dir}"
 	$(DOCKER) images | $(GREP) -E "^${U}/${APP}  *" > "${TS}"
 #	$(MAKE) -C ${mkfile_dir}/ "${TS}"

@@ -41,12 +41,12 @@ ls -al "${DF}" prepare.sh buildconfig
 set -v
 set -x
 
-TMP_DF="${DF}"
+# TMP_DF="${DF}"
 
-if [[ ! "x${IMAGE_VERSION}" = "xlatest" ]]; then
+#if [[ ! "x${IMAGE_VERSION}" = "xlatest" ]]; then
    TMP_DF="${IMG_APP}_${IMAGE_VERSION}_Dockerfile"
-   sed "s@^FROM  *\([^ :#][^ :#]*\) *\$@FROM \1:${IMAGE_VERSION}@g" "${DF}" > "${TMP_DF}" 
-fi
+   sed -e "s@^ *FROM  *\(hilbert/[^ :#]*\) *\([#].*\)\?\$@FROM \1:${IMAGE_VERSION}@gi" "${DF}" > "${TMP_DF}"
+#fi
 
 echo "${TMP_DF}"
 ls -la "${TMP_DF}"
@@ -55,7 +55,7 @@ if [[ -f "${TMP_DF}" ]] && [[ -r "${TMP_DF}" ]]; then
 
 cat "${TMP_DF}"
 
-docker build \
+time docker build \
 --tag "${IMAGE_NAME}" \
 --build-arg IMAGE_VERSION="${IMAGE_VERSION}" \
 --build-arg VCS_REF="${VCS_REF}" \
@@ -67,8 +67,9 @@ docker build \
 
 else
 
-sed "s@^FROM  *\([^ :#][^ :#]*\) *\$@FROM \1:${IMAGE_VERSION}@g" "${DF}" | \
-docker build \
+###########################################################################
+sed -e "s@^ *FROM  *\(hilbert/[^ :#]*\) *\([#].*\)\?\$@FROM \1:${IMAGE_VERSION}@gi" "${DF}" | \
+time docker build \
       --tag "${IMAGE_NAME}" \
       --build-arg IMAGE_VERSION="${IMAGE_VERSION}" \
       --build-arg VCS_REF="${VCS_REF}" \
