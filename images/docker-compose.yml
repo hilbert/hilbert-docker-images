@@ -585,9 +585,6 @@ services:
     image: alpine:3.4
     devices:
      - "/dev/bus/usb:/dev/bus/usb:rwm"
-     - "/dev/nvidia0:/dev/nvidia0"
-     - "/dev/nvidiactl:/dev/nvidiactl"
-     - "/dev/dri:/dev/dri"
      - "/dev/snd:/dev/snd"
      - "/dev/shm:/dev/shm"
      - "/dev/input:/dev/input"

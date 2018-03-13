@@ -21,7 +21,6 @@ ARGS=
 # --privileged
 RUNTERM=--rm -it -a stdin -a stdout -a stderr --net=host -v /tmp/:/tmp/:rw -e DISPLAY $(VIDEO_DEVICES)
 
-# --device /dev/dri/card1 --device /dev/dri/renderD129 
 # -e KIOSK_BROWSER="/opt/kiosk-browser/kiosk-browser"
 # in ms
 

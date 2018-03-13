@@ -1,5 +1,5 @@
 #~~phusion/baseimage:0.9.18~~
-FROM hilbert/baseimage
+FROM hilbert/baseimage:0.9.19_69a8fc1
 
 MAINTAINER Oleksandr Motsak <malex984+hilbert.base@gmail.com>
 
@@ -40,13 +40,15 @@ RUN groupadd -f -g $GROUPS $USER \
 #USER $USER
 #WORKDIR $HOME
 
-COPY setup_ogl.sh hb.sh hb_wrapper.sh hb_dummy.sh config_cups.sh /usr/local/bin/
-#RUN chmod +x /usr/local/bin/config_cups.sh
+COPY setup_ogl.sh config_cups.sh /usr/local/bin/
+
+RUN wget -qO- https://github.com/hilbert/hilbert-heartbeat/archive/v1.0.0.tar.gz | \
+    tar -xzv --wildcards -C /usr/local/bin/ --strip=1 --xform='s#^.*/client/bash#.#x' \
+       'hilbert-heartbeat*/client/bash/heartbeat.sh' 'hilbert-heartbeat*/client/bash/hb_*.sh'
+
+RUN chmod +x /usr/local/bin/*
 
 # RUN locale-gen de_DE.utf8 && locale-gen ru_RU.utf8
-
-#ADD https://raw.githubusercontent.com/phusion/baseimage-docker/master/image/bin/my_init /sbin/my_init
-#RUN chmod +x /sbin/my_init
 
 # Use baseimage-docker's init system.
 # CMD ["/sbin/my_init"]

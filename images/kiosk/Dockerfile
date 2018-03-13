@@ -32,9 +32,7 @@ RUN update.sh \
 #COPY package.json /usr/local/src/kiosk/
 #RUN cd /usr/local/src/kiosk && npm install electron-prebuilt --save-dev && npm install yargs --save-dev
 
-#   https://raw.githubusercontent.com/hilbert/hilbert-heartbeat/master/client/js/hilbert-heartbeat.js
-ADD https://raw.githubusercontent.com/hilbert/hilbert-heartbeat/2108824ee24f6896d1bb3437cb94d033a05e3f36/client/js/hilbert-heartbeat.js /usr/local/share/hilbert-heartbeat.js
-
+ADD https://raw.githubusercontent.com/hilbert/hilbert-heartbeat/v1.0.0/client/js/hilbert-heartbeat.js /usr/local/share/hilbert-heartbeat.js
 ENV HB_LIBRARY_FILE /usr/local/share/hilbert-heartbeat.js
 
 COPY browser.sh run.sh kiosk.sh testapp.sh hb_preload.sh /usr/local/bin/
