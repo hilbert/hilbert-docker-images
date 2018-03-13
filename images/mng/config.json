@@ -1,7 +1,0 @@
-{
-  "test": false,
-  "port": 4000,
-  "hilbert_cli_path": "/usr/local/bin/",
-  "mkls_cmd": "nc localhost 6557",
-  "log_level": "verbose"
-}

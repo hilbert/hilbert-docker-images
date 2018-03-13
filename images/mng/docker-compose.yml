@@ -17,9 +17,15 @@ services:
      - "${HILBERT_SERVER_CONFIG_PATH:-./}:/HILBERT:ro"
     environment:
      - HOME=/root
-     - HILBERT_CLI_PATH=/usr/local/bin
-     - HILBERT_SERVER_CONFIG_PATH=/HILBERT/Hilbert.yml
+#     - HILBERT_CLI_PATH=/usr/local/bin
+     - HILBERT_SERVER_CONFIG_PATH=/HILBERT/
      - HILBERT_SERVER_CONFIG_SSH_PATH=/root/SSH
+     - HILBERT_UI_SIMULATION_MODE=1
+     - HILBERT_UI_INT_PORT=3333
+     - HILBERT_UI_LOG_LEVEL=debug
+     - HILBERT_UI_LOG_DIR=/var/log
+     - HILBERT_UI_DB=""
+     - HILBERT_UI_EXT_PORT=${HILBERT_UI_PORT:-8000}
     entrypoint:
      - /sbin/my_init
      - --skip-runit
@@ -27,12 +33,14 @@ services:
      - --
 #    ports:
 #     - "8888:8000"
-    expose: 
-     - 8000
+    expose:
+     - ${HILBERT_UI_PORT:-8000}
     restart: always
     command:
      - /usr/local/run.sh
-     - --test=1
+
+
+
 
   mng:
     extends: 
@@ -40,6 +48,13 @@ services:
     labels:
      - "description=Management front-end and back-end (real management scripts)"
     restart: on-failure:5
+    environment:
+     - HILBERT_UI_SIMULATION_MODE=0
+     - HILBERT_UI_INT_PORT=4444
+     - HILBERT_UI_LOG_LEVEL=info
+     - HILBERT_UI_DB=/HILBERT_DB/hilbert-dev.sqlite
+    volumes:
+     - "${HILBERT_UI_DB:-/tmp}:/HILBERT_DB:rw"
     command:
      - /usr/local/run.sh
 

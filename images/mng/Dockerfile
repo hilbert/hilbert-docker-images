@@ -1,35 +1,62 @@
-FROM hilbert/nodejs
+FROM hilbert/base
+###FROM hilbert/nodejs::::
 
 MAINTAINER Oleksandr Motsak <malex984+hilbert.mng@gmail.com>
+###MAINTAINER Oleksandr Motsak <malex984+hilbert.nodejs@gmail.com>
+
+# https://github.com/nodesource/distributions
+
+#RUN wget -qO- https://deb.nodesource.com/gpgkey/nodesource.gpg.key | apt-key add -
+#ADD https://deb.nodesource.com/setup_4.x /tmp/setup_4.sh
+#RUN chmod +x /tmp/setup_4.sh && bash /tmp/setup_4.sh
+
+## curl --silent --location https://deb.nodesource.com/setup_4.x | sudo -E bash -
+## wget -qO- https://deb.nodesource.com/setup_4.x | bash -
+
+RUN update.sh \
+ && DEBIAN_FRONTEND=noninteractive curl -sL https://deb.nodesource.com/setup_4.x | sudo -E bash - \
+ && install.sh nodejs \
+ && clean.sh
+
+#RUN npm install electron-prebuilt -g 
+## && npm install asar -g && \
+##    npm install yargs -g
+
+# ONBUILD COPY package.json index.html main.js /usr/src/kiosk/
+# CMD [ "npm", "start" ]
+# CMD [ "launch.sh", "/usr/src/kiosk/run.sh" ] ## nodejs
+
 
 # install dependencies
 RUN update.sh && \
-    install.sh nginx rsync lftp wakeonlan python3-pip openssh-client && \
-    pip3 install --upgrade pip && pip install --upgrade setuptools && \
-    pip install dill semantic_version ruamel.yaml argcomplete && \
+    install.sh nginx rsync wakeonlan openssh-client && \
     clean.sh && \
     rm -fR /etc/nginx/sites-enabled/default /etc/nginx/sites-available/default /root/.ssh
+
+#    python3-pip lftp 
+#    pip3 install --upgrade pip && pip install --upgrade setuptools && \
+#    pip install dill semantic_version ruamel.yaml argcomplete && \
 
 # tell Docker which port is exposed by the container
 # EXPOSE 8000
 
-RUN mkdir -p /usr/local/src
+# RUN mkdir -p /usr/local/src
 
 # download latest stable version and install node.js dependencies
 RUN git clone --depth 1 -b 'master' https://github.com/hilbert/hilbert-ui.git /usr/local/hilbert-ui \
     && cd /usr/local/hilbert-ui/client && npm install && cd /usr/local/hilbert-ui/server && npm install
 
 # download latest version. (note: required python packages were installed above)
-RUN git clone --depth 1 -b 'devel' https://github.com/hilbert/hilbert-cli.git /usr/local/src/cli \
-    && cd /usr/local/src/cli && python3 ./setup.py install 
+#RUN git clone --depth 1 -b 'devel' https://github.com/hilbert/hilbert-cli.git /tmp/hilbert_cli \
+#    && cd /tmp/hilbert_cli && python3 ./setup.py install
+
+ENV HILBERT_CLI_PATH=/usr/local/bin
+
+ADD "https://cloud.imaginary.org/index.php/s/WSGU4yEaR4RaH3T/download?path=%2F&files=hilbert" /usr/local/bin/hilbert
+RUN chmod a+x /usr/local/bin/hilbert
 
 # Dummy script checker  (instead of full Haskel Suite)
 COPY shellcheck /usr/local/bin/
-COPY config.json /usr/local/hilbert-ui/server/
-COPY scripts /usr/local/hilbert-ui/server/scripts/
-
-# configure nginx
-COPY hilbert-ui /etc/nginx/sites-enabled/
 
 # configure services for baseimage-docker's init system
 #RUN echo "#!/bin/sh\nnginx" > /etc/rc.local
@@ -39,7 +66,7 @@ COPY hilbert-ui /etc/nginx/sites-enabled/
 #    && chmod +x  /etc/service/hilbert_ui_api/run
 
 # main entry point
-COPY nginx.sh run.sh uiserver.sh /usr/local/
+COPY nginx.sh run.sh /usr/local/
 
 ENV HOME /root
 
