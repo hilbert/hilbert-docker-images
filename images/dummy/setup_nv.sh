@@ -24,7 +24,8 @@ chmod +x /tmp/nv
 mkdir -p /usr/lib/xorg/modules/drivers/ /usr/lib/x86_64-linux-gnu/dri/ && \
 chmod go+rx /usr/lib/xorg/modules/drivers/ /usr/lib/x86_64-linux-gnu/dri/
 
-/tmp/nv --silent --no-network --no-kernel-module --skip-module-unload --no-x-check --no-nouveau-check --run-nvidia-xconfig --no-cc-version-check --no-kernel-module-source --install-vdpau-wrapper --no-check-for-alternate-installs  2>&1 || true
+### --install-vdpau-wrapper
+/tmp/nv --silent --no-network --no-kernel-module --skip-module-unload --no-x-check --no-nouveau-check --run-nvidia-xconfig --no-cc-version-check --no-kernel-module-source  --no-check-for-alternate-installs  2>&1 || true
 cat /var/log/nvidia-installer.log
 
 #rm -f /tmp/nv

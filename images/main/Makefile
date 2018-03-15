@@ -5,14 +5,14 @@ include ../Makefile.inc
 CMD=main.sh
 ARGS=
 
-RUNTERM=-it -a stdin -a stdout -a stderr --ipc=host --privileged --net=host --pid=host \
+RUNTERM=-it -a stdin -a stdout -a stderr --ipc=host --net=host \
         -v /etc/localtime:/etc/localtime:ro -v /tmp/:/tmp/:rw \
         -v /var/run/docker.sock:/var/run/docker.sock
 	# -P
 
 ### TODO: switch to remote docker / networking!?
 
-OPTS=--skip-startup-files --no-kill-all-on-exit --quiet --skip-runit
+OPTS=/sbin/my_init --skip-startup-files --quiet --skip-runit
 
 check: $(TS)
 	test -n "${DISPLAY}"
@@ -20,3 +20,5 @@ check: $(TS)
 	docker ps -a
 	docker run --rm -e MENU_TRY="text" -e DISPLAY ${RUNTERM} --label is_top_app=0 $(IMG) ${OPTS} -- ${CMD} ${ARGS}
 
+
+build: build_full

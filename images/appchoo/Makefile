@@ -10,7 +10,7 @@ CH=A_Test_App_A B_Same_Test_App Alsa_Test GUI_Shell Bash_in_Main X11_Shell X11Se
 ARGS="Please choose an app" 200 
 
 RUNTERM=-it -a stdin -a stdout -a stderr
-OPTS=--skip-startup-files --no-kill-all-on-exit --quiet --skip-runit
+OPTS=/sbin/my_init --skip-startup-files --quiet --skip-runit
 
 check: $(TS)
 	xhost +
@@ -22,3 +22,5 @@ check: $(TS)
 #$(APP).list: txt2jpg.sh
 #	./txt2jpg.sh $(CH) > $(APP).list
 
+
+build: build_full

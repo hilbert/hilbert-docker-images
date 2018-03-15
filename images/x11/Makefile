@@ -3,11 +3,11 @@ COPYFILES   := Xorg.sh startXephyr.sh
 include ../Makefile.inc
 
 
-RUNTERM=--ipc=host --privileged --net=host --pid=host \
+RUNTERM=--ipc=host --net=host \
         -v /etc/localtime:/etc/localtime:ro -v /tmp/:/tmp/:rw
 # -v /dev/shm:/dev/shm -v /dev/dri:/dev/dri 
 
-OPTS=--skip-startup-files --no-kill-all-on-exit --quiet --skip-runit
+OPTS=/sbin/my_init --skip-startup-files --quiet --skip-runit
 
 CMD=startXephyr.sh
 # Xorg.sh
@@ -21,3 +21,5 @@ check: $(TS)
 	docker logs xxx 2>&1 | grep DISPLAY
 	xterm -display `docker logs xxx 2>&1 | grep DISPLAY_NUM | sed s@DISPLAY_NUM@@g` -e bash -c 'docker logs xxx; sleep 9'
 	docker rm -vf xxx
+
+build: build_full

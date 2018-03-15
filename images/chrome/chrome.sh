@@ -2,7 +2,7 @@
 
 B="${GOOGLE_CHROME:-/opt/google/chrome/google-chrome}"
 
-$B \
+exec $B \
 --enable-pinch \
 --flag-switches-begin --disable-threaded-scrolling \
 --enable-apps-show-on-first-paint --enable-embedded-extension-options \

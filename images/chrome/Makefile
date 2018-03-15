@@ -15,10 +15,10 @@ APP_ID=browser_app
 
 # -it -a stdin -a stdout -a stderr 
 # --privileged
-RUNTERM=--ipc=host --net=host --pid=host -e GOOGLE_CHROME=$(GOOGLE_CHROME) 
+RUNTERM=--ipc=host --net=host -e GOOGLE_CHROME=$(GOOGLE_CHROME) 
 
 # --no-kill-all-on-exit 
-OPTS=--skip-startup-files --quiet --skip-runit
+OPTS=/sbin/my_init --skip-startup-files --quiet --skip-runit
 
 check: $(TS)
 	### [ -z "${DISPLAY}" ] && exit 1
@@ -29,3 +29,5 @@ check: $(TS)
 	docker run -d -e DISPLAY -e APP_ID="${APP_ID}" ${RUNTERM} --label is_top_app=1 -v /tmp/:/tmp/:rw -v /dev/shm:/dev/shm $(IMG) ${OPTS} -- ${CMD} ${ARGS} || true
 	ls -al /dev/pts/ptmx
 	: chmod a+rw /dev/pts/ptmx
+
+build: build_full

@@ -4,7 +4,21 @@
 #SELFDIR=`cd "$SELFDIR" && pwd`
 #cd "$SELFDIR"
 
+
 I="$1"
+
+# The following is an adaptation to the new naming schema: hilbert/$APP:$VERSION
+U=hilbert
+IMAGE_VERSION="${IMAGE_VERSION:-latest}"
+IMG="$U/${I}:${IMAGE_VERSION}" # IMG="$APP" #IMG="$U/$I:$APP"
+
+ID=$(docker images | awk '{ print "[" $1 ":" $2 "]" }' | sort | uniq | grep "\[${IMG}\]")
+
+if [ -z "$ID" ]; then
+  echo "ERROR: no such image '${IMG}'"
+  exit 2
+fi
+
 shift
 
 G="$1"
@@ -20,11 +34,11 @@ docker rm -vf $C 1>&2 || true
 docker rmi -f --no-prune=false $D 1>&2 || true
 
 
-R="-it -a stdin -a stdout -a stderr --label is_top_app=0 --ipc=host --net=host --pid=host -v /etc/localtime:/etc/localtime:ro -v /tmp/:/tmp/:rw"
-O="--skip-startup-files --no-kill-all-on-exit --quiet --skip-runit"
+R="-it -a stdin -a stdout -a stderr --label is_top_app=0 --ipc=host --net=host -v /etc/localtime:/etc/localtime:ro -v /tmp/:/tmp/:rw"
+O="--skip-startup-files --quiet --skip-runit"
 
-## Create $C conainer out of $I and run customization script in it:
-docker run $R --name $C $I $O -- bash -c 'customize.sh' 1>&2
+## Create $C conainer out of $IMG and run customization script in it:
+docker run $R --name $C $IMG $O -- bash -c 'customize.sh' 1>&2
 # --privileged --ipc=host  --net=host --pid=host -v /dev/:/dev/:rw
 
 

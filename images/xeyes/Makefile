@@ -5,7 +5,7 @@ include ../Makefile.inc
 CMD=xterm
 
 RUNTERM=-it -a stdin -a stdout -a stderr
-OPTS=--skip-startup-files --no-kill-all-on-exit --quiet --skip-runit
+OPTS=/sbin/my_init --skip-startup-files --quiet --skip-runit
 
 check: $(TS)
 	### [ -z "${DISPLAY}" ] && exit 1
@@ -13,3 +13,5 @@ check: $(TS)
 	docker ps -a
 	docker run --rm -e DISPLAY ${RUNTERM} --label is_top_app=1 -v /tmp/:/tmp/:rw $(IMG) ${OPTS} -- ${CMD} ; echo $$? > .returncode
 	cat .returncode && rm .returncode
+
+build: build_full

@@ -1,0 +1,43 @@
+-  Hilbert Docker Images
+
+   Copyright 2016 IMAGINARY gGmbH
+
+   Licensed under the Apache License, Version 2.0 (the "License");
+   you may not use this file except in compliance with the License.
+   You may obtain a copy of the License at
+
+       https://www.apache.org/licenses/LICENSE-2.0
+
+   Unless required by applicable law or agreed to in writing, software
+   distributed under the License is distributed on an "AS IS" BASIS,
+   WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+   See the License for the specific language governing permissions and
+   limitations under the License.
+
+-  `images/appchoo/FreeMonoBold.ttf` is under GNU GPL: http://www.gnu.org/copyleft/gpl.html.
+   It was taken from  http://www.myfontfree.com/free-monospaced-bold-myfontfreecom64f120964.htm
+
+-  `images/omd_agent/check-mk-agent_1.2.6p12-1_all.deb` is under GNU GPL (part of Check_MK).
+   The file was taken from OMD provided by https://labs.consol.de/nagios/omd-repository/
+   due to https://mathias-kettner.de/checkmk_omd.html
+
+-  `images/test/GpuTest_Linux_x64_0.7.0.tar.bz2` was taken from http://www.geeks3d.com/gputest/
+   Its license notice is in `GpuTest_Linux_x64_0.7.0/EULA.txt`
+
+-  `images/cups/` is our modification of https://github.com/ticosax/cups-in-docker,
+   which is under Apache v2 License
+
+-  `images/appchoo/appchoo` is a binary executable built by us using 
+   https://github.com/malex984/appchoo (modified version of https://github.com/IMAGINARY/appchoo),
+   which is under CC0 1.0
+
+-  `images/skype/apulse/` contains shared binary libraries built by us using
+   https://github.com/i-rinat/apulse.git  (which is under MIT)
+
+-  `images/gui/x_64x64.png` and `images/gui/qclosebutton` are due to
+   https://github.com/IMAGINARY/qclosebutton
+
+-  `images/kiosk/prototype.min.js`, `images/kiosk/arrow.png` and `images/kiosk/testapp.html` are 
+   originally from http://scripty2.com/demos/touch/touchspector/ (MIT)
+
+- `images/kiosk/{Left,Right,Center}.mp3` are originally from https://github.com/bear24rw/alsa-utils/ (GPL-2.0)

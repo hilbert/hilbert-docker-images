@@ -1,25 +1,38 @@
-FROM malex984/dockapp:base
+ARG IMAGE_VERSION=someversion
+FROM hilbert/base:${IMAGE_VERSION}
 
-MAINTAINER Oleksandr Motsak <malex984@googlemail.com>
+MAINTAINER Oleksandr Motsak <malex984+hilbert.omd@gmail.com>
 
 # Install OMD, see http://labs.consol.de/OMD/
 RUN gpg --keyserver keys.gnupg.net --recv-keys F8C1CA08A57B9ED7 && \
     gpg --armor --export F8C1CA08A57B9ED7 | apt-key add - && \
-    echo 'deb http://labs.consol.de/repo/stable/ubuntu trusty main' >> /etc/apt/sources.list && \
-    update.sh && install.sh \
-           libpython2.7 omd net-tools netcat xinetd at \
-    && clean.sh
+    echo 'deb http://labs.consol.de/repo/stable/ubuntu trusty main' >> /etc/apt/sources.list
+    
+RUN update.sh \
+&& install.sh \
+    ssl-cert libpython2.7 net-tools netcat xinetd at \
+    time traceroute libsnmp-python dialog dnsutils \
+    fping graphviz libapache2-mod-fcgid libapache2-mod-proxy-html \
+    apache2-mpm-prefork apache2-utils \
+    libboost-program-options1.54.0 libboost-system1.54.0 libdbi1 \
+    libevent-1.4-2 libnet-snmp-perl libpango1.0-0 libreadline5 \
+    libsnmp-perl mysql-server patch php5-cli \
+    php5-cgi libradiusclient-ng2 php5-gd php5-mcrypt \
+    php5-sqlite php-pear pyro rsync smbclient snmp unzip xvfb python-ldap \
+&& wget "http://files.omdistro.org/releases/1.30/omd-1.30.trusty.amd64.deb" -P /tmp/ \
+&& dpkg -i /tmp/omd-1.30.trusty.amd64.deb \
+&& install.sh -fy \
+&& clean.sh
+    
 
 #### due to http://www.monitoring-portal.org/wbb/index.php?page=Thread&threadID=32891
 #### http://labs.consol.de/repo/testing/ubuntu (instead of stable) 
 #### is supposed to provide Icinga 2...
 
+
 # Install the agent to monitor localhost
 ## http://mathias-kettner.de/download/check-mk-agent_1.2.4p5-2_all.deb
-#RUN wget https://mathias-kettner.de/support/1.2.6p12/check-mk-raw-1.2.6p12_0.trusty_amd64.deb -P /tmp/
-#RUN dpkg -i /tmp/check-mk-raw-1.2.6p12_0.trusty_amd64.deb
 ## check-mk-agent_1.2.4p5-2_all.deb
-
 
 
 RUN echo yes | omd setup
@@ -59,7 +72,7 @@ RUN omd create default || true
 # * Accept connections on any IP address, since we get a random one
 
 RUN omd config default set TMPFS "off" && \
- omd config default set ADMIN_MAIL "malex984@googlemail.com" && \
+ omd config default set ADMIN_MAIL "malex984+omd@gmail.com" && \
  omd config default set LIVESTATUS_TCP "on" && \
  omd config default set MKEVENTD "on"  && \
  omd config default set NAGIOS_THEME "classicui"  && \
@@ -143,4 +156,40 @@ RUN chmod +x /usr/local/bin/omd_entrypoint.sh
 ############## https://github.com/SpringerSBM/basic-docker-omd
 
 
+
+
+ARG GIT_NOT_CLEAN_CHECK
+# Build-time metadata as defined at http://label-schema.org
+ARG BUILD_DATE=someday
+ARG VCS_REF=HEAD
+ARG VCS_URL="https://github.com/hilbert/hilbert-docker-images"
+
+ARG DOCKERFILE="/images/omd/Dockerfile"
+LABEL org.label-schema.description="containes pre-cofigured OMD service instance" \
+      org.label-schema.build-date="${BUILD_DATE}" \
+      org.label-schema.vcs-ref="${VCS_REF}" \
+      org.label-schema.vcs-url="${VCS_URL}" \
+      org.label-schema.version="${IMAGE_VERSION}" \
+      com.microscaling.docker.dockerfile="${DOCKERFILE}" \
+      IMAGE_VERSION="${IMAGE_VERSION}" \
+      GIT_NOT_CLEAN_CHECK="${GIT_NOT_CLEAN_CHECK}" \
+      org.label-schema.name="Hilbert" \
+      org.label-schema.vendor="IMAGINARY gGmbH" \
+      org.label-schema.url="https://hilbert.github.io" \
+      org.label-schema.schema-version="1.0" \
+      com.microscaling.license="Apache-2.0"     
+
+ONBUILD LABEL org.label-schema.build-date="" \
+      org.label-schema.name="" \
+      org.label-schema.description="" \
+      org.label-schema.vendor="" \
+      org.label-schema.url="" \
+      org.label-schema.vcs-ref="" \
+      org.label-schema.vcs-url="" \
+      org.label-schema.version="" \
+      org.label-schema.schema-version="" \
+      com.microscaling.license="" \
+      com.microscaling.docker.dockerfile="" \
+      IMAGE_VERSION="" \
+      GIT_NOT_CLEAN_CHECK=""
 

@@ -2,7 +2,7 @@ version: '2.0'
 services:
   mywebapp:
     build: .
-    image: malex984/dockapp:mywebapp
+    image: hilbert/mywebapp
     labels:
      - "is_top_app=1"
      - "description=MyWebApp"

@@ -3,11 +3,11 @@ COPYFILES   :=
 include ../Makefile.inc
 
 # --privileged --ipc=host  --net=host --pid=host
-RUNTERM=-it -a stdin -a stdout -a stderr  --ipc=host  --net=host --pid=host \
+RUNTERM=-it -a stdin -a stdout -a stderr  --ipc=host  --net=host \
         -v /etc/localtime:/etc/localtime:ro -v /tmp/:/tmp/:rw
 #	-v /dev/:/dev/:rw
 
-OPTS=--skip-startup-files --no-kill-all-on-exit --quiet --skip-runit
+OPTS=/sbin/my_init --skip-startup-files --quiet --skip-runit
 
 
 D  := dummyx11
@@ -24,7 +24,7 @@ ${GL}: ${TS} ${mkfile_dir}/../main/generate_ogl.sh
 	docker images
 	docker ps -a
 	echo "Customizing with '${mkfile_dir}/generate_ogl.sh "${IMG}" "${GL}" > ${mkfile_dir}/${APP}_${D}.diff'"
-	${mkfile_dir}/../main/generate_ogl.sh "${IMG}" "${GL}" > ${mkfile_dir}/${APP}_${D}.diff
+	${mkfile_dir}/../main/generate_ogl.sh "${APP}" "${GL}" > ${mkfile_dir}/${APP}_${D}.diff
 	docker images
 	docker ps -a
 	ls -la ${GL} > ${DS}
@@ -45,7 +45,7 @@ ${GL}: ${TS} ${mkfile_dir}/../main/generate_ogl.sh
 	# mkdir -p ${GL} && tar xzvf ${GL}.tgz -C ${GL}
 check: ${TS} ${GL}
 	$(DOCKER) ps -a
-	$(DOCKER) run ${RUNTERM} --label is_top_app=1 --rm malex984/dockapp:xeyes ${OPTS} -- bash -c "which setup_ogl.sh; setup_ogl.sh $(GZ); sleep 1"
+	$(DOCKER) run ${RUNTERM} --label is_top_app=1 --rm hilbert/xeyes ${OPTS} -- bash -c "which setup_ogl.sh; setup_ogl.sh $(GZ); sleep 1"
 	$(DOCKER) ps -a
 
 clean:
@@ -54,3 +54,5 @@ clean:
 	docker rm -vf $C || true
 	docker rmi -f --no-prune=false $D || true
 	docker images -q -f dangling=true | xargs docker rmi || true
+
+build: build_full

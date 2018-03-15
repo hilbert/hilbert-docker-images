@@ -12,10 +12,9 @@ fi
 SELFDIR=`dirname "$0"`
 SELFDIR=`cd "$SELFDIR" && pwd`
 
-U=malex984
-I=dockapp
-#
-PREFIX="$U/$I"
+U=hilbert
+IMAGE_VERSION="${IMAGE_VERSION:-latest}"
+
 
 if [ -z "$HIP" ]; then 
   HIP=$(ip route show 0.0.0.0/0 | grep -Eo 'via \S+' | awk '{ print $2 }')
@@ -99,7 +98,7 @@ echo
 
 
 ## options for /sbin/my_init:
-#OPTS="--skip-startup-files --no-kill-all-on-exit --quiet --skip-runit"
+#OPTS="--skip-startup-files --quiet --skip-runit"
 ## options for running terminal apps via docker run:
 #RUNTERM="--rm -it  -a stdin -a stdout -a stderr"
 
@@ -167,9 +166,9 @@ do
     100) # Surfer
       if [ ! -z "$DISPLAY" ]; then
         echo "Starting GUI shell for surfer... Please build surfer yourself... " 
-	$SELFDIR/run.sh "surfer" launch.sh /opt/SURFER/SURFER
+	$SELFDIR/run.sh 'surfer' launch.sh /opt/SURFER/SURFER
 	# /opt/SURFER/SURFER
-#	$SELFDIR/run.sh "$PREFIX:appchoo" bash
+#	$SELFDIR/run.sh 'appchoo' bash
         # "rxvt-unicode -fn xft:terminus:pixelsize=12 -e bash"
       else
         echo "Please start X11 beforehand!"
@@ -189,7 +188,7 @@ do
     102) # FireFox
       if [ ! -z "$DISPLAY" ]; then
         echo "Starting iceweasel/firefox?... "
-	$SELFDIR/run.sh "iceweasel" launch.sh browser.sh
+	$SELFDIR/run.sh 'iceweasel' launch.sh browser.sh
       else
         echo "Please start X11 beforehand!"
       fi
@@ -239,7 +238,7 @@ do
     107) # Skype
       if [ ! -z "$DISPLAY" ]; then
         echo "Starting skype... " 
-	$SELFDIR/run.sh "skype" skype.sh
+	$SELFDIR/run.sh 'skype' skype.sh
       else
         echo "Please start X11 beforehand!"
       fi
@@ -248,7 +247,7 @@ do
     108) Media Players...
       if [ ! -z "$DISPLAY" ]; then
         echo "Starting GUI shell... Please run cmus/vlc/mplaye/xine yourself... " 
-	$SELFDIR/run.sh "play" launch.sh
+	$SELFDIR/run.sh 'play' launch.sh
         # "rxvt-unicode -fn xft:terminus:pixelsize=12 -e bash"
       else
         echo "Please start X11 beforehand!"
@@ -258,7 +257,7 @@ do
     109) # Q3: openarena
       if [ ! -z "$DISPLAY" ]; then
         echo "Starting Q3... "
- 	$SELFDIR/run.sh "q3" q3.sh
+ 	$SELFDIR/run.sh 'q3' q3.sh
       else
         echo "Please start X11 beforehand!"
       fi
@@ -325,19 +324,19 @@ done
 #       --lxc-conf='lxc.cgroup.devices.allow=c 226:* rwm' \
 #       --lxc-conf='lxc.cgroup.devices.allow=c 81:* rwm' \
 #       --lxc-conf='lxc.cgroup.devices.allow=c 116:* rwm' \
-#      "$U/$I:sound" /sbin/setuser ur /bin/bash
+#      "$U/sound:${IMAGE_VERSION}" /sbin/setuser ur /bin/bash
 
 #echo "Pulling necessary images: "
-#docker pull "$U/$I:base"
-#docker pull "$U/$I:dd"
-#docker pull "$U/$I:main"
-#docker pull "$U/$I:menu"
-#docker pull "$U/$I:appa"
-#docker pull "$U/$I:alsa"
-#docker pull "$U/$I:xeyes"
-#docker pull "$U/$I:gui"
-#docker pull "$U/$I:x11"
-#docker pull "$U/$I:skype"
-#docker pull "$U/$I:q3"
-#docker pull "$U/$I:iceweasel"
-#docker pull "$U/$I:cups"
+#docker pull "$U/base:${IMAGE_VERSION}"
+#docker pull "$U/dd:${IMAGE_VERSION}"
+#docker pull "$U/main:${IMAGE_VERSION}"
+#docker pull "$U/menu:${IMAGE_VERSION}"
+#docker pull "$U/appa:${IMAGE_VERSION}"
+#docker pull "$U/alsa:${IMAGE_VERSION}"
+#docker pull "$U/xeyes:${IMAGE_VERSION}"
+#docker pull "$U/gui:${IMAGE_VERSION}"
+#docker pull "$U/x11:${IMAGE_VERSION}"
+#docker pull "$U/skype:${IMAGE_VERSION}"
+#docker pull "$U/q3:${IMAGE_VERSION}"
+#docker pull "$U/iceweasel:${IMAGE_VERSION}"
+#docker pull "$U/cups:${IMAGE_VERSION}"
