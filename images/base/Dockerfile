@@ -60,6 +60,13 @@ RUN chmod +x /usr/local/bin/*
 ## ENTRYPOINT ["/sbin/my_init"]
 
 
+# Add Tini
+ENV TINI_VERSION v0.17.0
+ADD https://github.com/krallin/tini/releases/download/${TINI_VERSION}/tini-static-muslc-amd64 /sbin/tini
+RUN chmod +x /sbin/tini
+# ENTRYPOINT ["/sbin/tini", "--"]
+
+
 ARG IMAGE_VERSION=someversion
 # Build-time metadata as defined at http://label-schema.org
 ARG BUILD_DATE=someday
