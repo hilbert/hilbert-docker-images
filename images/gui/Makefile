@@ -1,5 +1,5 @@
 mkfile_path := $(abspath $(lastword $(MAKEFILE_LIST)))
-COPYFILES   := launch.sh x_64x64.png qclosebutton
+COPYFILES   := x_64x64.png qclosebutton
 include ../Makefile.inc
 
 CMD=launch.sh xterm -e bash 

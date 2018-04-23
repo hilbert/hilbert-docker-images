@@ -40,7 +40,7 @@ RUN ln -s /usr/src/xfullscreen/xfullscreen /usr/local/bin/
 
 # RUN git clone https://github.com/IMAGINARY/qclosebutton.git /usr/src/qclosebutton/
 # RUN cd /usr/src/qclosebutton && qmake && make && cp qclosebutton /usr/local/bin/ && make clean
-COPY qclosebutton launch.sh x_64x64.png /usr/local/bin/
+COPY qclosebutton x_64x64.png /usr/local/bin/
 # NOTE: qclosebutton is a blob for now (building requires more packages... see :appchoo)
 
 LABEL com.nvidia.volumes.needed="nvidia_driver"

@@ -3,7 +3,7 @@
 SELFDIR="$(dirname "$0")"
 SELFDIR="$(cd "$SELFDIR" && pwd)"
 
-cd "$SELFDIR"
+# cd "$SELFDIR"
 
 # config_cups.sh
 time setup_ogl.sh
