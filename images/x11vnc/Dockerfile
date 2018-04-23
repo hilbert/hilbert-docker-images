@@ -3,7 +3,7 @@ FROM hilbert/base:${IMAGE_VERSION}
 
 MAINTAINER Oleksandr Motsak <malex984+hilbert.x11vnc@gmail.com>
 
-RUN update.sh && install.sh x11vnc && clean.sh
+RUN update.sh && install.sh x11vnc unclutter && clean.sh
 
 # VOLUME /tmp/.X11-unix/
 COPY x11vnc.sh /usr/local/bin/
