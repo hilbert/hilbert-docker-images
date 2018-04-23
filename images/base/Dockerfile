@@ -44,7 +44,7 @@ RUN groupadd -f -g $GROUPS $USER \
 #USER $USER
 #WORKDIR $HOME
 
-COPY setup_ogl.sh config_cups.sh /usr/local/bin/
+COPY setup_ogl.sh config_cups.sh launch.sh /usr/local/bin/
 
 RUN wget -qO- https://github.com/hilbert/hilbert-heartbeat/archive/testing.tar.gz | \
     tar -xzv --wildcards -C /usr/local/bin/ --strip=1 --xform='s#^.*/client/bash#.#x' \
