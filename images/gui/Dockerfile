@@ -27,6 +27,7 @@ RUN update.sh \
        libindicator7 libgtk2.0-0 libxtst6 libexif12 \
        libcanberra-gtk3-module \
        libqt4-core libqt4-gui \
+       compton \
  && pip3 install --upgrade pip && pip install --upgrade setuptools \
  && upgrade.sh \
  && clean.sh
