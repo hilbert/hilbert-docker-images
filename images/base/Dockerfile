@@ -46,6 +46,8 @@ RUN groupadd -f -g $GROUPS $USER \
 
 COPY setup_ogl.sh config_cups.sh launch.sh /usr/local/bin/
 
+RUN wget -q "https://cloud.imaginary.org/index.php/s/WSGU4yEaR4RaH3T/download?path=%2F&files=xbanish" -O /usr/local/bin/xbanish
+
 RUN wget -qO- https://github.com/hilbert/hilbert-heartbeat/archive/testing.tar.gz | \
     tar -xzv --wildcards -C /usr/local/bin/ --strip=1 --xform='s#^.*/client/bash#.#x' \
        'hilbert-heartbeat*/client/bash/heartbeat.sh' 'hilbert-heartbeat*/client/bash/hb_*.sh'
