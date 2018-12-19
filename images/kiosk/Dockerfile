@@ -18,7 +18,7 @@ MAINTAINER Oleksandr Motsak <malex984+hilbert.kiosk@gmail.com>
 
 RUN update.sh \
  && install.sh gconf2 gconf-service libnotify4 libappindicator1 libxtst6 libnss3 libxss1 \
- && wget -q "https://cloud.imaginary.org/index.php/s/XYH8k1wxxz25d2J/download?path=%2F&files=kiosk-browser_0.10.0-alpha.1_amd64.deb" -O /tmp/kiosk-browser.deb \
+ && wget -q "https://cloud.imaginary.org/index.php/s/XYH8k1wxxz25d2J/download?path=%2F&files=kiosk-browser_0.10.0-alpha.3_amd64.deb" -O /tmp/kiosk-browser.deb \
  && dpkg -i /tmp/kiosk-browser.deb \
  && install.sh -fy \
  && clean.sh # && mv /opt/kiosk-browser /opt/kiosk-browser.0.9.0
