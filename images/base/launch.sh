@@ -36,12 +36,13 @@ export LC_ALL="$LANG"
 # xdotool
 
 if [[ "x${HILBERT_MOUSE_CURSOR}" = "xoff" ]]; then
+  : "${HILBERT_XBANISH_ARGS:=-a}"
   echo "Hiding the mouse via [xbanish ${HILBERT_XBANISH_ARGS}]..."
   /usr/local/bin/xbanish ${HILBERT_XBANISH_ARGS} &>>/dev/null &
 fi
 
 if [[ "x${HILBERT_MOUSE_CURSOR}" = "xunclutter" ]]; then
-  : ${HILBERT_UNCLUTTER_ARGS:= -idle 0 -jitter 50 -root}
+  : "${HILBERT_UNCLUTTER_ARGS:= -idle 0 -jitter 50 -root}"
   echo "Hiding the mouse via [unclutter ${HILBERT_UNCLUTTER_ARGS}]..."
   ## http://stackoverflow.com/a/696855
   ## https://stackoverflow.com/a/13935981
