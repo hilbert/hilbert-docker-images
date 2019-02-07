@@ -7,12 +7,14 @@ MAINTAINER Oleksandr Motsak <malex984+hilbert.base@gmail.com>
 #~~phusion/baseimage:0.9.18~~
 #~~hilbert/baseimage:${IMAGE_VERSION}~~
 
+COPY 99update_docker_hub /etc/apt/apt.conf.d/
+
 COPY update.sh install.sh upgrade.sh clean.sh /usr/local/bin/
 
 # Update & Install & Clean up APT
 # Not: please if possible add all the packages to the following single install command!
-RUN update.sh && upgrade.sh \
- && install.sh bash wget curl git cups-bsd p7zip-full pciutils bzip2 ca-certificates \
+RUN clean.sh && update.sh -o "Acquire::CompressionTypes::Order::=gz" && upgrade.sh \
+ && install.sh bash bc wget curl git cups-bsd p7zip-full pciutils bzip2 ca-certificates \
  && clean.sh
 
 # dist-upgrade ?
@@ -44,9 +46,9 @@ RUN groupadd -f -g $GROUPS $USER \
 #USER $USER
 #WORKDIR $HOME
 
-COPY setup_ogl.sh config_cups.sh /usr/local/bin/
+COPY setup_ogl.sh config_cups.sh launch.sh xbanish /usr/local/bin/
 
-RUN wget -qO- https://github.com/hilbert/hilbert-heartbeat/archive/v1.0.0.tar.gz | \
+RUN wget -qO- https://github.com/hilbert/hilbert-heartbeat/archive/testing.tar.gz | \
     tar -xzv --wildcards -C /usr/local/bin/ --strip=1 --xform='s#^.*/client/bash#.#x' \
        'hilbert-heartbeat*/client/bash/heartbeat.sh' 'hilbert-heartbeat*/client/bash/hb_*.sh'
 

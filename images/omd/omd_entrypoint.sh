@@ -27,22 +27,38 @@ curl -L -XGET -u "omdadmin:omd" -- \
 
 # exit 0
 
-SLEEP_TIME=60
+SLEEP_TIME=${HILBERT_OMD_CHECK_DELAY:-10}
 MAX_TRIES=5
 
-tries=0
+OMD_SITE_NAME=default
 
 while /bin/true; do
-  sleep $SLEEP_TIME
-  omd status 2>&1 | grep -q "stopped" && {
-    if [ $tries -gt $MAX_TRIES ]; then
-      echo "** ERROR: Stopped service found; aborting (after $tries tries) **"
-      exit 1
-    fi
-    tries=$(( tries + 1 ))
-    echo "** ERROR: Stopped service found; trying to start again **"
-    omd start 2>&1
-  }
+    tries=0
+    omd status 2>&1 | grep -q "stopped" && {
+       if [ $tries -gt $MAX_TRIES ]; then
+          echo "** ERROR: Stopped service found; aborting (after $tries tries) **"
+          exit 1
+       fi
+       tries=$(( tries + 1 ))
+       echo "** ERROR: Stopped service found; trying to start again **"
+       omd start 2>&1
+       sleep 1
+    }
+#done
+
+
+#while /bin/true; do
+
+    UNIXTIME=$(date +%s)
+    su - -c "lq 'GET hosts\nColumns: name\n'" "${OMD_SITE_NAME}" | \
+        | eval 'sed "s/\(.*\)/COMMAND [$UNIXTIME] SCHEDULE_FORCED_SVC_CHECK;\1;Check_MK;$UNIXTIME\n\nCOMMAND [$UNIXTIME] SCHEDULE_FORCED_HOST_CHECK;\1;$UNIXTIME\n/g"' \
+    su - -c "cat | lq" "${OMD_SITE_NAME}"
+
+    echo "[${UNIXTIME}] Hosts and service checks scheduled"
+
+    sleep ${SLEEP_TIME}
 done
+
+
 
 exit 0

@@ -86,10 +86,53 @@ function finish()
     exit 0 # 128 + 15 -- SIGTERM      
 }
 
-# trap 'kill ${!}; finish' EXIT SIGTERM SIGINT
-trap '{ kill ${!} ; finish ;  exit 255 ; }' EXIT SIGTERM SIGINT SIGHUP
+
+function _trap_handler() {  # EXIT signal handler to remove temporary preload-file and make sure to terminate BG application
+  rv=$?
+#  echo "Ret. code: [$rv]?"
+  local var="$1" # NOTE: **Name** of global variable with PID of BG process
+  local pid=${!var} # NOTE: current value of PID
+  shift
+  local sig="$1" # signal to handle
+  shift
+  echo "PID of BG process: [${pid}]. TRYING TO HANDLE SIGNAL [${sig}]: "
+
+
+  if [[ ${pid} -ne 0 ]]; then
+    if [[ "${sig}" -ne 0 ]]; then
+      echo "TRYING TO PASS the signal [${sig}] the BG process: "
+      kill "-${sig}" "${pid}" && sleep 1
+    fi
+
+    echo "TRYING TO KILL the BG Main process: "
+    kill "${pid}" && sleep 1
+    kill -SIGKILL "${pid}"
+  fi
+
+  rm -f "${PRELOAD_FILE}"
+#  echo "Ret. code: [$rv]!"
+#  exit ${rv}
+}
+
+
+# NOTE: the collowing is due to https://stackoverflow.com/a/2183063
+function _trap_handler_setup() {  # setup signal handlers
+  local func="$1"
+  shift
+  local varname="$1"
+  shift
+  for sig ; do
+    trap "${func} ${varname} ${sig}" "${sig}"
+  done
+  return 0
+}
+
+
 
 pid=0
+
+## trap '{ finish ;  exit 255 ; }' EXIT SIGTERM SIGINT SIGHUP
+_trap_handler_setup "_trap_handler" "pid" 0 # 1 2 3 13 15
 
 #### Application starts here:
 echo "Starting in background: [$@ --preload ${PRELOAD_FILE}]... and waiting for that to finish..."
@@ -97,23 +140,22 @@ echo "Starting in background: [$@ --preload ${PRELOAD_FILE}]... and waiting for 
 #exec "$SELFDIR/run.sh" "$@"
 #/bin/bash -c "$@ --preload ${PRELOAD_FILE}" &
 exec "$@" --preload "${PRELOAD_FILE}" &
-
-pid="$!"
+pid="${!}"
 
 echo "=> PID: $pid"
 
 while ps -o pid | grep -q "^[[:space:]]*"$pid"[[:space:]]*$"
 do
-  sleep 6
+  sleep 3
 done
 
-# try to wait explicitly (just to be sure that such BG process is not running anymore):
-#tail -f /dev/null & 
-wait ${pid}
+echo "WAITING for the Main process [${pid}]: "
+wait "${pid}"
+_ret=$?
 pid=0
 
 # just to be sure:
 rm -f "${PRELOAD_FILE}"
 
-exit 0
+exit ${_ret}
 
