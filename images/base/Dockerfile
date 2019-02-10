@@ -48,7 +48,7 @@ RUN groupadd -f -g $GROUPS $USER \
 
 COPY setup_ogl.sh config_cups.sh launch.sh xbanish /usr/local/bin/
 
-RUN wget -qO- https://github.com/hilbert/hilbert-heartbeat/archive/testing.tar.gz | \
+RUN wget -qO- https://github.com/hilbert/hilbert-heartbeat/archive/devel.tar.gz | \
     tar -xzv --wildcards -C /usr/local/bin/ --strip=1 --xform='s#^.*/client/bash#.#x' \
        'hilbert-heartbeat*/client/bash/heartbeat.sh' 'hilbert-heartbeat*/client/bash/hb_*.sh'
 
