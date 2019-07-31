@@ -1,5 +1,6 @@
-ARG IMAGE_VERSION=someversion
-FROM hilbert/base:${IMAGE_VERSION}
+#ARG  IMAGE_VERSION=someversion
+FROM hilbert/base:devel
+# ${IMAGE_VERSION}
 ###FROM hilbert/nodejs::::
 
 MAINTAINER Oleksandr Motsak <malex984+hilbert.mng@gmail.com>
@@ -13,9 +14,14 @@ MAINTAINER Oleksandr Motsak <malex984+hilbert.mng@gmail.com>
 ## curl --silent --location https://deb.nodesource.com/setup_4.x | sudo -E bash -
 ## wget -qO- https://deb.nodesource.com/setup_4.x | bash -
 
+# && DEBIAN_FRONTEND=noninteractive curl -sSL https://deb.nodesource.com/gpgkey/nodesource.gpg.key | sudo apt-key add -
+# && DEBIAN_FRONTEND=noninteractive curl -sL https://deb.nodesource.com/setup_4.x | sudo -E bash - \
 RUN update.sh \
- && DEBIAN_FRONTEND=noninteractive curl -sL https://deb.nodesource.com/setup_4.x | sudo -E bash - \
- && install.sh nodejs \
+ && DEBIAN_FRONTEND=noninteractive curl -sL https://deb.nodesource.com/setup_10.x | bash - \
+ && install.sh nodejs gcc g++ make \
+ && DEBIAN_FRONTEND=noninteractive curl -sL https://dl.yarnpkg.com/debian/pubkey.gpg | apt-key add - \
+ && echo "deb https://dl.yarnpkg.com/debian/ stable main" | tee /etc/apt/sources.list.d/yarn.list \
+ && update.sh && install.sh yarn \
  && clean.sh
 
 #RUN npm install electron-prebuilt -g 
@@ -44,13 +50,15 @@ RUN update.sh && \
 
 # download latest stable version and install node.js dependencies
 RUN git clone --depth 1 -b 'master' https://github.com/hilbert/hilbert-ui.git /usr/local/hilbert-ui \
-    && cd /usr/local/hilbert-ui/client && npm install && cd /usr/local/hilbert-ui/server && npm install
+&&  cd /usr/local/hilbert-ui/client && yarn install --prod \
+&&  cd /usr/local/hilbert-ui/server && yarn install --prod
 
 # download latest version. (note: required python packages were installed above)
 #RUN git clone --depth 1 -b 'devel' https://github.com/hilbert/hilbert-cli.git /tmp/hilbert_cli \
 #    && cd /tmp/hilbert_cli && python3 ./setup.py install
 
 ENV HILBERT_CLI_PATH=/usr/local/bin
+
 
 ADD "https://cloud.imaginary.org/index.php/s/WSGU4yEaR4RaH3T/download?path=%2F&files=hilbert" /usr/local/bin/hilbert
 RUN chmod a+x /usr/local/bin/hilbert
@@ -77,6 +85,7 @@ ARG GIT_NOT_CLEAN_CHECK
 ARG BUILD_DATE=someday
 ARG VCS_REF=HEAD
 ARG VCS_URL="https://github.com/hilbert/hilbert-docker-images"
+ARG IMAGE_VERSION
 
 ARG DOCKERFILE="/images/mng/Dockerfile"
 LABEL org.label-schema.description="Hilbert Dashboard UI (including Hilbert server tool)" \

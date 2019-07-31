@@ -4,8 +4,8 @@ services:
     labels:
      - "is_top_app=0"
      - "description=Management front-end and back-end (simulated back-end management scripts)"
-    build: .
-    image: hilbert/mng:${IMAGE_VERSION:-latest}
+#    build: .
+    image: hilbert/mng:devel_new # devel # ${IMAGE_VERSION:-latest}
     network_mode: host
     privileged: false
     stdin_open: false
@@ -21,11 +21,11 @@ services:
      - HILBERT_SERVER_CONFIG_PATH=/HILBERT/
      - HILBERT_SERVER_CONFIG_SSH_PATH=/root/SSH
      - HILBERT_UI_SIMULATION_MODE=1
-     - HILBERT_UI_INT_PORT=3333
+     - HILBERT_UI_INT_PORT=4444
      - HILBERT_UI_LOG_LEVEL=debug
      - HILBERT_UI_LOG_DIR=/var/log
      - HILBERT_UI_DB=""
-     - HILBERT_UI_EXT_PORT=${HILBERT_UI_PORT:-8000}
+     - HILBERT_UI_EXT_PORT=${HILBERT_UI_PORT:-8008}
     entrypoint:
      - /sbin/my_init
      - --skip-runit
@@ -34,7 +34,7 @@ services:
 #    ports:
 #     - "8888:8000"
     expose:
-     - ${HILBERT_UI_PORT:-8000}
+     - ${HILBERT_UI_PORT:-8008}
     restart: always
     command:
      - /usr/local/run.sh

@@ -83,7 +83,7 @@ $(env | grep HILBERT_)
 EOF
 
 # export NODE_PATH=/usr/lib/node_modules/hilbert-ui/node_modules
-exec node app/main.js \
+exec node lib/main.js \
   --test="${HILBERT_UI_SIMULATION_MODE}" \
   --port="${HILBERT_UI_INT_PORT}" \
   --log_level="${HILBERT_UI_LOG_LEVEL}" \

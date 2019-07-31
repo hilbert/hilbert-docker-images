@@ -1,0 +1,83 @@
+version: '2.1'
+volumes:
+  mng_local: # current data volume used by production Dashboard
+    driver: local
+  mng0_local: # just for testing
+    driver: local
+services:
+  mng:
+    command:
+    - /usr/local/run.sh
+    devices:
+    - /dev/dri/card0
+    entrypoint:
+    - /sbin/my_init
+    - --skip-runit
+    - --skip-startup-files
+    - --
+    environment:
+      HILBERT_CLI_PATH: /HILBERT/
+      HILBERT_SERVER_CONFIG_PATH: /HILBERT/
+      HILBERT_SERVER_CONFIG_SSH_PATH: /root/SSH
+#      HILBERT_UI_DB: /MNG_LOCAL/UI.sqlite
+      HILBERT_UI_EXT_PORT: '8005'
+      HILBERT_UI_INT_PORT: '4445'
+#      HILBERT_UI_LOG_DIR: /MNG_LOCAL/
+      HILBERT_UI_LOG_DIR: /tmp/
+      HILBERT_UI_DB: /tmp/UI.sqlite
+      HILBERT_UI_LOG_LEVEL: info
+      HILBERT_UI_SIMULATION_MODE: '0'
+      HOME: /root
+    expose:
+    - '8005'
+    image: hilbert/mng:devel_new # new  # New image!
+    labels:
+      is_top_app: '0'
+    network_mode: host
+    privileged: false
+    restart: on-failure:5
+    stdin_open: false
+    tty: false
+    volumes:
+#    - /var/home/kiosk/CFG:/HILBERT:ro
+#    - /shared/interactives/0000_general/Hilbert/CFG:/HILBERT:ro
+    - /var/home/kiosk/CFG:/HILBERT:ro
+    - mng0_local:/MNG_LOCAL:rw
+    - /etc/localtime:/etc/localtime:ro
+    - /var/home/kiosk/.ssh:/root/SSH:ro
+    - /tmp:/tmp:rw
+  mng_demo:
+    command:
+    - /usr/local/run.sh
+    entrypoint:
+    - /sbin/my_init
+    - --skip-runit
+    - --skip-startup-files
+    - --
+    environment:
+      HILBERT_CLI_PATH: /HILBERT/
+      HILBERT_SERVER_CONFIG_PATH: /HILBERT/
+      HILBERT_SERVER_CONFIG_SSH_PATH: /root/SSH
+      HILBERT_UI_DB: /MNG_LOCAL/UI.sqlite
+      HILBERT_UI_EXT_PORT: '8004'
+      HILBERT_UI_INT_PORT: '4444'
+      HILBERT_UI_LOG_DIR: /MNG_LOCAL/
+      HILBERT_UI_LOG_LEVEL: info
+      HILBERT_UI_SIMULATION_MODE: '1'
+      HOME: /root
+    expose:
+    - '8004'
+    image: hilbert/mng:devel_new
+    labels:
+      is_top_app: '0'
+    network_mode: host
+    privileged: false
+    restart: on-failure:5
+    stdin_open: false
+    tty: false
+    volumes:
+    - /var/home/kiosk/CFG:/HILBERT:ro
+    - mng0_local:/MNG_LOCAL:rw
+    - /etc/localtime:/etc/localtime:ro
+    - /var/home/kiosk/.ssh:/root/SSH:ro
+    - /tmp:/tmp:rw
