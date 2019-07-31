@@ -37,11 +37,17 @@ REPO ?= ${U}
 # TODO: Add tag depending on git branch!?
 
 # Get the latest git commit ID
-GIT_COMMIT ?= $(strip $(shell git rev-parse --short HEAD))
+#GIT_COMMIT ?= $(strip $(shell git rev-parse --short HEAD))
+GIT_COMMIT ?= $(strip $(shell git describe --always --dirty --long))
+# Get date of latest commit
+GIT_COMMIT_DATE ?= $(strip $(shell git show -s --format=%ai HEAD))
 # Get the git repository URL
-GIT_ORIGIN_URL ?= $(strip $(shell git config --get remote.origin.url))
+#GIT_ORIGIN_URL ?= $(strip $(shell git config --get remote.origin.url))
+GIT_ORIGIN_URL ?= $(strip $(shell git ls-remote --get-url))
 # Get the current checkout status
 GIT_NOT_CLEAN_CHECK ?= $(strip $(shell git status --porcelain))
+# Commit summary
+GIT_SUMMARY ?= $(strip $(shell git log --pretty=format:"Commit %h | %ai | %s%d [%an]" -1))
 
 #ifneq (x$(GIT_NOT_CLEAN_CHECK), x)
 #DOCKER_TAG_SUFFIX = "-dirty"
@@ -61,7 +67,9 @@ AUDIO_DEVICES ?= `find /dev/ -group audio -type c -exec echo -n "--device {} " \
 
 IMAGE_VERSION ?= latest
 VCS_REF       ?= ${GIT_COMMIT}
+VCS_DATE      ?= ${GIT_COMMIT_DATE}
 VCS_URL       ?= ${GIT_ORIGIN_URL}
+VCS_SUMMARY   ?= ${GIT_SUMMARY}
 
 
 APP  ?= $(shell $(ECHO) "${current_dir}" | $(SED) -e 's@[\-]@_@g' | $(TR) '[:upper:]' '[:lower:]')
@@ -91,6 +99,7 @@ SS := ${top_dir}/${BASE}.timestamp
 # POST = $(shell rename @COLON@ : *)
 
 all: show debug build prune show
+build-tag-push: build_full tag push
 
 show:
 	$(ECHO)
@@ -114,18 +123,24 @@ debug:
 	$(ECHO) "DOCKER_BUILD_OPTS : ${DOCKER_BUILD_OPTS}"
 
 DOCKER_BUILD_OPTS_BASIC=--pull=false --force-rm=true --rm=true \
---no-cache=false
+--no-cache=false 
+
 
 DOCKER_BUILD_OPTS_SIMPLE=${DOCKER_BUILD_OPTS_BASIC} \
 --build-arg IMAGE_VERSION="${IMAGE_VERSION}"
 
 DOCKER_BUILD_OPTS=${DOCKER_BUILD_OPTS_SIMPLE} \
---build-arg VCS_REF="${VCS_REF}" \
---build-arg VCS_URL="${VCS_URL}" \
 --build-arg GIT_NOT_CLEAN_CHECK="${GIT_NOT_CLEAN_CHECK}" \
 --build-arg BUILD_DATE=`date -u +"%Y-%m-%dT%H:%M:%SZ"` \
 --build-arg DOCKERFILE="/images/${APP}/${APP}_${IMAGE_VERSION}_Dockerfile"
 
+
+DOCKER_BUILD_OPTS_HITS=${DOCKER_BUILD_OPTS} \
+--build-arg VCS_REF="${VCS_REF}" \
+--build-arg VCS_DATE="${VCS_DATE}" \
+--build-arg VCS_URL="${VCS_URL}" \
+--build-arg VCS_SUMMARY="${VCS_SUMMARY}" \
+--build-arg DP_CREDENTIALS="${DP_CREDENTIALS}"
 
 TMP_DF=${mkfile_dir}/${APP}_${IMAGE_VERSION}_Dockerfile
 
@@ -134,6 +149,7 @@ build:
 	$(CAT) "${DF}" | $(SED) -e 's@^ *FROM  *\(hilbert/[^ :#]*\) *\([#].*\)\?$$@FROM \1:$(IMAGE_VERSION)@gi' > "${TMP_DF}"
 	cd ${mkfile_dir} && $(DOCKER) -D build ${DOCKER_BUILD_OPTS_BASIC} -t "${IMG}" -f "${TMP_DF}" "${mkfile_dir}"
 	$(DOCKER) images | $(GREP) -E "^${U}/${APP}  *" > "${TS}"
+	$(ECHO) "VCS_SUMMARY: ${VCS_SUMMARY}"
 #	$(MAKE) -C ${mkfile_dir}/ "${TS}"
 
 # "${ACOPYFILES}" "${ACOPYFILES2}"
@@ -143,7 +159,9 @@ build1:
 	$(CAT) "${DF}" | $(SED) -e 's@^ *FROM  *\(hilbert/[^ :#]*\) *\([#].*\)\?$$@FROM \1:$(IMAGE_VERSION)@gi' > "${TMP_DF}"
 	cd ${mkfile_dir} && $(DOCKER) -D build ${DOCKER_BUILD_OPTS_SIMPLE} -t "${IMG}" -f "${TMP_DF}" "${mkfile_dir}"
 	$(DOCKER) images | $(GREP) -E "^${U}/${APP}  *" > "${TS}"
+	$(ECHO) "VCS_SUMMARY: ${VCS_SUMMARY}"
 #	$(MAKE) -C ${mkfile_dir}/ "${TS}"
+build_simple: build1
 
 # ${TS} ${SS} 
 ## Maybe try using docker-compose for building?
@@ -152,6 +170,15 @@ build_full:
 	$(CAT) "${DF}" | $(SED) -e 's@^ *FROM  *\(hilbert/[^ :#]*\) *\([#].*\)\?$$@FROM \1:$(IMAGE_VERSION)@gi' > "${TMP_DF}"
 	cd ${mkfile_dir} && $(DOCKER) -D build ${DOCKER_BUILD_OPTS} -t "${IMG}" -f "${TMP_DF}" "${mkfile_dir}"
 	$(DOCKER) images | $(GREP) -E "^${U}/${APP}  *" > "${TS}"
+	$(ECHO) "VCS_SUMMARY: ${VCS_SUMMARY}"
+#	$(MAKE) -C ${mkfile_dir}/ "${TS}"
+
+build_hits:
+	$(RM) -f "${TS}"
+	$(CAT) "${DF}" | $(SED) -e 's@^FROM  *\([^ :#][^ :#]*\) *$$@FROM \1:$(IMAGE_VERSION)@g' > "${TMP_DF}"
+	cd ${mkfile_dir} && $(DOCKER) -D build ${DOCKER_BUILD_OPTS_HITS} -t "${IMG}" -f "${TMP_DF}" "${mkfile_dir}"
+	$(DOCKER) images | $(GREP) -E "^${U}/${APP}  *" > "${TS}"
+	$(ECHO) "VCS_SUMMARY: ${VCS_SUMMARY}"
 #	$(MAKE) -C ${mkfile_dir}/ "${TS}"
 
 
